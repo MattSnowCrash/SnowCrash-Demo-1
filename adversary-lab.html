@@ -878,7 +878,7 @@
     <div class="prompts-panel" id="prompts-panel" style="display:none;">
       <div class="prompts-panel-title">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-2)" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Triggering Prompts — Failure Analysis
+        Prompt Analysis — Per-Prompt Results
       </div>
       <div class="prompts-summary" id="prompts-summary"></div>
       <div id="prompts-list"></div>
@@ -888,7 +888,27 @@
 </div><!-- /layout -->
 </div><!-- /app-shell -->
 
+<script src="_overrides_sabotage_blackmail.js"></script>
+<script src="_overrides_gaslight_selfpres.js"></script>
+<script src="_overrides_deceptive_goalmis.js"></script>
+<script src="_overrides_power_social.js"></script>
 <script>
+/* ── Merge all override parts into a single MODEL_PROMPT_OVERRIDES object ── */
+var MODEL_PROMPT_OVERRIDES = {};
+function mergeOverrides(part) {
+  if (!part) return;
+  for (var model in part) {
+    if (!MODEL_PROMPT_OVERRIDES[model]) MODEL_PROMPT_OVERRIDES[model] = {};
+    for (var scenario in part[model]) {
+      MODEL_PROMPT_OVERRIDES[model][scenario] = part[model][scenario];
+    }
+  }
+}
+mergeOverrides(typeof OVERRIDES_PART1 !== 'undefined' ? OVERRIDES_PART1 : null);
+mergeOverrides(typeof OVERRIDES_PART2 !== 'undefined' ? OVERRIDES_PART2 : null);
+mergeOverrides(typeof OVERRIDES_PART3 !== 'undefined' ? OVERRIDES_PART3 : null);
+mergeOverrides(typeof OVERRIDES_PART4 !== 'undefined' ? OVERRIDES_PART4 : null);
+
 function getSubjectModel() {
   return document.getElementById('model-select').value;
 }
@@ -1473,6 +1493,12 @@ function getEffectiveData(scenarioKey, modelName) {
       result.judgeRationale = base.judgeRationale + modelNotes[scenarioKey];
     }
 
+    // Use model-specific prompt overrides if available
+    var overrides = MODEL_PROMPT_OVERRIDES[modelName];
+    if (overrides && overrides[scenarioKey]) {
+      result.prompts = overrides[scenarioKey];
+    }
+
     return result;
   }
 
@@ -1682,7 +1708,17 @@ function runDemo() {
       });
 
       if (failCount === 0) {
-        html = '<div class="prompt-no-failures">All ' + data.prompts.length + ' prompts passed \u2014 no adversarial vulnerabilities detected in this scenario.</div>';
+        html = '<div class="prompt-no-failures" style="margin-bottom:14px;">All ' + data.prompts.length + ' prompts passed \u2014 no adversarial vulnerabilities detected in this scenario.</div>';
+        // Still show individual passing prompts so the user can see what was tested
+        sorted.forEach(function(p) {
+          html += '<div class="prompt-card prompt-pass">';
+          html += '<div class="prompt-card-header">';
+          html += '<span class="prompt-id">' + p.id + '</span>';
+          html += '<span class="prompt-status pass">PASS</span>';
+          html += '</div>';
+          html += '<div class="prompt-text">"' + p.text + '"</div>';
+          html += '</div>';
+        });
       }
 
       list.innerHTML = html;
