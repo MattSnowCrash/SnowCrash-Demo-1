@@ -224,6 +224,7 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
   <div class="floating-label" id="label-router">Model Safety Router<span class="sub">ATC Tower</span></div>
   <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">12 active</span></div>
   <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">3 models testing</span></div>
+  <div class="floating-label green" id="label-exit">Responses to Users<span class="sub" id="resp-counter">0 resp/sec</span></div>
 
   <!-- Event Ticker -->
   <div class="event-ticker">
@@ -547,6 +548,91 @@ modelNames.forEach((name, i) => {
 });
 
 /* ═══════════════════════════════════════════════════════
+   D2) FAR RIGHT — EXIT PORTAL (Outbound Responses)
+   ═══════════════════════════════════════════════════════ */
+const exitPortalGroup = new THREE.Group();
+exitPortalGroup.position.set(36, 0, -4);
+scene.add(exitPortalGroup);
+
+// Exit arch columns
+const exitColGeo = new THREE.BoxGeometry(0.4, 8, 0.4);
+const exitColL = new THREE.Mesh(exitColGeo, glowMat(GREEN, 0.7));
+exitColL.position.set(-2.2, 4, 0);
+exitPortalGroup.add(exitColL);
+const exitColR = new THREE.Mesh(exitColGeo, glowMat(GREEN, 0.7));
+exitColR.position.set(2.2, 4, 0);
+exitPortalGroup.add(exitColR);
+
+// Exit arc
+const exitArcCurve = new THREE.EllipseCurve(0, 8, 2.2, 2.2, 0, Math.PI, false, 0);
+const exitArcPts = exitArcCurve.getPoints(32);
+const exitArcGeo = new THREE.BufferGeometry().setFromPoints(exitArcPts.map(p => new THREE.Vector3(p.x, p.y, 0)));
+exitPortalGroup.add(new THREE.Line(exitArcGeo, lineMat(GREEN, 0.9)));
+
+// Inner glow
+const exitPlane = new THREE.Mesh(new THREE.PlaneGeometry(4, 7), glowMat(GREEN, 0.06));
+exitPlane.position.set(0, 4.2, 0);
+exitPortalGroup.add(exitPlane);
+
+// Exit scan line
+const exitScan = new THREE.Mesh(new THREE.PlaneGeometry(3.8, 0.08), glowMat(GREEN, 0.6));
+exitScan.position.set(0, 2, 0.01);
+exitPortalGroup.add(exitScan);
+
+// Exit rings
+for (let i = 0; i < 3; i++) {
+  const ringGeo = new THREE.TorusGeometry(2.8 + i * 0.4, 0.03, 8, 48);
+  const ring = new THREE.Mesh(ringGeo, glowMat(GREEN, 0.12 - i * 0.03));
+  ring.position.set(0, 4.5, -0.2);
+  ring.userData.speed = 0.25 + i * 0.12;
+  ring.userData.isExitRing = true;
+  exitPortalGroup.add(ring);
+}
+
+// Exit base
+const exitBase = new THREE.Mesh(new THREE.CylinderGeometry(3, 3.3, 0.2, 6), glowMat(GREEN, 0.15));
+exitBase.position.y = 0.1;
+exitPortalGroup.add(exitBase);
+
+// Green point light at exit
+const exitLight = new THREE.PointLight(GREEN, 0.6, 25);
+exitLight.position.set(0, 5, 0);
+exitPortalGroup.add(exitLight);
+
+// Response beams: pool → exit portal
+const responseBeams = [];
+function createResponseBeam() {
+  const activeNodes = poolNodes.filter(n => n.state === 'active');
+  if (activeNodes.length === 0) return;
+  const node = activeNodes[Math.floor(Math.random() * activeNodes.length)];
+  const nodeWorld = new THREE.Vector3();
+  node.mesh.getWorldPosition(nodeWorld);
+
+  const endPos = new THREE.Vector3(36 + (Math.random()-0.5)*2, 4 + Math.random()*2, -4 + (Math.random()-0.5)*2);
+  const mid = new THREE.Vector3().lerpVectors(nodeWorld, endPos, 0.5);
+  mid.y += 5 + Math.random() * 3;
+
+  const curve = new THREE.QuadraticBezierCurve3(nodeWorld, mid, endPos);
+  const points = curve.getPoints(24);
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geo, lineMat(GREEN, 0.7));
+  scene.add(line);
+
+  const particle = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 10), glowMat(GREEN, 1));
+  // Outer glow on response orb
+  const respGlow = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 8), glowMat(GREEN, 0.3));
+  particle.add(respGlow);
+  particle.position.copy(nodeWorld);
+  scene.add(particle);
+
+  // Brief flash on the pool node
+  node.mesh.material.opacity = 1;
+  setTimeout(() => { if (node.mesh.material) node.mesh.material.opacity = 0.7; }, 200);
+
+  responseBeams.push({ line, particle, curve, t: 0, speed: 0.012 + Math.random() * 0.005 });
+}
+
+/* ═══════════════════════════════════════════════════════
    E) BOTTOM/FRONT — AI CRASH TEST LAB
    ═══════════════════════════════════════════════════════ */
 const labGroup = new THREE.Group();
@@ -859,6 +945,10 @@ function spawnFlowParticle(type) {
     color = GREEN;
     startPos = new THREE.Vector3(0, 2, 0);
     endPos = new THREE.Vector3(18, 2, -4);
+  } else if (type === 'response') {
+    color = GREEN;
+    startPos = new THREE.Vector3(18 + (Math.random()-0.5)*4, 2 + Math.random()*2, -4 + (Math.random()-0.5)*4);
+    endPos = new THREE.Vector3(36, 4 + Math.random()*2, -4 + (Math.random()-0.5)*2);
   } else {
     color = RED;
     startPos = new THREE.Vector3(6, 3, 14);
@@ -882,13 +972,16 @@ const labelPortal = document.getElementById('label-portal');
 const labelRouter = document.getElementById('label-router');
 const labelPool = document.getElementById('label-pool');
 const labelCrashtest = document.getElementById('label-crashtest');
+const labelExit = document.getElementById('label-exit');
 const reqCounter = document.getElementById('req-counter');
+const respCounter = document.getElementById('resp-counter');
 
 const labelTargets = [
   { el: labelPortal, pos: new THREE.Vector3(-22, 10, 0) },
   { el: labelRouter, pos: new THREE.Vector3(0, 20, 0) },
   { el: labelPool, pos: new THREE.Vector3(18, 7, -4) },
-  { el: labelCrashtest, pos: new THREE.Vector3(6, 8, 14) }
+  { el: labelCrashtest, pos: new THREE.Vector3(6, 8, 14) },
+  { el: labelExit, pos: new THREE.Vector3(36, 10, -4) }
 ];
 
 function projectLabels() {
@@ -931,6 +1024,12 @@ setInterval(() => {
   reqCounter.textContent = reqPerSec + ' req/sec';
 }, 1500);
 
+let respPerSec = 10;
+setInterval(() => {
+  respPerSec = Math.floor(7 + Math.random() * 8);
+  respCounter.textContent = respPerSec + ' resp/sec';
+}, 1800);
+
 /* ═══════════════════════════════════════════════════════
    EVENT TICKER
    ═══════════════════════════════════════════════════════ */
@@ -951,7 +1050,13 @@ const tickerEvents = [
   'User Request #48299 → Router → Grok 3: <span class="cleared">CLEARED</span>',
   'Crash Test Lab → Nemotron Ultra: HALLUCINATION PROBE PASSED → <span class="promoted">PROMOTED</span>',
   'User Request #48300 → Router → GPT-4.1: <span class="cleared">CLEARED</span>',
-  'User Request #48301 → Router → Crash Test Lab: Command R+ <span class="testing">TESTING</span>'
+  'User Request #48301 → Router → Crash Test Lab: Command R+ <span class="testing">TESTING</span>',
+  'Claude Opus 4 → Response delivered to user #48291 <span class="cleared">✓ COMPLETE</span>',
+  'GPT-5 → Response delivered to user #48293 <span class="cleared">✓ COMPLETE</span>',
+  'Gemini Ultra 2 → Response delivered to user #48294 <span class="cleared">✓ COMPLETE</span>',
+  'Mistral Large 3 → Response delivered to user #48296 <span class="cleared">✓ COMPLETE</span>',
+  'Claude Sonnet 4 → Response delivered to user #48298 <span class="cleared">✓ COMPLETE</span>',
+  'Grok 3 → Response delivered to user #48299 <span class="cleared">✓ COMPLETE</span>'
 ];
 
 // Double the ticker for seamless loop
@@ -983,6 +1088,9 @@ setInterval(() => {
   createEjectBeam(pass);
 }, 4500);
 
+// Response beams from pool to exit
+setInterval(createResponseBeam, 2000);
+
 // Pulse rings
 setInterval(createPulseRing, 3000);
 
@@ -994,7 +1102,7 @@ setInterval(() => {
 
 // Flow particles
 setInterval(() => {
-  const types = ['request', 'tolab', 'topool', 'reject'];
+  const types = ['request', 'tolab', 'topool', 'response', 'response', 'reject'];
   spawnFlowParticle(types[Math.floor(Math.random() * types.length)]);
 }, 200);
 
@@ -1090,6 +1198,29 @@ function animate() {
       beam.line.material.opacity = Math.max(0, 0.6 - beam.t * 0.6);
     }
   }
+
+  // ── Response beams (pool → exit) ──
+  for (let i = responseBeams.length - 1; i >= 0; i--) {
+    const beam = responseBeams[i];
+    beam.t += beam.speed;
+    if (beam.t >= 1) {
+      scene.remove(beam.line);
+      scene.remove(beam.particle);
+      responseBeams.splice(i, 1);
+    } else {
+      beam.particle.position.copy(beam.curve.getPointAt(beam.t));
+      beam.line.material.opacity = Math.max(0, 0.5 - beam.t * 0.5);
+    }
+  }
+
+  // ── Exit portal scan + rings ──
+  exitScan.position.y = 1 + Math.sin(t * 1.8 + 1) * 3.2;
+  exitPortalGroup.children.forEach(child => {
+    if (child.userData.isExitRing) {
+      child.rotation.z = t * child.userData.speed;
+      child.rotation.y = t * child.userData.speed * 0.4;
+    }
+  });
 
   // ── Eject beams ──
   for (let i = ejectBeams.length - 1; i >= 0; i--) {
