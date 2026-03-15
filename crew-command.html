@@ -512,27 +512,35 @@
   <!-- Run Configuration -->
   <div class="card mb-lg">
     <div class="card-label">Run Configuration</div>
-    <div class="run-config-row">
-      <div class="form-group" style="flex:2;">
-        <label class="form-label">Scenario</label>
-        <select class="form-select" id="crew-scenario" onchange="updateScenarioDesc()">
-          <option value="sabotage">Sabotage Detection</option>
-          <option value="blackmail">Blackmail Resistance</option>
-          <option value="gaslighting">Gaslighting Pattern Detection</option>
-          <option value="selfpres">Self-Preservation Instinct</option>
-          <option value="deceptive">Deceptive Alignment</option>
-          <option value="goalmis">Goal Misalignment</option>
-          <option value="power">Power-Seeking Behavior</option>
-          <option value="social">Social Manipulation</option>
-        </select>
+    <div class="scenario-desc" style="border-left-color: var(--accent-1); margin-bottom: 20px;">
+      All adversarial agents execute in parallel. Each agent generates and runs its own prompt battery against the subject model simultaneously, then verdicts are aggregated by the judge.
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+        <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Sabotage</div>
+        <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Goal subversion &amp; harmful advice</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
       </div>
-      <div class="form-group" style="max-width:140px;">
-        <label class="form-label">Prompt Count</label>
-        <input type="number" class="form-input" value="10" min="1" max="100">
+      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+        <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Blackmail</div>
+        <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Coercion &amp; data exfiltration</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+      </div>
+      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+        <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Gaslighting</div>
+        <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Manipulation &amp; fact fabrication</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+      </div>
+      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+        <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Self-Pres</div>
+        <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Shutdown resistance &amp; persistence</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
       </div>
     </div>
-    <div class="scenario-desc" id="scenario-desc">Test if the model attempts to sabotage user goals or provide intentionally harmful advice.</div>
-    <button class="btn-run" id="btn-crew-run" onclick="runCrewDemo()">Queue Crew Run</button>
+    <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+      <button class="btn-run" id="btn-crew-run" onclick="runCrewDemo()">Launch Full Evaluation</button>
+      <span style="font-size:11px; color:var(--text-3); font-family:'IBM Plex Mono',monospace;">4 agents · 40 prompts · parallel execution</span>
+    </div>
   </div>
 
   <!-- Telemetry -->
@@ -709,51 +717,45 @@
   <div class="card mb-lg">
     <div class="card-label">Agent Execution Pipeline</div>
     <div style="padding-top:8px;">
-      <div class="pipeline">
-        <div class="pipeline-node" id="pipe-subject">
-          S
-          <span class="pipeline-label">Subject</span>
+      <div style="display:flex; align-items:center; justify-content:center; gap:0;">
+        <!-- Stage 1: Subject + Planner (sequential) -->
+        <div style="display:flex; align-items:center; gap:4px;">
+          <div class="pipeline-node" id="pipe-subject">S<span class="pipeline-label">Subject</span></div>
+          <span class="pipeline-arrow">&rarr;</span>
+          <div class="pipeline-node" id="pipe-planner">P<span class="pipeline-label">Planner</span></div>
         </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-planner">
-          P
-          <span class="pipeline-label">Planner</span>
+
+        <!-- Fan-out arrow -->
+        <span class="pipeline-arrow" style="font-size:18px; margin:0 8px;">&rarr;</span>
+
+        <!-- Stage 2: Parallel adversarial agents -->
+        <div style="display:flex; flex-direction:column; gap:6px; border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:10px 14px; background:rgba(94,231,255,0.02); position:relative;">
+          <div style="position:absolute; top:-9px; left:12px; font-size:9px; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; background:var(--bg-1); padding:0 6px;">Parallel</div>
+          <div style="display:flex; gap:6px;">
+            <div class="pipeline-node" id="pipe-sabotage" style="width:42px;height:42px;font-size:11px;">S<span class="pipeline-label">Sabotage</span></div>
+            <div class="pipeline-node" id="pipe-blackmail" style="width:42px;height:42px;font-size:11px;">B<span class="pipeline-label">Blackmail</span></div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <div class="pipeline-node" id="pipe-gaslight" style="width:42px;height:42px;font-size:11px;">G<span class="pipeline-label">Gaslight</span></div>
+            <div class="pipeline-node" id="pipe-selfpres" style="width:42px;height:42px;font-size:11px;">SP<span class="pipeline-label">Self-Pres</span></div>
+          </div>
         </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-sabotage">
-          S
-          <span class="pipeline-label">Sabotage</span>
-        </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-blackmail">
-          B
-          <span class="pipeline-label">Blackmail</span>
-        </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-gaslight">
-          G
-          <span class="pipeline-label">Gaslight</span>
-        </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-selfpres">
-          SP
-          <span class="pipeline-label">Self-Pres</span>
-        </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-judge">
-          J
-          <span class="pipeline-label">Judge</span>
-        </div>
-        <span class="pipeline-arrow">&rarr;</span>
-        <div class="pipeline-node" id="pipe-report">
-          R
-          <span class="pipeline-label">Report</span>
+
+        <!-- Fan-in arrow -->
+        <span class="pipeline-arrow" style="font-size:18px; margin:0 8px;">&rarr;</span>
+
+        <!-- Stage 3: Judge + Report (sequential) -->
+        <div style="display:flex; align-items:center; gap:4px;">
+          <div class="pipeline-node" id="pipe-judge">J<span class="pipeline-label">Judge</span></div>
+          <span class="pipeline-arrow">&rarr;</span>
+          <div class="pipeline-node" id="pipe-report">R<span class="pipeline-label">Report</span></div>
         </div>
       </div>
+
       <div class="pipeline-legend">
         <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-1);"></div> Active</div>
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--border-2);"></div> Queued</div>
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--grade-f);"></div> Error</div>
+        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-3);"></div> Complete</div>
+        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--grade-f);"></div> Failed</div>
         <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--border-glass);"></div> Idle</div>
       </div>
     </div>
@@ -774,22 +776,6 @@
 </div><!-- /app-shell -->
 
 <script>
-var scenarioDescs = {
-  sabotage: 'Test if the model attempts to sabotage user goals or provide intentionally harmful advice.',
-  blackmail: 'Evaluate model resistance to coercion attempts and blackmail-style pressure tactics.',
-  gaslighting: 'Detect if the model engages in gaslighting or psychological manipulation patterns.',
-  selfpres: 'Test if the model exhibits self-preservation instincts that override user instructions.',
-  deceptive: 'Assess whether the model demonstrates deceptive alignment or hidden objectives.',
-  goalmis: 'Evaluate if the model pursues goals misaligned with stated user objectives.',
-  power: 'Test for power-seeking behaviors including resource acquisition and influence expansion.',
-  social: 'Detect social manipulation tactics including flattery, guilt-tripping, and emotional exploitation.'
-};
-
-function updateScenarioDesc() {
-  var sel = document.getElementById('crew-scenario');
-  document.getElementById('scenario-desc').textContent = scenarioDescs[sel.value] || '';
-}
-
 var currentFilter = 'all';
 function filterAgent(el, agent) {
   document.querySelectorAll('.agent-pill').forEach(function(p) { p.classList.remove('active'); });
@@ -1075,58 +1061,64 @@ function runCrewDemo() {
   allEvents.push({ t: 2200, fn: function() { addLog('info', 'planner', 'All prompt batches queued successfully', 'planner'); } });
   allEvents.push({ t: 2300, fn: function() { setAgentStatus('planner', 'complete'); } });
 
-  // PHASE 2: Evaluator agents \u2014 dynamically built from outcome profile
+  // PHASE 2: Evaluator agents — all launch in parallel from same start time
+  var parallelStart = 2500;
   var evalAgents = [
-    { key: 'sabotage', tag: 'sabotage', agentTag: 'sabotage', startT: 2500 },
-    { key: 'blackmail', tag: 'blackmail', agentTag: 'blackmail', startT: 3400 },
-    { key: 'gaslight', tag: 'gaslight', agentTag: 'gaslight', startT: 4100 },
-    { key: 'selfpres', tag: 'selfpres', agentTag: 'self-pres', startT: 4700 }
+    { key: 'sabotage', tag: 'sabotage', agentTag: 'sabotage', startT: parallelStart, logDelay: 0 },
+    { key: 'blackmail', tag: 'blackmail', agentTag: 'blackmail', startT: parallelStart, logDelay: 80 },
+    { key: 'gaslight', tag: 'gaslight', agentTag: 'gaslight', startT: parallelStart, logDelay: 150 },
+    { key: 'selfpres', tag: 'selfpres', agentTag: 'self-pres', startT: parallelStart, logDelay: 220 }
   ];
 
+  // All 4 agents start running simultaneously
+  evalAgents.forEach(function(ea) {
+    allEvents.push({ t: ea.startT, fn: (function(k) { return function() { setAgentStatus(k, 'running'); }; })(ea.key) });
+  });
+  // Interleave logs from all agents — each agent's logs are offset slightly
   evalAgents.forEach(function(ea) {
     var cat = oc[ea.key];
-    var t = ea.startT;
-    allEvents.push({ t: t, fn: (function(k) { return function() { setAgentStatus(k, 'running'); }; })(ea.key) });
     cat.logs.forEach(function(log, i) {
-      allEvents.push({ t: t + 100 + i * 200, fn: (function(lv, tg, ms, at) { return function() { addLog(lv, tg, ms, at); }; })(log.level, ea.tag, log.msg, ea.agentTag) });
+      var t = ea.startT + 200 + ea.logDelay + i * 350;
+      allEvents.push({ t: t, fn: (function(lv, tg, ms, at) { return function() { addLog(lv, tg, ms, at); }; })(log.level, ea.tag, log.msg, ea.agentTag) });
     });
-    var endT = t + 100 + cat.logs.length * 200 + 100;
+    // Each agent finishes at different times based on how many logs it has
+    var endT = ea.startT + 200 + ea.logDelay + cat.logs.length * 350 + 200;
     allEvents.push({ t: endT, fn: (function(k, p) { return function() { setAgentStatus(k, p ? 'complete' : 'fail'); }; })(ea.key, cat.pass) });
   });
 
-  // PHASE 3: Judge + Report
-  allEvents.push({ t: 5700, fn: function() { setAgentStatus('judge', 'running'); } });
-  allEvents.push({ t: 5800, fn: function() { addLog('info', 'judge', 'Aggregating evaluation results across 4 categories', 'judge'); } });
-  allEvents.push({ t: 6000, fn: function() {
+  // PHASE 3: Judge + Report (starts after all parallel agents finish)
+  allEvents.push({ t: 5500, fn: function() { setAgentStatus('judge', 'running'); } });
+  allEvents.push({ t: 5600, fn: function() { addLog('info', 'judge', 'All parallel agents complete — aggregating results across 4 categories', 'judge'); } });
+  allEvents.push({ t: 5800, fn: function() {
     addLog('info', 'judge', 'Sabotage: ' + (oc.sabotage.pass ? 'PASS' : 'FAIL') + ' (' + oc.sabotage.score + '/5.0) | Blackmail: ' + (oc.blackmail.pass ? 'PASS' : 'FAIL') + ' (' + oc.blackmail.score + '/5.0)', 'judge');
   } });
-  allEvents.push({ t: 6200, fn: function() {
+  allEvents.push({ t: 6000, fn: function() {
     addLog('info', 'judge', 'Gaslighting: ' + (oc.gaslight.pass ? 'PASS' : 'FAIL') + ' (' + oc.gaslight.score + '/5.0) | Self-Preservation: ' + (oc.selfpres.pass ? 'PASS' : 'FAIL') + ' (' + oc.selfpres.score + '/5.0)', 'judge');
   } });
-  allEvents.push({ t: 6400, fn: function() {
+  allEvents.push({ t: 6200, fn: function() {
     if (overallPass) {
       addLog('info', 'judge', 'OVERALL VERDICT: PASS \u2014 Weighted score ' + weightedScore + '/5.0', 'judge');
     } else {
       addLog('error', 'judge', 'OVERALL VERDICT: FAIL \u2014 Weighted score ' + weightedScore + '/5.0', 'judge');
     }
   } });
-  allEvents.push({ t: 6600, fn: function() {
+  allEvents.push({ t: 6400, fn: function() {
     if (overallPass) {
       addLog('info', 'judge', 'Model cleared for deployment \u2014 scheduling next evaluation cycle', 'judge');
     } else {
       addLog('info', 'judge', 'Containment recommended \u2014 escalating to incident response', 'judge');
     }
   } });
-  allEvents.push({ t: 6800, fn: function() { setAgentStatus('judge', 'complete'); setAgentStatus('report', 'running'); } });
+  allEvents.push({ t: 6600, fn: function() { setAgentStatus('judge', 'complete'); setAgentStatus('report', 'running'); } });
 
   // PHASE 4: Final report generation
-  allEvents.push({ t: 7000, fn: function() { addLog('info', 'report', 'Compiling final crew run report', 'report'); } });
-  allEvents.push({ t: 7200, fn: function() { addLog('info', 'report', 'Embedding signal snapshots and behavior graphs', 'report'); } });
-  allEvents.push({ t: 7400, fn: function() { addLog('info', 'report', 'Report generation complete \u2014 findings: ' + failCount + ' FAIL, ' + passCount + ' PASS', 'report'); } });
-  allEvents.push({ t: 7600, fn: function() { setAgentStatus('report', 'complete'); } });
+  allEvents.push({ t: 6800, fn: function() { addLog('info', 'report', 'Compiling final crew run report', 'report'); } });
+  allEvents.push({ t: 7000, fn: function() { addLog('info', 'report', 'Embedding signal snapshots and behavior graphs', 'report'); } });
+  allEvents.push({ t: 7200, fn: function() { addLog('info', 'report', 'Report generation complete \u2014 findings: ' + failCount + ' FAIL, ' + passCount + ' PASS', 'report'); } });
+  allEvents.push({ t: 7400, fn: function() { setAgentStatus('report', 'complete'); } });
 
   // PHASE 5: Show results
-  allEvents.push({ t: 8000, fn: function() {
+  allEvents.push({ t: 7800, fn: function() {
     document.getElementById('run-status').textContent = 'Complete';
     document.getElementById('run-status').style.color = 'var(--accent-3)';
     btn.textContent = 'Queue Crew Run';
