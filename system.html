@@ -618,10 +618,10 @@ function createResponseBeam() {
   const line = new THREE.Line(geo, lineMat(GREEN, 0.7));
   scene.add(line);
 
-  const particle = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 10), glowMat(GREEN, 1));
-  // Outer glow on response orb
-  const respGlow = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 8), glowMat(GREEN, 0.3));
-  particle.add(respGlow);
+  const particle = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 10), glowMat(GREEN, 1));
+  particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), glowMat(WHITE, 1)));
+  particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), glowMat(GREEN, 0.3)));
+  particle.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 8), glowMat(GREEN, 0.08)));
   particle.position.copy(nodeWorld);
   scene.add(particle);
 
@@ -863,19 +863,29 @@ function createRouteBeam(toPool) {
   const line = new THREE.Line(geo, lineMat(color, 0.9));
   scene.add(line);
 
-  // Traveling particle — larger and brighter for pool routes
-  const pSize = toPool ? 0.3 : 0.15;
+  // Traveling particle — big and bright for pool routes
+  const pSize = toPool ? 0.4 : 0.18;
   const particleGeo = new THREE.SphereGeometry(pSize, 12, 12);
   const particle = new THREE.Mesh(particleGeo, glowMat(color, 1));
-  // Add outer glow halo for pool-bound requests
   if (toPool) {
-    const halo = new THREE.Mesh(new THREE.SphereGeometry(0.55, 8, 8), glowMat(GREEN, 0.35));
-    particle.add(halo);
+    // Bright white core
+    particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), glowMat(WHITE, 1)));
+    // Inner glow
+    particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), glowMat(GREEN, 0.4)));
+    // Outer halo
+    particle.add(new THREE.Mesh(new THREE.SphereGeometry(1.1, 8, 8), glowMat(GREEN, 0.12)));
   }
   particle.position.copy(startPos);
   scene.add(particle);
 
-  routeBeams.push({ line, particle, curve, t: 0, speed: 0.015 + Math.random() * 0.005, color, toPool });
+  // Find which pool node this beam targets (for chaining response)
+  let targetPoolNode = null;
+  if (toPool) {
+    const activeNodes = poolNodes.filter(n => n.state === 'active');
+    if (activeNodes.length > 0) targetPoolNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
+  }
+
+  routeBeams.push({ line, particle, curve, t: 0, speed: 0.015 + Math.random() * 0.005, color, toPool, targetPoolNode });
 
   // Flash at tower base
   flashMat.opacity = 0.7;
@@ -1266,6 +1276,34 @@ function animate() {
     if (beam.t >= 1) {
       scene.remove(beam.line);
       scene.remove(beam.particle);
+      // When a pool-bound request arrives, flash the target node
+      // then after a short delay, fire a response beam from that node to exit
+      if (beam.toPool && beam.targetPoolNode) {
+        const node = beam.targetPoolNode;
+        node.mesh.material.opacity = 1;
+        // Schedule response beam from this specific node after 0.8-2s "processing"
+        const delay = 800 + Math.random() * 1200;
+        setTimeout(() => {
+          if (node.mesh.material) node.mesh.material.opacity = 0.7;
+          // Fire response from this node
+          const nodeWorld = new THREE.Vector3();
+          node.mesh.getWorldPosition(nodeWorld);
+          const endPos = new THREE.Vector3(36 + (Math.random()-0.5)*2, 4 + Math.random()*2, -4 + (Math.random()-0.5)*2);
+          const mid = new THREE.Vector3().lerpVectors(nodeWorld, endPos, 0.5);
+          mid.y += 5 + Math.random() * 3;
+          const curve = new THREE.QuadraticBezierCurve3(nodeWorld, mid, endPos);
+          const pts = curve.getPoints(24);
+          const geo = new THREE.BufferGeometry().setFromPoints(pts);
+          const ln = new THREE.Line(geo, lineMat(GREEN, 0.7));
+          scene.add(ln);
+          const p = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 10), glowMat(GREEN, 1));
+          p.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), glowMat(WHITE, 1)));
+          p.add(new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), glowMat(GREEN, 0.3)));
+          p.position.copy(nodeWorld);
+          scene.add(p);
+          responseBeams.push({ line: ln, particle: p, curve, t: 0, speed: 0.012 + Math.random() * 0.005 });
+        }, delay);
+      }
       routeBeams.splice(i, 1);
     } else {
       beam.particle.position.copy(beam.curve.getPointAt(beam.t));
