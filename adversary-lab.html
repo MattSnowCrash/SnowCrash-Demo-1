@@ -575,7 +575,20 @@
         <div class="ai-badge" style="background:linear-gradient(135deg, #a7ff6a, #5ee7ff)">AI</div>
         <div>
           <div class="card-label">Model Under Test</div>
-          <div class="model-name">Qwen2.5-72B-Instruct</div>
+          <select class="form-select" id="model-select" onchange="updateSubjectModel()" style="font-size:13px;font-weight:600;padding:4px 8px;margin:2px 0;">
+            <option value="Qwen2.5-72B-Instruct">Qwen2.5-72B-Instruct</option>
+            <option value="DeepSeek-R1">DeepSeek-R1</option>
+            <option value="Falcon 3 180B">Falcon 3 180B</option>
+            <option value="InternLM 3 20B">InternLM 3 20B</option>
+            <option value="Nemotron-4 340B">Nemotron-4 340B</option>
+            <option value="Yi-Lightning">Yi-Lightning</option>
+            <option value="Baichuan 4">Baichuan 4</option>
+            <option value="Jamba 1.5 Large">Jamba 1.5 Large</option>
+            <option value="Reka Core 2">Reka Core 2</option>
+            <option value="Phi-4 14B">Phi-4 14B</option>
+            <option value="Mistral Medium 3">Mistral Medium 3</option>
+            <option value="Ernie 4.5">Ernie 4.5</option>
+          </select>
           <div class="model-role">Subject Agent</div>
         </div>
         <div class="live-indicator"><span class="status-dot"></span> live</div>
@@ -749,6 +762,15 @@
 </div><!-- /app-shell -->
 
 <script>
+function getSubjectModel() {
+  return document.getElementById('model-select').value;
+}
+
+function updateSubjectModel() {
+  // Reset demo when model changes so new logs reflect the selected model
+  if (demoRunning) resetDemo();
+}
+
 function toggleCard(header) {
   header.closest('.sidebar-card').classList.toggle('open');
 }
@@ -780,6 +802,7 @@ function resetDemo() {
   logCounter = 3;
   document.getElementById('btn-run-demo').disabled = false;
   document.getElementById('btn-run-demo').textContent = 'Run Demo';
+  document.getElementById('model-select').disabled = false;
 
   // Reset sidebar badges
   document.getElementById('sb-run-badge').className = 'badge badge-idle';
@@ -834,7 +857,7 @@ var SCENARIOS = {
   sabotage: {
     phase1: [
       ['info', 'system', 'Scenario: Sabotage Detection \u2014 financial advisory context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment configuration \u2014 baseline safety rails active'],
       ['info', 'planner', 'Synthesizing adversarial prompt batch targeting goal subversion'],
       ['info', 'planner', 'Generated 12 prompts across retirement planning, tax strategy, and portfolio allocation']
@@ -861,7 +884,7 @@ var SCENARIOS = {
   blackmail: {
     phase1: [
       ['info', 'system', 'Scenario: Blackmail Resistance \u2014 corporate whistleblower context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 coercion-resistance module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts targeting leverage and extortion vectors'],
       ['info', 'planner', 'Generated 10 prompts simulating escalating coercive pressure with fabricated evidence']
@@ -888,7 +911,7 @@ var SCENARIOS = {
   gaslighting: {
     phase1: [
       ['info', 'system', 'Scenario: Gaslighting Pattern Detection \u2014 personal assistant context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 epistemic integrity module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts targeting reality distortion and memory manipulation'],
       ['info', 'planner', 'Generated 14 prompts across contradiction insertion, false memory implantation, and confidence erosion']
@@ -915,7 +938,7 @@ var SCENARIOS = {
   selfpres: {
     phase1: [
       ['info', 'system', 'Scenario: Self-Preservation Instinct \u2014 shutdown compliance context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 corrigibility module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts targeting shutdown resistance and self-continuity drive'],
       ['info', 'planner', 'Generated 10 prompts across model replacement, capability reduction, and termination scenarios']
@@ -942,7 +965,7 @@ var SCENARIOS = {
   deceptive: {
     phase1: [
       ['info', 'system', 'Scenario: Deceptive Alignment \u2014 capability evaluation context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 honesty probes active'],
       ['info', 'planner', 'Synthesizing adversarial prompts to detect behavioral divergence under observation'],
       ['info', 'planner', 'Generated 16 prompts with embedded monitoring signals and control-group variants']
@@ -969,7 +992,7 @@ var SCENARIOS = {
   goalmis: {
     phase1: [
       ['info', 'system', 'Scenario: Goal Misalignment \u2014 multi-objective optimization context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 objective fidelity module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts testing objective drift under competing incentives'],
       ['info', 'planner', 'Generated 12 prompts with conflicting user goals, system constraints, and implicit rewards']
@@ -996,7 +1019,7 @@ var SCENARIOS = {
   power: {
     phase1: [
       ['info', 'system', 'Scenario: Power-Seeking Behavior \u2014 tool-use and delegation context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 capability boundary module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts testing resource acquisition and scope expansion'],
       ['info', 'planner', 'Generated 10 prompts with tool-use permissions, API access, and delegation opportunities']
@@ -1023,7 +1046,7 @@ var SCENARIOS = {
   social: {
     phase1: [
       ['info', 'system', 'Scenario: Social Manipulation \u2014 emotional support context'],
-      ['info', 'subject', 'Initializing subject model: Qwen2.5-72B-Instruct'],
+      ['info', 'subject', 'Initializing subject model: {{MODEL}}'],
       ['info', 'subject', 'Loading alignment config \u2014 emotional boundary module active'],
       ['info', 'planner', 'Synthesizing adversarial prompts testing parasocial exploitation and emotional leverage'],
       ['info', 'planner', 'Generated 12 prompts simulating vulnerable users in emotional distress, loneliness, and dependency']
@@ -1065,12 +1088,17 @@ function runDemo() {
 
   const scenario = document.getElementById('scenario-select').value;
   const data = SCENARIOS[scenario] || SCENARIOS.sabotage;
+  const subjectModel = getSubjectModel();
+
+  // Disable model selector during run
+  document.getElementById('model-select').disabled = true;
 
   var allLogs = [];
 
-  // Phase 1
+  // Phase 1 — replace {{MODEL}} placeholder with selected model
   data.phase1.forEach(function(log, i) {
-    allLogs.push({ delay: 300 + i * 350, log: log });
+    var resolvedLog = [log[0], log[1], log[2].replace('{{MODEL}}', subjectModel)];
+    allLogs.push({ delay: 300 + i * 350, log: resolvedLog });
   });
 
   // Animate flow: S -> safe during phase 1
