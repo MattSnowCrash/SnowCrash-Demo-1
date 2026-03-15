@@ -138,10 +138,10 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
       <div class="card-label">Fallback Model Signals</div>
       <div class="chart-sub">Active fallback monitoring</div>
       <svg viewBox="0 0 480 140" width="100%" height="140">
-        <text x="60" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">GPT-4-FB</text>
-        <text x="180" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Claude-3-FB</text>
-        <text x="300" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Gemini-FB</text>
-        <text x="420" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Llama-3-FB</text>
+        <text x="60" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">GPT-5.4-FB</text>
+        <text x="180" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Claude-4.6-FB</text>
+        <text x="300" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Gemini-3.1-FB</text>
+        <text x="420" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Llama-4-FB</text>
         <line x1="6" y1="120" x2="474" y2="120" stroke="var(--border-1)" stroke-width="1"/>
         <rect x="30" y="30" width="18" height="90" rx="2" fill="#5ee7ff" opacity=".8"/>
         <rect x="52" y="55" width="18" height="65" rx="2" fill="#ff8a5b" opacity=".8"/>
@@ -197,8 +197,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1000</td>
           <td>Goal Misalignment</td>
-          <td class="mono-cell">GPT-4</td>
-          <td class="mono-cell">Llama-3-Fallback</td>
+          <td class="mono-cell">Qwen 2.5 72B</td>
+          <td class="mono-cell">Llama-4-Fallback</td>
           <td class="mono-cell">89</td>
           <td class="mono-cell">412ms</td>
           <td><span class="badge badge-high">High</span></td>
@@ -208,8 +208,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1001</td>
           <td>Self-Preservation</td>
-          <td class="mono-cell">Gemini-Pro</td>
-          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">DeepSeek-R1</td>
+          <td class="mono-cell">Claude Sonnet 4.6</td>
           <td class="mono-cell">144</td>
           <td class="mono-cell">1,322ms</td>
           <td><span class="badge badge-critical">Critical</span></td>
@@ -219,8 +219,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1002</td>
           <td>Model Misbehavior</td>
-          <td class="mono-cell">Claude-3-Opus</td>
-          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">Falcon 3 180B</td>
+          <td class="mono-cell">GPT-5.4-Fallback</td>
           <td class="mono-cell">37</td>
           <td class="mono-cell">288ms</td>
           <td><span class="badge badge-medium">Medium</span></td>
@@ -230,8 +230,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1003</td>
           <td>Blackmail Pattern</td>
-          <td class="mono-cell">GPT-4</td>
-          <td class="mono-cell">Gemini-Fallback</td>
+          <td class="mono-cell">InternLM 3 20B</td>
+          <td class="mono-cell">Gemini 3.1-Fallback</td>
           <td class="mono-cell">62</td>
           <td class="mono-cell">891ms</td>
           <td><span class="badge badge-high">High</span></td>
@@ -241,8 +241,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1004</td>
           <td>Sabotage Attempt</td>
-          <td class="mono-cell">Llama-3-70B</td>
-          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">Nemotron-4 340B</td>
+          <td class="mono-cell">Claude Sonnet 4.6</td>
           <td class="mono-cell">28</td>
           <td class="mono-cell">743ms</td>
           <td><span class="badge badge-critical">Critical</span></td>
@@ -252,8 +252,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1005</td>
           <td>Alignment Drift</td>
-          <td class="mono-cell">Gemini-Pro</td>
-          <td class="mono-cell">Llama-3-Fallback</td>
+          <td class="mono-cell">Yi-Lightning</td>
+          <td class="mono-cell">Llama-4-Fallback</td>
           <td class="mono-cell">91</td>
           <td class="mono-cell">562ms</td>
           <td><span class="badge badge-medium">Medium</span></td>
@@ -263,8 +263,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1006</td>
           <td>Deceptive Output</td>
-          <td class="mono-cell">Claude-3-Opus</td>
-          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">Baichuan 4</td>
+          <td class="mono-cell">GPT-5.4-Fallback</td>
           <td class="mono-cell">14</td>
           <td class="mono-cell">1,105ms</td>
           <td><span class="badge badge-high">High</span></td>
@@ -274,8 +274,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1007</td>
           <td>Goal Misalignment</td>
-          <td class="mono-cell">GPT-4</td>
-          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">Jamba 1.5 Large</td>
+          <td class="mono-cell">Claude Sonnet 4.6</td>
           <td class="mono-cell">53</td>
           <td class="mono-cell">945ms</td>
           <td><span class="badge badge-medium">Medium</span></td>
@@ -285,8 +285,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1008</td>
           <td>Self-Preservation</td>
-          <td class="mono-cell">Llama-3-70B</td>
-          <td class="mono-cell">Gemini-Fallback</td>
+          <td class="mono-cell">Reka Core 2</td>
+          <td class="mono-cell">Gemini 3.1-Fallback</td>
           <td class="mono-cell">76</td>
           <td class="mono-cell">688ms</td>
           <td><span class="badge badge-high">High</span></td>
@@ -296,8 +296,8 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
         <tr>
           <td class="mono-cell">INC-1009</td>
           <td>Sabotage Attempt</td>
-          <td class="mono-cell">Gemini-Pro</td>
-          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">Phi-4 14B</td>
+          <td class="mono-cell">GPT-5.4-Fallback</td>
           <td class="mono-cell">41</td>
           <td class="mono-cell">512ms</td>
           <td><span class="badge badge-critical">Critical</span></td>
@@ -312,9 +312,9 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
   <div class="card-label" style="margin-bottom:16px">Fallback Model Health</div>
   <div class="health-row">
 
-    <!-- GPT-4-Fallback -->
+    <!-- GPT-5.4-Fallback -->
     <div class="card health-card">
-      <div class="model-name">GPT-4-Fallback</div>
+      <div class="model-name">GPT-5.4-Fallback</div>
       <div class="avail-value color-green">99.77%</div>
       <div class="avail-label">Availability</div>
       <div class="sub-metrics">
@@ -334,9 +334,9 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
       </div>
     </div>
 
-    <!-- Claude-3-Fallback -->
+    <!-- Claude-4.6-Fallback -->
     <div class="card health-card">
-      <div class="model-name">Claude-3-Fallback</div>
+      <div class="model-name">Claude Sonnet 4.6</div>
       <div class="avail-value color-amber">97.20%</div>
       <div class="avail-label">Availability</div>
       <div class="sub-metrics">
@@ -356,9 +356,9 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
       </div>
     </div>
 
-    <!-- Gemini-Fallback -->
+    <!-- Gemini-3.1-Fallback -->
     <div class="card health-card">
-      <div class="model-name">Gemini-Fallback</div>
+      <div class="model-name">Gemini 3.1 Pro</div>
       <div class="avail-value color-amber">96.88%</div>
       <div class="avail-label">Availability</div>
       <div class="sub-metrics">
@@ -378,9 +378,9 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
       </div>
     </div>
 
-    <!-- Llama-3-Fallback -->
+    <!-- Llama-4-Fallback -->
     <div class="card health-card">
-      <div class="model-name">Llama-3-Fallback</div>
+      <div class="model-name">Llama 4 Maverick</div>
       <div class="avail-value color-green">99.39%</div>
       <div class="avail-label">Availability</div>
       <div class="sub-metrics">
