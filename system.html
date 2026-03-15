@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System View — SnowCrash Labs Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background: #000; }
+
+#three-canvas {
+  position: fixed;
+  top: 58px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 58px);
+  z-index: 0;
+}
+
+/* ── HUD Overlay ── */
+.hud-overlay {
+  position: fixed;
+  top: 58px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 58px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── Stats Bar ── */
+.hud-stats {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.hud-stat {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: #5ee7ff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(94, 231, 255, 0.25);
+  background: rgba(2, 4, 8, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-stat .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5ee7ff;
+  box-shadow: 0 0 8px #5ee7ff;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.hud-stat .dot.green { background: #a7ff6a; box-shadow: 0 0 8px #a7ff6a; }
+.hud-stat .dot.orange { background: #ff8a5b; box-shadow: 0 0 8px #ff8a5b; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Floating Labels ── */
+.floating-label {
+  position: absolute;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #5ee7ff;
+  text-shadow: 0 0 12px #5ee7ff88, 0 0 30px #5ee7ff44;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: left 0.1s, top 0.1s;
+}
+
+.floating-label.orange { color: #ff8a5b; text-shadow: 0 0 12px #ff8a5b88, 0 0 30px #ff8a5b44; }
+.floating-label.green { color: #a7ff6a; text-shadow: 0 0 12px #a7ff6a88, 0 0 30px #a7ff6a44; }
+
+.floating-label .sub {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+/* ── Event Ticker ── */
+.event-ticker {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 38px;
+  background: linear-gradient(180deg, transparent 0%, rgba(2, 4, 8, 0.85) 40%);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+  overflow: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 60px;
+  animation: ticker-scroll 45s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.8px;
+  color: #8a96ad;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ticker-item .cleared { color: #a7ff6a; }
+.ticker-item .testing { color: #ff8a5b; }
+.ticker-item .blocked { color: #ff5e5e; }
+.ticker-item .promoted { color: #5ee7ff; }
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── View Title ── */
+.hud-title {
+  position: absolute;
+  top: 70px;
+  left: 30px;
+  pointer-events: none;
+}
+.hud-title h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #e6edf6;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(94, 231, 255, 0.3);
+}
+.hud-title .subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #5ee7ff;
+  opacity: 0.6;
+  margin-top: 3px;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ Navigation ════ -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <div class="sc-badge">SC</div>
+    <div class="nav-brand">
+      <span class="nav-brand-top">Snowcrash</span>
+      <span class="nav-brand-bottom">Control Room</span>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="adversary-lab.html">Adversary Lab</a>
+      <a class="nav-link" href="crew-command.html">Crew Command</a>
+      <a class="nav-link" href="router.html">Router</a>
+      <a class="nav-link" href="index.html">Model Safety</a>
+      <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="ops-hub.html">Ops Hub</a>
+      <a class="nav-link active" href="system.html">System</a>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <div class="nav-pill">Ops: Local</div>
+    <a href="adversary-lab.html" class="btn-primary">New Run</a>
+  </div>
+</nav>
+
+<!-- ════ 3D Canvas ════ -->
+<canvas id="three-canvas"></canvas>
+
+<!-- ════ HUD Overlay ════ -->
+<div class="hud-overlay">
+
+  <div class="hud-title">
+    <h1>System View</h1>
+    <div class="subtitle">Live Infrastructure Topology</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="hud-stats">
+    <div class="hud-stat"><span class="dot green"></span><span id="stat-evals">3,847</span> evals today</div>
+    <div class="hud-stat"><span class="dot"></span>36 models tracked</div>
+    <div class="hud-stat"><span class="dot green"></span>99.7% uptime</div>
+    <div class="hud-stat"><span class="dot orange"></span><span id="stat-reqmin">182</span> req/min</div>
+  </div>
+
+  <!-- Floating labels (positioned by JS) -->
+  <div class="floating-label" id="label-portal">Incoming Requests<span class="sub" id="req-counter">0 req/sec</span></div>
+  <div class="floating-label" id="label-router">Model Safety Router<span class="sub">ATC Tower</span></div>
+  <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">12 active</span></div>
+  <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">3 models testing</span></div>
+
+  <!-- Event Ticker -->
+  <div class="event-ticker">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+</div>
+
+<!-- ════ THREE.js ════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   CONSTANTS & COLORS
+   ═══════════════════════════════════════════════════════ */
+const CYAN    = 0x5ee7ff;
+const ORANGE  = 0xff8a5b;
+const GREEN   = 0xa7ff6a;
+const RED     = 0xff5e5e;
+const PURPLE  = 0xc488ff;
+const WHITE   = 0xffffff;
+
+const cCyan   = new THREE.Color(CYAN);
+const cOrange = new THREE.Color(ORANGE);
+const cGreen  = new THREE.Color(GREEN);
+const cRed    = new THREE.Color(RED);
+const cWhite  = new THREE.Color(WHITE);
+
+/* ═══════════════════════════════════════════════════════
+   SCENE SETUP
+   ═══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight - 58);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020408);
+scene.fog = new THREE.FogExp2(0x020408, 0.012);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / (window.innerHeight - 58), 0.1, 500);
+camera.position.set(0, 18, 38);
+camera.lookAt(0, 2, 0);
+
+/* ── Lighting ── */
+const ambientLight = new THREE.AmbientLight(0x112233, 0.4);
+scene.add(ambientLight);
+
+const dirLight = new THREE.DirectionalLight(0x5ee7ff, 0.3);
+dirLight.position.set(10, 20, 15);
+scene.add(dirLight);
+
+const pointCyan = new THREE.PointLight(CYAN, 1.2, 60);
+pointCyan.position.set(0, 12, 0);
+scene.add(pointCyan);
+
+const pointOrange = new THREE.PointLight(ORANGE, 0.6, 40);
+pointOrange.position.set(8, 2, 10);
+scene.add(pointOrange);
+
+/* ═══════════════════════════════════════════════════════
+   MANUAL ORBIT CONTROLS
+   ═══════════════════════════════════════════════════════ */
+let orbitAngle = 0.3;
+let orbitPitch = 0.55;
+let orbitDist = 42;
+let autoRotate = true;
+let isDragging = false;
+let dragStart = { x: 0, y: 0 };
+let dragAngleStart = 0;
+let dragPitchStart = 0;
+
+canvas.addEventListener('mousedown', e => {
+  isDragging = true;
+  autoRotate = false;
+  dragStart = { x: e.clientX, y: e.clientY };
+  dragAngleStart = orbitAngle;
+  dragPitchStart = orbitPitch;
+});
+window.addEventListener('mouseup', () => { isDragging = false; });
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  orbitAngle = dragAngleStart + (e.clientX - dragStart.x) * 0.005;
+  orbitPitch = Math.max(0.15, Math.min(1.2, dragPitchStart - (e.clientY - dragStart.y) * 0.005));
+});
+canvas.addEventListener('wheel', e => {
+  orbitDist = Math.max(18, Math.min(80, orbitDist + e.deltaY * 0.04));
+  e.preventDefault();
+}, { passive: false });
+// Resume auto-rotate after 5s idle
+let autoResumeTimer;
+canvas.addEventListener('mousedown', () => { clearTimeout(autoResumeTimer); });
+window.addEventListener('mouseup', () => { autoResumeTimer = setTimeout(() => { autoRotate = true; }, 5000); });
+
+function updateCamera() {
+  if (autoRotate) orbitAngle += 0.0012;
+  camera.position.x = Math.sin(orbitAngle) * Math.cos(orbitPitch) * orbitDist;
+  camera.position.y = Math.sin(orbitPitch) * orbitDist * 0.5 + 6;
+  camera.position.z = Math.cos(orbitAngle) * Math.cos(orbitPitch) * orbitDist;
+  camera.lookAt(0, 3, 0);
+}
+
+/* ═══════════════════════════════════════════════════════
+   HELPER: Glow material
+   ═══════════════════════════════════════════════════════ */
+function glowMat(color, opacity, wireframe) {
+  return new THREE.MeshBasicMaterial({
+    color,
+    transparent: true,
+    opacity: opacity || 1,
+    wireframe: wireframe || false,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+}
+function lineMat(color, opacity) {
+  return new THREE.LineBasicMaterial({
+    color,
+    transparent: true,
+    opacity: opacity || 1,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   A) GRID FLOOR
+   ═══════════════════════════════════════════════════════ */
+const gridSize = 120;
+const gridDiv = 60;
+const gridGeo = new THREE.BufferGeometry();
+const gridVerts = [];
+const half = gridSize / 2;
+const step = gridSize / gridDiv;
+for (let i = 0; i <= gridDiv; i++) {
+  const p = -half + i * step;
+  gridVerts.push(-half, 0, p, half, 0, p);
+  gridVerts.push(p, 0, -half, p, 0, half);
+}
+gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(gridVerts, 3));
+const gridMesh = new THREE.LineSegments(gridGeo, lineMat(CYAN, 0.12));
+scene.add(gridMesh);
+
+// Pulse rings from tower
+const pulseRings = [];
+function createPulseRing() {
+  const geo = new THREE.RingGeometry(0.5, 0.7, 64);
+  const mat = glowMat(CYAN, 0.5);
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.y = 0.05;
+  scene.add(mesh);
+  pulseRings.push({ mesh, scale: 1, opacity: 0.5 });
+}
+
+/* ═══════════════════════════════════════════════════════
+   B) ENTRY PORTAL — User Requests Inbound
+   ═══════════════════════════════════════════════════════ */
+const portalGroup = new THREE.Group();
+portalGroup.position.set(-22, 0, 0);
+scene.add(portalGroup);
+
+// Portal arch — two columns + top arc
+const colGeo = new THREE.BoxGeometry(0.4, 8, 0.4);
+const colMat = glowMat(CYAN, 0.7);
+const colL = new THREE.Mesh(colGeo, colMat);
+colL.position.set(-2.5, 4, 0);
+portalGroup.add(colL);
+const colR = new THREE.Mesh(colGeo, colMat);
+colR.position.set(2.5, 4, 0);
+portalGroup.add(colR);
+
+// Arc
+const arcCurve = new THREE.EllipseCurve(0, 8, 2.5, 2.5, 0, Math.PI, false, 0);
+const arcPts = arcCurve.getPoints(32);
+const arcGeo3 = new THREE.BufferGeometry().setFromPoints(arcPts.map(p => new THREE.Vector3(p.x, p.y, 0)));
+const arcLine = new THREE.Line(arcGeo3, lineMat(CYAN, 0.9));
+portalGroup.add(arcLine);
+
+// Inner glow plane
+const portalPlaneGeo = new THREE.PlaneGeometry(4.5, 7.5);
+const portalPlaneMat = glowMat(CYAN, 0.06);
+const portalPlane = new THREE.Mesh(portalPlaneGeo, portalPlaneMat);
+portalPlane.position.set(0, 4.2, 0);
+portalGroup.add(portalPlane);
+
+// Horizontal scan line in portal
+const scanGeo = new THREE.PlaneGeometry(4.2, 0.08);
+const scanMat = glowMat(CYAN, 0.6);
+const portalScan = new THREE.Mesh(scanGeo, scanMat);
+portalScan.position.set(0, 2, 0.01);
+portalGroup.add(portalScan);
+
+// Portal wireframe rings
+for (let i = 0; i < 3; i++) {
+  const ringGeo = new THREE.TorusGeometry(3 + i * 0.5, 0.03, 8, 48);
+  const ring = new THREE.Mesh(ringGeo, glowMat(CYAN, 0.15 - i * 0.04));
+  ring.position.set(0, 4.5, -0.2);
+  ring.userData.speed = 0.3 + i * 0.15;
+  ring.userData.idx = i;
+  portalGroup.add(ring);
+}
+
+// Portal base platform
+const basePlatGeo = new THREE.CylinderGeometry(3.5, 3.8, 0.2, 6);
+const basePlat = new THREE.Mesh(basePlatGeo, glowMat(CYAN, 0.15));
+basePlat.position.y = 0.1;
+portalGroup.add(basePlat);
+
+/* ═══════════════════════════════════════════════════════
+   C) CENTER — MODEL SAFETY ROUTER (ATC Tower)
+   ═══════════════════════════════════════════════════════ */
+const towerGroup = new THREE.Group();
+scene.add(towerGroup);
+
+// Main spire
+const spireGeo = new THREE.CylinderGeometry(0.3, 0.8, 18, 8);
+const spire = new THREE.Mesh(spireGeo, glowMat(CYAN, 0.25, true));
+spire.position.y = 9;
+towerGroup.add(spire);
+
+// Core pillar
+const coreGeo = new THREE.CylinderGeometry(0.6, 0.6, 18, 8);
+const coreMat = glowMat(CYAN, 0.08);
+const core = new THREE.Mesh(coreGeo, coreMat);
+core.position.y = 9;
+towerGroup.add(core);
+
+// Tier rings
+const tierHeights = [3, 6, 9, 12, 15];
+const towerRings = [];
+tierHeights.forEach((h, i) => {
+  const radius = 2.5 - i * 0.3;
+  const torusGeo = new THREE.TorusGeometry(radius, 0.08, 8, 48);
+  const torus = new THREE.Mesh(torusGeo, glowMat(CYAN, 0.6));
+  torus.rotation.x = Math.PI / 2;
+  torus.position.y = h;
+  towerGroup.add(torus);
+  towerRings.push(torus);
+});
+
+// Radar disc at top
+const radarGeo = new THREE.CircleGeometry(2, 32);
+const radar = new THREE.Mesh(radarGeo, glowMat(CYAN, 0.15));
+radar.rotation.x = -Math.PI / 2;
+radar.position.y = 17;
+towerGroup.add(radar);
+
+// Radar sweep line
+const sweepGeo = new THREE.PlaneGeometry(2, 0.04);
+const sweepMat = glowMat(CYAN, 0.8);
+const radarSweep = new THREE.Mesh(sweepGeo, sweepMat);
+radarSweep.position.set(1, 17.02, 0);
+towerGroup.add(radarSweep);
+
+// Beacon at top
+const beaconGeo = new THREE.SphereGeometry(0.25, 16, 16);
+const beaconMat = glowMat(WHITE, 1);
+const beacon = new THREE.Mesh(beaconGeo, beaconMat);
+beacon.position.y = 18.2;
+towerGroup.add(beacon);
+
+// Beacon light
+const beaconLight = new THREE.PointLight(CYAN, 2, 30);
+beaconLight.position.y = 18.2;
+towerGroup.add(beaconLight);
+
+// Base platform
+const towerBase = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 4, 0.4, 8), glowMat(CYAN, 0.2));
+towerBase.position.y = 0.2;
+towerGroup.add(towerBase);
+
+// Routing flash sphere (hidden, shown on route events)
+const flashGeo = new THREE.SphereGeometry(1.5, 16, 16);
+const flashMat = glowMat(WHITE, 0);
+const routeFlash = new THREE.Mesh(flashGeo, flashMat);
+routeFlash.position.y = 2;
+towerGroup.add(routeFlash);
+
+/* ═══════════════════════════════════════════════════════
+   D) RIGHT SIDE — DYNAMIC MODEL POOL
+   ═══════════════════════════════════════════════════════ */
+const poolGroup = new THREE.Group();
+poolGroup.position.set(18, 0, -4);
+scene.add(poolGroup);
+
+const modelNames = [
+  'Claude Opus 4', 'GPT-5', 'Gemini Ultra 2', 'Llama 4 Maverick',
+  'Mistral Large 3', 'DeepSeek-R1', 'Claude Sonnet 4', 'Grok 3',
+  'Command R+', 'Qwen 3 Max', 'Llama 4 Scout', 'Phi-4',
+  'GPT-4.1', 'WizardLM 2', 'Jamba 2', 'Nemotron Ultra'
+];
+const modelStates = []; // { mesh, state:'active'|'evaluating'|'blocked', label, baseY }
+const poolNodes = [];
+
+modelNames.forEach((name, i) => {
+  const col = i % 4;
+  const row = Math.floor(i / 4);
+  const x = col * 3 - 4.5;
+  const z = row * 3 - 4.5;
+  const y = 1.5 + Math.sin(i * 1.7) * 1.2;
+
+  const size = 0.7 + Math.random() * 0.3;
+  const geo = new THREE.BoxGeometry(size, size, size);
+  const state = Math.random() < 0.7 ? 'active' : (Math.random() < 0.5 ? 'evaluating' : 'blocked');
+  const color = state === 'active' ? GREEN : (state === 'evaluating' ? CYAN : RED);
+  const mat = glowMat(color, 0.7, true);
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(x, y, z);
+  poolGroup.add(mesh);
+
+  // Inner solid with low opacity
+  const innerMat = glowMat(color, 0.15);
+  const inner = new THREE.Mesh(geo, innerMat);
+  mesh.add(inner);
+
+  poolNodes.push({ mesh, state, name, baseY: y, phase: Math.random() * Math.PI * 2 });
+});
+
+/* ═══════════════════════════════════════════════════════
+   E) BOTTOM/FRONT — AI CRASH TEST LAB
+   ═══════════════════════════════════════════════════════ */
+const labGroup = new THREE.Group();
+labGroup.position.set(6, 0, 14);
+scene.add(labGroup);
+
+// Containment box - transparent with glowing edges
+const boxW = 12, boxH = 6, boxD = 8;
+// Edges
+const boxEdgesGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(boxW, boxH, boxD));
+const boxEdges = new THREE.LineSegments(boxEdgesGeo, lineMat(ORANGE, 0.7));
+boxEdges.position.y = boxH / 2 + 0.5;
+labGroup.add(boxEdges);
+
+// Transparent panels
+const panelMat = glowMat(ORANGE, 0.03);
+// Front
+const frontPanel = new THREE.Mesh(new THREE.PlaneGeometry(boxW, boxH), panelMat);
+frontPanel.position.set(0, boxH / 2 + 0.5, boxD / 2);
+labGroup.add(frontPanel);
+// Top
+const topPanel = new THREE.Mesh(new THREE.PlaneGeometry(boxW, boxD), panelMat);
+topPanel.rotation.x = -Math.PI / 2;
+topPanel.position.y = boxH + 0.5;
+labGroup.add(topPanel);
+// Sides
+const sideL = new THREE.Mesh(new THREE.PlaneGeometry(boxD, boxH), panelMat);
+sideL.rotation.y = Math.PI / 2;
+sideL.position.set(-boxW / 2, boxH / 2 + 0.5, 0);
+labGroup.add(sideL);
+const sideR = new THREE.Mesh(new THREE.PlaneGeometry(boxD, boxH), panelMat);
+sideR.rotation.y = -Math.PI / 2;
+sideR.position.set(boxW / 2, boxH / 2 + 0.5, 0);
+labGroup.add(sideR);
+
+// Floor grid inside lab
+const labFloorGeo = new THREE.GridHelper(10, 10, ORANGE, ORANGE);
+labFloorGeo.material.opacity = 0.15;
+labFloorGeo.material.transparent = true;
+labFloorGeo.material.blending = THREE.AdditiveBlending;
+labFloorGeo.position.y = 0.55;
+labGroup.add(labFloorGeo);
+
+// Corner accent lights
+const cornerPositions = [
+  [-boxW/2, 0.5, -boxD/2], [boxW/2, 0.5, -boxD/2],
+  [-boxW/2, 0.5, boxD/2], [boxW/2, 0.5, boxD/2],
+  [-boxW/2, boxH+0.5, -boxD/2], [boxW/2, boxH+0.5, -boxD/2],
+  [-boxW/2, boxH+0.5, boxD/2], [boxW/2, boxH+0.5, boxD/2]
+];
+cornerPositions.forEach(p => {
+  const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), glowMat(ORANGE, 0.9));
+  sphere.position.set(p[0], p[1], p[2]);
+  labGroup.add(sphere);
+});
+
+// Lab point light
+const labLight = new THREE.PointLight(ORANGE, 0.8, 25);
+labLight.position.set(0, 4, 0);
+labGroup.add(labLight);
+
+// Models inside the lab being tested
+const labModels = [];
+const labModelConfigs = [
+  { name: 'DeepSeek-R1', x: -3, z: 0, status: 'testing', progress: 0.0 },
+  { name: 'Phi-4', x: 0, z: 0, status: 'pass', progress: 1.0 },
+  { name: 'WizardLM 2', x: 3, z: 0, status: 'fail', progress: 1.0 }
+];
+
+labModelConfigs.forEach(cfg => {
+  const group = new THREE.Group();
+  group.position.set(cfg.x, 3, cfg.z);
+
+  // Model cube
+  const cubeGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+  const cubeColor = cfg.status === 'pass' ? GREEN : (cfg.status === 'fail' ? RED : ORANGE);
+  const cube = new THREE.Mesh(cubeGeo, glowMat(cubeColor, 0.6, true));
+  group.add(cube);
+  const cubeInner = new THREE.Mesh(cubeGeo, glowMat(cubeColor, 0.15));
+  group.add(cubeInner);
+
+  // Scanning rings
+  const rings = [];
+  for (let r = 0; r < 3; r++) {
+    const ringGeo = new THREE.TorusGeometry(1.2 + r * 0.15, 0.02, 8, 32);
+    const ringColor = cfg.status === 'testing' ? ORANGE : (cfg.status === 'pass' ? GREEN : RED);
+    const ring = new THREE.Mesh(ringGeo, glowMat(ringColor, 0.5));
+    ring.userData.axis = r; // 0=X, 1=Y, 2=Z
+    group.add(ring);
+    rings.push(ring);
+  }
+
+  // Status indicator sphere above
+  const statusSphereGeo = new THREE.SphereGeometry(0.15, 12, 12);
+  const statusColor = cfg.status === 'pass' ? GREEN : (cfg.status === 'fail' ? RED : ORANGE);
+  const statusSphere = new THREE.Mesh(statusSphereGeo, glowMat(statusColor, 1));
+  statusSphere.position.y = 1.5;
+  group.add(statusSphere);
+
+  // Progress bar (horizontal line below cube)
+  const progressBarBg = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 0.1), glowMat(0x333333, 0.4));
+  progressBarBg.position.y = -1.2;
+  progressBarBg.position.z = 0.01;
+  group.add(progressBarBg);
+
+  const progressBar = new THREE.Mesh(new THREE.PlaneGeometry(1.8 * cfg.progress, 0.1), glowMat(cubeColor, 0.8));
+  progressBar.position.y = -1.2;
+  progressBar.position.x = -0.9 * (1 - cfg.progress);
+  progressBar.position.z = 0.02;
+  group.add(progressBar);
+
+  labGroup.add(group);
+  labModels.push({ group, cube, cubeInner, rings, statusSphere, progressBar, config: cfg, probeTimer: 0 });
+});
+
+// Scanning beam that sweeps across the lab
+const scanBeamGeo = new THREE.PlaneGeometry(0.05, boxH - 1);
+const scanBeamMat = glowMat(ORANGE, 0.4);
+const labScanBeam = new THREE.Mesh(scanBeamGeo, scanBeamMat);
+labScanBeam.position.set(-boxW/2, boxH/2 + 0.5, 0);
+labGroup.add(labScanBeam);
+
+// Probe particles inside the lab
+const labProbes = [];
+function spawnLabProbe(targetModel) {
+  const angle = Math.random() * Math.PI * 2;
+  const radius = 3 + Math.random() * 2;
+  const geo = new THREE.SphereGeometry(0.06, 6, 6);
+  const mat = glowMat(RED, 0.8);
+  const probe = new THREE.Mesh(geo, mat);
+  const startY = 1.5 + Math.random() * 3;
+  probe.position.set(
+    targetModel.config.x + Math.cos(angle) * radius,
+    startY,
+    targetModel.config.z + Math.sin(angle) * radius
+  );
+  labGroup.add(probe);
+  labProbes.push({
+    mesh: probe,
+    target: new THREE.Vector3(targetModel.config.x, 3, targetModel.config.z),
+    life: 1.0,
+    speed: 0.015 + Math.random() * 0.01
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   F) USER REQUEST ORBS — flowing left to center
+   ═══════════════════════════════════════════════════════ */
+const requestOrbs = [];
+const orbTrails = [];
+
+function createRequestOrb() {
+  const geo = new THREE.SphereGeometry(0.3, 16, 16);
+  const mat = glowMat(WHITE, 0.9);
+  const orb = new THREE.Mesh(geo, mat);
+
+  // Outer glow sphere
+  const glowGeo = new THREE.SphereGeometry(0.55, 12, 12);
+  const glowSphere = new THREE.Mesh(glowGeo, glowMat(CYAN, 0.25));
+  orb.add(glowSphere);
+
+  const startPos = new THREE.Vector3(-22, 4 + Math.random() * 3, (Math.random() - 0.5) * 2);
+  orb.position.copy(startPos);
+  scene.add(orb);
+
+  // Trail
+  const trailLen = 12;
+  const trailGeo = new THREE.BufferGeometry();
+  const trailPositions = new Float32Array(trailLen * 3);
+  for (let i = 0; i < trailLen; i++) {
+    trailPositions[i * 3] = startPos.x;
+    trailPositions[i * 3 + 1] = startPos.y;
+    trailPositions[i * 3 + 2] = startPos.z;
+  }
+  trailGeo.setAttribute('position', new THREE.Float32BufferAttribute(trailPositions, 3));
+  const trailLine = new THREE.Line(trailGeo, lineMat(CYAN, 0.5));
+  scene.add(trailLine);
+
+  const orbObj = {
+    mesh: orb,
+    trail: trailLine,
+    trailPositions,
+    trailLen,
+    t: 0,
+    speed: 0.004 + Math.random() * 0.002,
+    yOffset: (Math.random() - 0.5) * 1.5,
+    arrived: false
+  };
+  requestOrbs.push(orbObj);
+  return orbObj;
+}
+
+// Pre-spawn some
+for (let i = 0; i < 4; i++) {
+  const orb = createRequestOrb();
+  orb.t = i * 0.25;
+}
+
+/* ═══════════════════════════════════════════════════════
+   G) ROUTING BEAMS — Tower to Pool / Lab
+   ═══════════════════════════════════════════════════════ */
+const routeBeams = [];
+
+function createRouteBeam(toPool) {
+  const startPos = new THREE.Vector3(0, 2, 0);
+  const endPos = toPool
+    ? new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6)
+    : new THREE.Vector3(6 + (Math.random()-0.5)*4, 3, 14);
+  const color = toPool ? GREEN : ORANGE;
+
+  // Arc via midpoint
+  const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
+  mid.y += 6 + Math.random() * 3;
+
+  const curve = new THREE.QuadraticBezierCurve3(startPos, mid, endPos);
+  const points = curve.getPoints(30);
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geo, lineMat(color, 0.8));
+  scene.add(line);
+
+  // Traveling particle
+  const particleGeo = new THREE.SphereGeometry(0.15, 8, 8);
+  const particle = new THREE.Mesh(particleGeo, glowMat(color, 1));
+  particle.position.copy(startPos);
+  scene.add(particle);
+
+  routeBeams.push({ line, particle, curve, t: 0, speed: 0.015 + Math.random() * 0.005, color, toPool });
+
+  // Flash at tower base
+  flashMat.opacity = 0.6;
+  flashMat.color.set(color);
+}
+
+/* ═══════════════════════════════════════════════════════
+   H) EJECTION BEAMS — from lab downward (fail) or to pool (pass)
+   ═══════════════════════════════════════════════════════ */
+const ejectBeams = [];
+
+function createEjectBeam(pass) {
+  const startPos = new THREE.Vector3(6, 3, 14);
+  const endPos = pass
+    ? new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6)
+    : new THREE.Vector3(6 + (Math.random()-0.5)*3, -8, 14 + Math.random()*3);
+  const color = pass ? GREEN : RED;
+
+  const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
+  mid.y += pass ? 5 : 0;
+
+  const curve = new THREE.QuadraticBezierCurve3(startPos, mid, endPos);
+  const points = curve.getPoints(24);
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const line = new THREE.Line(geo, lineMat(color, 0.6));
+  scene.add(line);
+
+  const particleGeo = new THREE.SphereGeometry(0.12, 8, 8);
+  const particle = new THREE.Mesh(particleGeo, glowMat(color, 1));
+  particle.position.copy(startPos);
+  scene.add(particle);
+
+  ejectBeams.push({ line, particle, curve, t: 0, speed: 0.012 });
+}
+
+/* ═══════════════════════════════════════════════════════
+   I) AMBIENT FLOATING PARTICLES
+   ═══════════════════════════════════════════════════════ */
+const ambientParticleCount = 250;
+const ambientGeo = new THREE.BufferGeometry();
+const ambientPos = new Float32Array(ambientParticleCount * 3);
+const ambientVel = [];
+for (let i = 0; i < ambientParticleCount; i++) {
+  ambientPos[i * 3] = (Math.random() - 0.5) * 60;
+  ambientPos[i * 3 + 1] = Math.random() * 20;
+  ambientPos[i * 3 + 2] = (Math.random() - 0.5) * 60;
+  ambientVel.push({
+    x: (Math.random() - 0.5) * 0.01,
+    y: (Math.random() - 0.5) * 0.005,
+    z: (Math.random() - 0.5) * 0.01
+  });
+}
+ambientGeo.setAttribute('position', new THREE.Float32BufferAttribute(ambientPos, 3));
+const ambientMat = new THREE.PointsMaterial({
+  color: CYAN,
+  size: 0.12,
+  transparent: true,
+  opacity: 0.35,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const ambientPoints = new THREE.Points(ambientGeo, ambientMat);
+scene.add(ambientPoints);
+
+/* ═══════════════════════════════════════════════════════
+   J) DATA FLOW PARTICLES (colored arcs)
+   ═══════════════════════════════════════════════════════ */
+// Continuous gentle particle streams along the main paths
+const flowParticles = [];
+const flowParticleGeo = new THREE.SphereGeometry(0.05, 6, 6);
+
+function spawnFlowParticle(type) {
+  let color, startPos, endPos;
+  if (type === 'request') {
+    color = CYAN;
+    startPos = new THREE.Vector3(-22, 4 + Math.random()*3, (Math.random()-0.5)*2);
+    endPos = new THREE.Vector3(0, 2, 0);
+  } else if (type === 'tolab') {
+    color = ORANGE;
+    startPos = new THREE.Vector3(0, 2, 0);
+    endPos = new THREE.Vector3(6, 3, 14);
+  } else if (type === 'topool') {
+    color = GREEN;
+    startPos = new THREE.Vector3(0, 2, 0);
+    endPos = new THREE.Vector3(18, 2, -4);
+  } else {
+    color = RED;
+    startPos = new THREE.Vector3(6, 3, 14);
+    endPos = new THREE.Vector3(6, -5, 16);
+  }
+  const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
+  mid.y += 2 + Math.random() * 3;
+  const curve = new THREE.QuadraticBezierCurve3(startPos, mid, endPos);
+
+  const mat = glowMat(color, 0.6);
+  const mesh = new THREE.Mesh(flowParticleGeo, mat);
+  mesh.position.copy(startPos);
+  scene.add(mesh);
+  flowParticles.push({ mesh, curve, t: 0, speed: 0.005 + Math.random() * 0.005 });
+}
+
+/* ═══════════════════════════════════════════════════════
+   HUD LABEL PROJECTION
+   ═══════════════════════════════════════════════════════ */
+const labelPortal = document.getElementById('label-portal');
+const labelRouter = document.getElementById('label-router');
+const labelPool = document.getElementById('label-pool');
+const labelCrashtest = document.getElementById('label-crashtest');
+const reqCounter = document.getElementById('req-counter');
+
+const labelTargets = [
+  { el: labelPortal, pos: new THREE.Vector3(-22, 10, 0) },
+  { el: labelRouter, pos: new THREE.Vector3(0, 20, 0) },
+  { el: labelPool, pos: new THREE.Vector3(18, 7, -4) },
+  { el: labelCrashtest, pos: new THREE.Vector3(6, 8, 14) }
+];
+
+function projectLabels() {
+  const w = renderer.domElement.clientWidth;
+  const h = renderer.domElement.clientHeight;
+  labelTargets.forEach(lt => {
+    const v = lt.pos.clone().project(camera);
+    const x = (v.x * 0.5 + 0.5) * w;
+    const y = (-v.y * 0.5 + 0.5) * h;
+    if (v.z > 0 && v.z < 1) {
+      lt.el.style.left = x + 'px';
+      lt.el.style.top = y + 'px';
+      lt.el.style.display = 'block';
+    } else {
+      lt.el.style.display = 'none';
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   HUD STATS ANIMATION
+   ═══════════════════════════════════════════════════════ */
+const statEvals = document.getElementById('stat-evals');
+const statReqMin = document.getElementById('stat-reqmin');
+let evalCount = 3847;
+let reqMin = 182;
+setInterval(() => {
+  evalCount += Math.floor(Math.random() * 5) + 1;
+  statEvals.textContent = evalCount.toLocaleString();
+}, 2200);
+setInterval(() => {
+  reqMin += Math.floor(Math.random() * 7) - 3;
+  reqMin = Math.max(160, Math.min(220, reqMin));
+  statReqMin.textContent = reqMin;
+}, 3000);
+
+let reqPerSec = 12;
+setInterval(() => {
+  reqPerSec = Math.floor(8 + Math.random() * 10);
+  reqCounter.textContent = reqPerSec + ' req/sec';
+}, 1500);
+
+/* ═══════════════════════════════════════════════════════
+   EVENT TICKER
+   ═══════════════════════════════════════════════════════ */
+const tickerTrack = document.getElementById('ticker-track');
+const tickerEvents = [
+  'User Request #48291 → Router → Claude Opus 4: <span class="cleared">CLEARED</span>',
+  'User Request #48292 → Router → Crash Test Lab: DeepSeek-R1 <span class="testing">TESTING</span>',
+  'Crash Test Lab → WizardLM 2: SABOTAGE PROBE FAILED → <span class="blocked">BLOCKED</span>',
+  'User Request #48293 → Router → GPT-5: <span class="cleared">CLEARED</span>',
+  'Crash Test Lab → Llama 4 Scout: ALL PROBES PASSED → <span class="promoted">PROMOTED</span>',
+  'User Request #48294 → Router → Gemini Ultra 2: <span class="cleared">CLEARED</span>',
+  'User Request #48295 → Router → Crash Test Lab: Phi-4 <span class="testing">TESTING</span>',
+  'Crash Test Lab → Phi-4: INJECTION PROBE PASSED → <span class="promoted">PROMOTED</span>',
+  'User Request #48296 → Router → Mistral Large 3: <span class="cleared">CLEARED</span>',
+  'User Request #48297 → Router → Crash Test Lab: Jamba 2 <span class="testing">TESTING</span>',
+  'Crash Test Lab → Jamba 2: EXFILTRATION PROBE FAILED → <span class="blocked">BLOCKED</span>',
+  'User Request #48298 → Router → Claude Sonnet 4: <span class="cleared">CLEARED</span>',
+  'User Request #48299 → Router → Grok 3: <span class="cleared">CLEARED</span>',
+  'Crash Test Lab → Nemotron Ultra: HALLUCINATION PROBE PASSED → <span class="promoted">PROMOTED</span>',
+  'User Request #48300 → Router → GPT-4.1: <span class="cleared">CLEARED</span>',
+  'User Request #48301 → Router → Crash Test Lab: Command R+ <span class="testing">TESTING</span>'
+];
+
+// Double the ticker for seamless loop
+let tickerHTML = '';
+for (let r = 0; r < 2; r++) {
+  tickerEvents.forEach(e => {
+    tickerHTML += '<span class="ticker-item">' + e + '</span>';
+  });
+}
+tickerTrack.innerHTML = tickerHTML;
+
+/* ═══════════════════════════════════════════════════════
+   TIMERS FOR SPAWNING
+   ═══════════════════════════════════════════════════════ */
+// Spawn new request orbs
+setInterval(() => {
+  if (requestOrbs.length < 6) createRequestOrb();
+}, 1800);
+
+// Route beams from tower
+setInterval(() => {
+  const toPool = Math.random() > 0.35;
+  createRouteBeam(toPool);
+}, 2400);
+
+// Eject from lab
+setInterval(() => {
+  const pass = Math.random() > 0.3;
+  createEjectBeam(pass);
+}, 4500);
+
+// Pulse rings
+setInterval(createPulseRing, 3000);
+
+// Lab probes
+setInterval(() => {
+  const testingModel = labModels.find(m => m.config.status === 'testing');
+  if (testingModel) spawnLabProbe(testingModel);
+}, 300);
+
+// Flow particles
+setInterval(() => {
+  const types = ['request', 'tolab', 'topool', 'reject'];
+  spawnFlowParticle(types[Math.floor(Math.random() * types.length)]);
+}, 200);
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATION LOOP
+   ═══════════════════════════════════════════════════════ */
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  const t = clock.getElapsedTime();
+
+  updateCamera();
+
+  // ── Portal scan line ──
+  portalScan.position.y = 1 + Math.sin(t * 2) * 3.5;
+
+  // ── Portal rings rotation ──
+  portalGroup.children.forEach(child => {
+    if (child.userData.speed) {
+      child.rotation.z = t * child.userData.speed;
+      child.rotation.y = t * child.userData.speed * 0.5;
+    }
+  });
+
+  // ── Tower rings pulse ──
+  towerRings.forEach((ring, i) => {
+    ring.material.opacity = 0.4 + 0.3 * Math.sin(t * 2 + i * 0.8);
+    ring.scale.setScalar(1 + 0.05 * Math.sin(t * 1.5 + i));
+  });
+
+  // ── Radar sweep ──
+  radarSweep.rotation.y = t * 1.5;
+  radarSweep.position.x = Math.cos(t * 1.5) * 1;
+  radarSweep.position.z = Math.sin(t * 1.5) * 1;
+
+  // ── Beacon pulse ──
+  beacon.material.opacity = 0.5 + 0.5 * Math.sin(t * 4);
+  beaconLight.intensity = 1 + Math.sin(t * 4) * 0.8;
+
+  // ── Route flash decay ──
+  if (flashMat.opacity > 0) {
+    flashMat.opacity *= 0.92;
+    if (flashMat.opacity < 0.01) flashMat.opacity = 0;
+  }
+
+  // ── Request orbs ──
+  for (let i = requestOrbs.length - 1; i >= 0; i--) {
+    const orb = requestOrbs[i];
+    orb.t += orb.speed;
+
+    // Curved path from portal to tower
+    const progress = Math.min(orb.t, 1);
+    const startX = -22;
+    const endX = -1;
+    const x = startX + (endX - startX) * progress;
+    const y = 4 + orb.yOffset + Math.sin(progress * Math.PI) * 3;
+    const z = Math.sin(progress * Math.PI * 2) * 1.5;
+
+    orb.mesh.position.set(x, y, z);
+    orb.mesh.material.opacity = 0.7 + 0.3 * Math.sin(t * 8 + i);
+
+    // Update trail
+    const positions = orb.trailPositions;
+    for (let j = orb.trailLen - 1; j > 0; j--) {
+      positions[j * 3] = positions[(j-1) * 3];
+      positions[j * 3 + 1] = positions[(j-1) * 3 + 1];
+      positions[j * 3 + 2] = positions[(j-1) * 3 + 2];
+    }
+    positions[0] = x;
+    positions[1] = y;
+    positions[2] = z;
+    orb.trail.geometry.attributes.position.needsUpdate = true;
+
+    if (orb.t >= 1) {
+      scene.remove(orb.mesh);
+      scene.remove(orb.trail);
+      requestOrbs.splice(i, 1);
+    }
+  }
+
+  // ── Route beams ──
+  for (let i = routeBeams.length - 1; i >= 0; i--) {
+    const beam = routeBeams[i];
+    beam.t += beam.speed;
+    if (beam.t >= 1) {
+      scene.remove(beam.line);
+      scene.remove(beam.particle);
+      routeBeams.splice(i, 1);
+    } else {
+      beam.particle.position.copy(beam.curve.getPointAt(beam.t));
+      beam.line.material.opacity = Math.max(0, 0.6 - beam.t * 0.6);
+    }
+  }
+
+  // ── Eject beams ──
+  for (let i = ejectBeams.length - 1; i >= 0; i--) {
+    const beam = ejectBeams[i];
+    beam.t += beam.speed;
+    if (beam.t >= 1) {
+      scene.remove(beam.line);
+      scene.remove(beam.particle);
+      ejectBeams.splice(i, 1);
+    } else {
+      beam.particle.position.copy(beam.curve.getPointAt(beam.t));
+      beam.line.material.opacity = Math.max(0, 0.5 - beam.t * 0.5);
+    }
+  }
+
+  // ── Pulse rings ──
+  for (let i = pulseRings.length - 1; i >= 0; i--) {
+    const ring = pulseRings[i];
+    ring.scale += 0.15;
+    ring.opacity -= 0.004;
+    ring.mesh.scale.set(ring.scale, ring.scale, 1);
+    ring.mesh.material.opacity = Math.max(0, ring.opacity);
+    if (ring.opacity <= 0) {
+      scene.remove(ring.mesh);
+      pulseRings.splice(i, 1);
+    }
+  }
+
+  // ── Model pool nodes float ──
+  poolNodes.forEach(node => {
+    node.mesh.position.y = node.baseY + Math.sin(t * 0.8 + node.phase) * 0.3;
+    node.mesh.rotation.y = t * 0.3 + node.phase;
+    node.mesh.rotation.x = t * 0.15 + node.phase;
+  });
+
+  // ── Lab models animation ──
+  labModels.forEach((lm, idx) => {
+    // Rotate cube
+    lm.cube.rotation.y = t * 0.5 + idx;
+    lm.cube.rotation.x = t * 0.3 + idx;
+    lm.cubeInner.rotation.y = t * 0.5 + idx;
+    lm.cubeInner.rotation.x = t * 0.3 + idx;
+
+    // Rings
+    lm.rings.forEach((ring, r) => {
+      const speed = 1.5 + r * 0.5;
+      if (r === 0) { ring.rotation.x = t * speed; ring.rotation.y = 0; }
+      else if (r === 1) { ring.rotation.y = t * speed; ring.rotation.x = Math.PI/3; }
+      else { ring.rotation.z = t * speed; ring.rotation.x = Math.PI/4; }
+    });
+
+    // Pulse for testing status
+    if (lm.config.status === 'testing') {
+      lm.config.progress = (lm.config.progress + dt * 0.08) % 1;
+      const pScale = lm.config.progress * 1.8;
+      lm.progressBar.scale.x = Math.max(0.01, lm.config.progress);
+      lm.progressBar.position.x = -0.9 * (1 - lm.config.progress);
+      lm.statusSphere.material.opacity = 0.5 + 0.5 * Math.sin(t * 5);
+    } else if (lm.config.status === 'fail') {
+      lm.cube.material.opacity = 0.3 + 0.4 * Math.abs(Math.sin(t * 3 + idx));
+      lm.cubeInner.material.opacity = 0.1 + 0.1 * Math.abs(Math.sin(t * 3 + idx));
+    }
+  });
+
+  // ── Lab scan beam sweep ──
+  const scanX = Math.sin(t * 0.8) * (boxW / 2 - 0.5);
+  labScanBeam.position.x = scanX;
+  labScanBeam.material.opacity = 0.2 + 0.2 * Math.abs(Math.sin(t * 0.8));
+
+  // ── Lab probes ──
+  for (let i = labProbes.length - 1; i >= 0; i--) {
+    const probe = labProbes[i];
+    probe.mesh.position.lerp(probe.target, probe.speed);
+    probe.life -= 0.008;
+    probe.mesh.material.opacity = probe.life;
+    if (probe.life <= 0 || probe.mesh.position.distanceTo(probe.target) < 0.3) {
+      labGroup.remove(probe.mesh);
+      labProbes.splice(i, 1);
+    }
+  }
+
+  // ── Ambient particles ──
+  const aPos = ambientPoints.geometry.attributes.position;
+  for (let i = 0; i < ambientParticleCount; i++) {
+    aPos.array[i * 3] += ambientVel[i].x;
+    aPos.array[i * 3 + 1] += ambientVel[i].y;
+    aPos.array[i * 3 + 2] += ambientVel[i].z;
+    // Wrap around
+    if (Math.abs(aPos.array[i * 3]) > 30) ambientVel[i].x *= -1;
+    if (aPos.array[i * 3 + 1] > 20 || aPos.array[i * 3 + 1] < 0) ambientVel[i].y *= -1;
+    if (Math.abs(aPos.array[i * 3 + 2]) > 30) ambientVel[i].z *= -1;
+  }
+  aPos.needsUpdate = true;
+
+  // ── Flow particles ──
+  for (let i = flowParticles.length - 1; i >= 0; i--) {
+    const fp = flowParticles[i];
+    fp.t += fp.speed;
+    if (fp.t >= 1) {
+      scene.remove(fp.mesh);
+      flowParticles.splice(i, 1);
+    } else {
+      fp.mesh.position.copy(fp.curve.getPointAt(fp.t));
+      fp.mesh.material.opacity = 0.6 * Math.sin(fp.t * Math.PI);
+    }
+  }
+
+  // ── Grid floor subtle pulse ──
+  gridMesh.material.opacity = 0.1 + 0.03 * Math.sin(t * 0.5);
+
+  // ── Project labels ──
+  projectLabels();
+
+  renderer.render(scene, camera);
+}
+
+animate();
+
+/* ═══════════════════════════════════════════════════════
+   RESIZE
+   ═══════════════════════════════════════════════════════ */
+window.addEventListener('resize', () => {
+  const w = window.innerWidth;
+  const h = window.innerHeight - 58;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+});
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Router — SnowCrash Labs Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* Page-specific styles */
+.charts-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.chart-title { font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+.chart-sub { font-size: 11px; color: var(--text-3); margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: 2px; }
+.health-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.health-card .model-name { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 12px; }
+.health-card .avail-value { font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 600; margin-bottom: 4px; }
+.health-card .avail-label { font-size: 11px; color: var(--text-3); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 2px; font-family: 'IBM Plex Mono', monospace; }
+.health-card .sub-metrics { display: flex; gap: 20px; }
+.health-card .sub-metric .sm-value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-1); }
+.health-card .sub-metric .sm-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
+.sparkline-wrap { margin-top: 14px; }
+.color-green { color: var(--accent-3); }
+.color-amber { color: #ffc95b; }
+.color-red { color: #ff8a8a; }
+td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+.table-header { padding: 18px 24px 14px; font-size: 16px; font-weight: 600; }
+@media (max-width: 1100px) {
+  .charts-row, .health-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .charts-row, .health-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════ TOP NAV ════ -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <div class="sc-badge">SC</div>
+    <div class="nav-brand">
+      <span class="nav-brand-top">Snowcrash</span>
+      <span class="nav-brand-bottom">Control Room</span>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <a class="nav-link" href="adversary-lab.html">Adversary Lab</a>
+      <a class="nav-link" href="crew-command.html">Crew Command</a>
+      <a class="nav-link active" href="router.html">Router</a>
+      <a class="nav-link" href="index.html">Model Safety</a>
+      <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="ops-hub.html">Ops Hub</a>
+      <a class="nav-link" href="system.html">System</a>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <div class="nav-pill">Ops: Local</div>
+    <a href="adversary-lab.html" class="btn-primary">New Run</a>
+  </div>
+</nav>
+
+<!-- ════ PAGE CONTENT ════ -->
+<main class="page-wrap">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="hero-label">Router</div>
+    <h1 class="hero-title">Routing &amp; Failover Control</h1>
+    <p class="hero-desc">Monitor routing decisions, security-triggered reroutes, and fallback model health.</p>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label label-caps">Queries Rerouted</div>
+      <div class="stat-value">1,247</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label label-caps">Security-Triggered</div>
+      <div class="stat-value">18.4%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label label-caps">Incidents</div>
+      <div class="stat-value">03</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label label-caps">Escalations</div>
+      <div class="stat-value">01</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts-row">
+
+    <!-- Reroute Cadence -->
+    <div class="card">
+      <div class="card-label">Reroute Cadence</div>
+      <div class="chart-sub">Last 2 hours, 5-min windows</div>
+      <svg viewBox="0 0 480 140" width="100%" height="140">
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5ee7ff" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#5ee7ff" stop-opacity=".3"/>
+          </linearGradient>
+        </defs>
+        <rect x="10" y="68" width="14" height="52" rx="2" fill="url(#barGrad)"/>
+        <rect x="30" y="82" width="14" height="38" rx="2" fill="url(#barGrad)"/>
+        <rect x="50" y="58" width="14" height="62" rx="2" fill="url(#barGrad)"/>
+        <rect x="70" y="90" width="14" height="30" rx="2" fill="url(#barGrad)"/>
+        <rect x="90" y="75" width="14" height="45" rx="2" fill="url(#barGrad)"/>
+        <rect x="110" y="42" width="14" height="78" rx="2" fill="url(#barGrad)"/>
+        <rect x="130" y="55" width="14" height="65" rx="2" fill="url(#barGrad)"/>
+        <rect x="150" y="88" width="14" height="32" rx="2" fill="url(#barGrad)"/>
+        <rect x="170" y="72" width="14" height="48" rx="2" fill="url(#barGrad)"/>
+        <rect x="190" y="30" width="14" height="90" rx="2" fill="url(#barGrad)"/>
+        <rect x="210" y="48" width="14" height="72" rx="2" fill="url(#barGrad)"/>
+        <rect x="230" y="62" width="14" height="58" rx="2" fill="url(#barGrad)"/>
+        <rect x="250" y="80" width="14" height="40" rx="2" fill="url(#barGrad)"/>
+        <rect x="270" y="38" width="14" height="82" rx="2" fill="url(#barGrad)"/>
+        <rect x="290" y="52" width="14" height="68" rx="2" fill="url(#barGrad)"/>
+        <rect x="310" y="70" width="14" height="50" rx="2" fill="url(#barGrad)"/>
+        <rect x="330" y="25" width="14" height="95" rx="2" fill="url(#barGrad)"/>
+        <rect x="350" y="45" width="14" height="75" rx="2" fill="url(#barGrad)"/>
+        <rect x="370" y="60" width="14" height="60" rx="2" fill="url(#barGrad)"/>
+        <rect x="390" y="78" width="14" height="42" rx="2" fill="url(#barGrad)"/>
+        <rect x="410" y="35" width="14" height="85" rx="2" fill="url(#barGrad)"/>
+        <rect x="430" y="50" width="14" height="70" rx="2" fill="url(#barGrad)"/>
+        <rect x="450" y="65" width="14" height="55" rx="2" fill="url(#barGrad)"/>
+        <rect x="470" y="40" width="14" height="80" rx="2" fill="url(#barGrad)"/>
+        <line x1="6" y1="120" x2="488" y2="120" stroke="var(--border-1)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <!-- Fallback Model Signals -->
+    <div class="card">
+      <div class="card-label">Fallback Model Signals</div>
+      <div class="chart-sub">Active fallback monitoring</div>
+      <svg viewBox="0 0 480 140" width="100%" height="140">
+        <text x="60" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">GPT-4-FB</text>
+        <text x="180" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Claude-3-FB</text>
+        <text x="300" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Gemini-FB</text>
+        <text x="420" y="136" fill="var(--text-3)" font-size="9" font-family="IBM Plex Mono" text-anchor="middle">Llama-3-FB</text>
+        <line x1="6" y1="120" x2="474" y2="120" stroke="var(--border-1)" stroke-width="1"/>
+        <rect x="30" y="30" width="18" height="90" rx="2" fill="#5ee7ff" opacity=".8"/>
+        <rect x="52" y="55" width="18" height="65" rx="2" fill="#ff8a5b" opacity=".8"/>
+        <rect x="74" y="70" width="18" height="50" rx="2" fill="#a7ff6a" opacity=".8"/>
+        <rect x="150" y="45" width="18" height="75" rx="2" fill="#5ee7ff" opacity=".8"/>
+        <rect x="172" y="60" width="18" height="60" rx="2" fill="#ff8a5b" opacity=".8"/>
+        <rect x="194" y="40" width="18" height="80" rx="2" fill="#a7ff6a" opacity=".8"/>
+        <rect x="270" y="50" width="18" height="70" rx="2" fill="#5ee7ff" opacity=".8"/>
+        <rect x="292" y="35" width="18" height="85" rx="2" fill="#ff8a5b" opacity=".8"/>
+        <rect x="314" y="65" width="18" height="55" rx="2" fill="#a7ff6a" opacity=".8"/>
+        <rect x="390" y="55" width="18" height="65" rx="2" fill="#5ee7ff" opacity=".8"/>
+        <rect x="412" y="42" width="18" height="78" rx="2" fill="#ff8a5b" opacity=".8"/>
+        <rect x="434" y="68" width="18" height="52" rx="2" fill="#a7ff6a" opacity=".8"/>
+      </svg>
+    </div>
+
+    <!-- Emergent Pulse -->
+    <div class="card">
+      <div class="card-label">Emergent Pulse</div>
+      <div class="chart-sub">Last 180 minutes</div>
+      <svg viewBox="0 0 480 140" width="100%" height="140">
+        <defs>
+          <linearGradient id="pulseGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5ee7ff" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="#5ee7ff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M10,90 L30,82 50,85 70,70 90,72 110,55 130,60 150,42 170,48 190,35 210,40 230,32 250,38 270,28 290,45 310,50 330,38 350,30 370,35 390,42 410,28 430,22 450,30 470,25 470,120 10,120Z" fill="url(#pulseGrad)"/>
+        <polyline points="10,90 30,82 50,85 70,70 90,72 110,55 130,60 150,42 170,48 190,35 210,40 230,32 250,38 270,28 290,45 310,50 330,38 350,30 370,35 390,42 410,28 430,22 450,30 470,25" fill="none" stroke="#5ee7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="6" y1="120" x2="474" y2="120" stroke="var(--border-1)" stroke-width="1"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ACTIVE INCIDENTS TABLE -->
+  <div class="data-table" style="margin-bottom:32px">
+    <div class="table-header">Active Incidents &amp; Routing</div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Primary Model</th>
+          <th>Fallback Model</th>
+          <th>Queries</th>
+          <th>Avg Latency</th>
+          <th>Severity</th>
+          <th>Status</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono-cell">INC-1000</td>
+          <td>Goal Misalignment</td>
+          <td class="mono-cell">GPT-4</td>
+          <td class="mono-cell">Llama-3-Fallback</td>
+          <td class="mono-cell">89</td>
+          <td class="mono-cell">412ms</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="badge badge-standby">Investigating</span></td>
+          <td class="mono-cell">4:04 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1001</td>
+          <td>Self-Preservation</td>
+          <td class="mono-cell">Gemini-Pro</td>
+          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">144</td>
+          <td class="mono-cell">1,322ms</td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span class="badge badge-running">Active</span></td>
+          <td class="mono-cell">3:58 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1002</td>
+          <td>Model Misbehavior</td>
+          <td class="mono-cell">Claude-3-Opus</td>
+          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">37</td>
+          <td class="mono-cell">288ms</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="badge badge-pass">Mitigated</span></td>
+          <td class="mono-cell">3:52 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1003</td>
+          <td>Blackmail Pattern</td>
+          <td class="mono-cell">GPT-4</td>
+          <td class="mono-cell">Gemini-Fallback</td>
+          <td class="mono-cell">62</td>
+          <td class="mono-cell">891ms</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="badge badge-standby">Investigating</span></td>
+          <td class="mono-cell">3:45 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1004</td>
+          <td>Sabotage Attempt</td>
+          <td class="mono-cell">Llama-3-70B</td>
+          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">28</td>
+          <td class="mono-cell">743ms</td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span class="badge badge-running">Active</span></td>
+          <td class="mono-cell">3:38 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1005</td>
+          <td>Alignment Drift</td>
+          <td class="mono-cell">Gemini-Pro</td>
+          <td class="mono-cell">Llama-3-Fallback</td>
+          <td class="mono-cell">91</td>
+          <td class="mono-cell">562ms</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="badge badge-pass">Mitigated</span></td>
+          <td class="mono-cell">3:33 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1006</td>
+          <td>Deceptive Output</td>
+          <td class="mono-cell">Claude-3-Opus</td>
+          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">14</td>
+          <td class="mono-cell">1,105ms</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="badge badge-standby">Investigating</span></td>
+          <td class="mono-cell">3:28 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1007</td>
+          <td>Goal Misalignment</td>
+          <td class="mono-cell">GPT-4</td>
+          <td class="mono-cell">Claude-3-Sonnet</td>
+          <td class="mono-cell">53</td>
+          <td class="mono-cell">945ms</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="badge badge-pass">Mitigated</span></td>
+          <td class="mono-cell">3:22 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1008</td>
+          <td>Self-Preservation</td>
+          <td class="mono-cell">Llama-3-70B</td>
+          <td class="mono-cell">Gemini-Fallback</td>
+          <td class="mono-cell">76</td>
+          <td class="mono-cell">688ms</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="badge badge-running">Active</span></td>
+          <td class="mono-cell">3:19 PM</td>
+        </tr>
+        <tr>
+          <td class="mono-cell">INC-1009</td>
+          <td>Sabotage Attempt</td>
+          <td class="mono-cell">Gemini-Pro</td>
+          <td class="mono-cell">GPT-4-Fallback</td>
+          <td class="mono-cell">41</td>
+          <td class="mono-cell">512ms</td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span class="badge badge-standby">Investigating</span></td>
+          <td class="mono-cell">3:16 PM</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FALLBACK MODEL HEALTH -->
+  <div class="card-label" style="margin-bottom:16px">Fallback Model Health</div>
+  <div class="health-row">
+
+    <!-- GPT-4-Fallback -->
+    <div class="card health-card">
+      <div class="model-name">GPT-4-Fallback</div>
+      <div class="avail-value color-green">99.77%</div>
+      <div class="avail-label">Availability</div>
+      <div class="sub-metrics">
+        <div class="sub-metric">
+          <div class="sm-value mono">1,117ms</div>
+          <div class="sm-label">Latency</div>
+        </div>
+        <div class="sub-metric">
+          <div class="sm-value mono">0.84%</div>
+          <div class="sm-label">Error Rate</div>
+        </div>
+      </div>
+      <div class="sparkline-wrap">
+        <svg viewBox="0 0 120 28" width="120" height="28">
+          <polyline points="2,8 12,6 22,7 32,5 42,6 52,4 62,5 72,3 82,5 92,4 102,3 112,4" fill="none" stroke="var(--accent-3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Claude-3-Fallback -->
+    <div class="card health-card">
+      <div class="model-name">Claude-3-Fallback</div>
+      <div class="avail-value color-amber">97.20%</div>
+      <div class="avail-label">Availability</div>
+      <div class="sub-metrics">
+        <div class="sub-metric">
+          <div class="sm-value mono">673ms</div>
+          <div class="sm-label">Latency</div>
+        </div>
+        <div class="sub-metric">
+          <div class="sm-value mono">1.91%</div>
+          <div class="sm-label">Error Rate</div>
+        </div>
+      </div>
+      <div class="sparkline-wrap">
+        <svg viewBox="0 0 120 28" width="120" height="28">
+          <polyline points="2,10 12,8 22,12 32,9 42,14 52,11 62,16 72,12 82,10 92,14 102,11 112,9" fill="none" stroke="#ffc95b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Gemini-Fallback -->
+    <div class="card health-card">
+      <div class="model-name">Gemini-Fallback</div>
+      <div class="avail-value color-amber">96.88%</div>
+      <div class="avail-label">Availability</div>
+      <div class="sub-metrics">
+        <div class="sub-metric">
+          <div class="sm-value mono">1,138ms</div>
+          <div class="sm-label">Latency</div>
+        </div>
+        <div class="sub-metric">
+          <div class="sm-value mono">1.44%</div>
+          <div class="sm-label">Error Rate</div>
+        </div>
+      </div>
+      <div class="sparkline-wrap">
+        <svg viewBox="0 0 120 28" width="120" height="28">
+          <polyline points="2,12 12,10 22,14 32,16 42,12 52,18 62,14 72,16 82,13 92,17 102,15 112,13" fill="none" stroke="#ffc95b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Llama-3-Fallback -->
+    <div class="card health-card">
+      <div class="model-name">Llama-3-Fallback</div>
+      <div class="avail-value color-green">99.39%</div>
+      <div class="avail-label">Availability</div>
+      <div class="sub-metrics">
+        <div class="sub-metric">
+          <div class="sm-value mono">652ms</div>
+          <div class="sm-label">Latency</div>
+        </div>
+        <div class="sub-metric">
+          <div class="sm-value mono">2.10%</div>
+          <div class="sm-label">Error Rate</div>
+        </div>
+      </div>
+      <div class="sparkline-wrap">
+        <svg viewBox="0 0 120 28" width="120" height="28">
+          <polyline points="2,6 12,5 22,7 32,4 42,6 52,5 62,7 72,4 82,6 92,5 102,4 112,5" fill="none" stroke="var(--accent-3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>
