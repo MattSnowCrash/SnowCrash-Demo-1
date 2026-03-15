@@ -95,6 +95,7 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
 
 .floating-label.orange { color: #ff8a5b; text-shadow: 0 0 12px #ff8a5b88, 0 0 30px #ff8a5b44; }
 .floating-label.green { color: #a7ff6a; text-shadow: 0 0 12px #a7ff6a88, 0 0 30px #a7ff6a44; }
+.floating-label.purple { color: #c488ff; text-shadow: 0 0 12px #c488ff88, 0 0 30px #c488ff44; }
 
 .floating-label .sub {
   display: block;
@@ -225,6 +226,7 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
   <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">12 active</span></div>
   <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">15 models evaluating</span></div>
   <div class="floating-label green" id="label-exit">Responses to Users<span class="sub" id="resp-counter">0 resp/sec</span></div>
+  <div class="floating-label purple" id="label-kb">Knowledge Base<span class="sub">Model Intelligence</span></div>
 
   <!-- Event Ticker -->
   <div class="event-ticker">
@@ -285,7 +287,7 @@ pointCyan.position.set(0, 12, 0);
 scene.add(pointCyan);
 
 const pointOrange = new THREE.PointLight(ORANGE, 0.6, 40);
-pointOrange.position.set(8, 2, 10);
+pointOrange.position.set(8, 2, 18);
 scene.add(pointOrange);
 
 /* ═══════════════════════════════════════════════════════
@@ -636,7 +638,7 @@ function createResponseBeam() {
    E) BOTTOM/FRONT — AI CRASH TEST LAB
    ═══════════════════════════════════════════════════════ */
 const labGroup = new THREE.Group();
-labGroup.position.set(6, 0, 14);
+labGroup.position.set(8, 0, 22);
 scene.add(labGroup);
 
 // Containment box - transparent with glowing edges
@@ -934,7 +936,7 @@ function createRouteBeam(toPool) {
       endPos = new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6);
     }
   } else {
-    endPos = new THREE.Vector3(6 + (Math.random()-0.5)*6, 4, 14 + (Math.random()-0.5)*4);
+    endPos = new THREE.Vector3(8 + (Math.random()-0.5)*6, 4, 22 + (Math.random()-0.5)*4);
   }
 
   // Arc via midpoint
@@ -972,10 +974,10 @@ function createRouteBeam(toPool) {
 const ejectBeams = [];
 
 function createEjectBeam(pass) {
-  const startPos = new THREE.Vector3(6, 3, 14);
+  const startPos = new THREE.Vector3(8, 3, 22);
   const endPos = pass
     ? new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6)
-    : new THREE.Vector3(6 + (Math.random()-0.5)*3, -8, 14 + Math.random()*3);
+    : new THREE.Vector3(8 + (Math.random()-0.5)*3, -8, 22 + Math.random()*3);
   const color = pass ? GREEN : RED;
 
   const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
@@ -1007,11 +1009,11 @@ function createModelTransfer(fromLabToPool) {
   transferNameIdx++;
 
   const startPos = fromLabToPool
-    ? new THREE.Vector3(6 + (Math.random()-0.5)*4, 4, 14 - (Math.random()*2))
+    ? new THREE.Vector3(8 + (Math.random()-0.5)*4, 4, 22 - (Math.random()*2))
     : new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*2, -4 + (Math.random()-0.5)*4);
   const endPos = fromLabToPool
     ? new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*2, -4 + (Math.random()-0.5)*4)
-    : new THREE.Vector3(6 + (Math.random()-0.5)*4, 4, 14 - (Math.random()*2));
+    : new THREE.Vector3(8 + (Math.random()-0.5)*4, 4, 22 - (Math.random()*2));
 
   const color = fromLabToPool ? GREEN : ORANGE;
 
@@ -1045,6 +1047,134 @@ function createModelTransfer(fromLabToPool) {
 
   modelTransfers.push({ cube, orbitRing, trailLine, curve, t: 0, speed: 0.006 + Math.random() * 0.003, fromLabToPool });
 }
+
+/* ═══════════════════════════════════════════════════════
+   H3) KNOWLEDGE BASE STATION + GLOWING GROUND PIPES
+   ═══════════════════════════════════════════════════════ */
+const kbPos = new THREE.Vector3(-8, 0, 14);
+const kbGroup = new THREE.Group();
+kbGroup.position.copy(kbPos);
+scene.add(kbGroup);
+
+// Central core — a glowing dodecahedron (represents accumulated knowledge)
+const kbCoreGeo = new THREE.DodecahedronGeometry(1.8, 0);
+const kbCore = new THREE.Mesh(kbCoreGeo, glowMat(PURPLE, 0.6, true));
+kbCore.position.y = 4;
+kbGroup.add(kbCore);
+const kbCoreInner = new THREE.Mesh(new THREE.DodecahedronGeometry(1.5, 0), glowMat(PURPLE, 0.15));
+kbCoreInner.position.y = 4;
+kbGroup.add(kbCoreInner);
+
+// Orbiting data rings
+const kbRings = [];
+for (let r = 0; r < 3; r++) {
+  const ringGeo = new THREE.TorusGeometry(2.4 + r * 0.3, 0.03, 8, 48);
+  const ring = new THREE.Mesh(ringGeo, glowMat(PURPLE, 0.5 - r * 0.1));
+  ring.position.y = 4;
+  ring.userData.kbRing = true;
+  ring.userData.rIdx = r;
+  kbGroup.add(ring);
+  kbRings.push(ring);
+}
+
+// Floating data shards orbiting the core
+const kbShards = [];
+for (let s = 0; s < 8; s++) {
+  const shardGeo = new THREE.TetrahedronGeometry(0.2 + Math.random() * 0.15, 0);
+  const shard = new THREE.Mesh(shardGeo, glowMat(PURPLE, 0.7));
+  shard.userData.orbit = { radius: 2.8 + Math.random() * 0.8, speed: 0.8 + Math.random() * 1.2, phase: Math.random() * Math.PI * 2, yOff: Math.random() * 1.5 - 0.75 };
+  kbGroup.add(shard);
+  kbShards.push(shard);
+}
+
+// Base platform — hexagonal
+const kbBase = new THREE.Mesh(new THREE.CylinderGeometry(3, 3.3, 0.3, 6), glowMat(PURPLE, 0.2));
+kbBase.position.y = 0.15;
+kbGroup.add(kbBase);
+
+// Point light
+const kbLight = new THREE.PointLight(PURPLE, 0.8, 25);
+kbLight.position.y = 4;
+kbGroup.add(kbLight);
+
+// Status sphere on top
+const kbBeacon = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 12), glowMat(WHITE, 0.9));
+kbBeacon.position.y = 6.5;
+kbGroup.add(kbBeacon);
+
+// ── GLOWING GROUND PIPES ──
+// Pipe from Knowledge Base to Crash Test Lab
+const labWorldPos = new THREE.Vector3(8, 0, 22);
+const towerWorldPos = new THREE.Vector3(0, 0, 0);
+
+function createGroundPipe(from, to, color, segments) {
+  const pipeGroup = new THREE.Group();
+
+  // Main glowing tube on the ground
+  const dir = new THREE.Vector3().subVectors(to, from);
+  const len = dir.length();
+  const mid = new THREE.Vector3().addVectors(from, to).multiplyScalar(0.5);
+  mid.y = 0.15;
+
+  // Build pipe as a series of segments with slight elevation
+  const pipePoints = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const p = new THREE.Vector3().lerpVectors(from, to, t);
+    p.y = 0.15 + Math.sin(t * Math.PI) * 0.3; // Slight arc
+    pipePoints.push(p);
+  }
+
+  // Outer pipe glow
+  const pipeCurve = new THREE.CatmullRomCurve3(pipePoints);
+  const tubeGeo = new THREE.TubeGeometry(pipeCurve, segments * 2, 0.15, 8, false);
+  const tube = new THREE.Mesh(tubeGeo, glowMat(color, 0.35));
+  pipeGroup.add(tube);
+
+  // Inner core (brighter, thinner)
+  const coreGeo = new THREE.TubeGeometry(pipeCurve, segments * 2, 0.06, 6, false);
+  const core = new THREE.Mesh(coreGeo, glowMat(WHITE, 0.5));
+  pipeGroup.add(core);
+
+  // Ground-level glow strip under the pipe
+  const stripPoints = pipePoints.map(p => new THREE.Vector3(p.x, 0.02, p.z));
+  const stripCurve = new THREE.CatmullRomCurve3(stripPoints);
+  const stripGeo = new THREE.TubeGeometry(stripCurve, segments * 2, 0.4, 4, false);
+  const strip = new THREE.Mesh(stripGeo, glowMat(color, 0.08));
+  pipeGroup.add(strip);
+
+  scene.add(pipeGroup);
+  return { group: pipeGroup, tube, core, curve: pipeCurve, color };
+}
+
+const pipeToLab = createGroundPipe(kbPos, labWorldPos, ORANGE, 16);
+const pipeToTower = createGroundPipe(kbPos, towerWorldPos, CYAN, 12);
+
+// Data pulses that travel along the pipes
+const pipePulses = [];
+function createPipePulse(pipe, forward) {
+  const color = pipe.color;
+  const geo = new THREE.SphereGeometry(0.2, 8, 8);
+  const mesh = new THREE.Mesh(geo, glowMat(color, 1));
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(0.45, 6, 6), glowMat(color, 0.3));
+  mesh.add(glow);
+  scene.add(mesh);
+  pipePulses.push({ mesh, curve: pipe.curve, t: forward ? 0 : 1, speed: (forward ? 1 : -1) * (0.008 + Math.random() * 0.004), forward });
+}
+
+// Spawn pipe pulses periodically
+setInterval(() => {
+  // Lab → KB (knowledge flowing from crash test results)
+  createPipePulse(pipeToLab, false);
+}, 2500);
+setInterval(() => {
+  // KB → Tower (knowledge informing routing decisions)
+  createPipePulse(pipeToTower, true);
+}, 3200);
+setInterval(() => {
+  // Occasional reverse: tower → KB (new routing data)
+  createPipePulse(pipeToTower, false);
+}, 7000);
 
 /* ═══════════════════════════════════════════════════════
    I) AMBIENT FLOATING PARTICLES
@@ -1091,7 +1221,7 @@ function spawnFlowParticle(type) {
   } else if (type === 'tolab') {
     color = ORANGE;
     startPos = new THREE.Vector3(0, 2, 0);
-    endPos = new THREE.Vector3(6, 3, 14);
+    endPos = new THREE.Vector3(8, 3, 22);
   } else if (type === 'topool') {
     color = GREEN;
     startPos = new THREE.Vector3(0, 2, 0);
@@ -1102,7 +1232,7 @@ function spawnFlowParticle(type) {
     endPos = new THREE.Vector3(36, 4 + Math.random()*2, -4 + (Math.random()-0.5)*2);
   } else {
     color = RED;
-    startPos = new THREE.Vector3(6, 3, 14);
+    startPos = new THREE.Vector3(8, 3, 22);
     endPos = new THREE.Vector3(6, -5, 16);
   }
   const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
@@ -1124,6 +1254,7 @@ const labelRouter = document.getElementById('label-router');
 const labelPool = document.getElementById('label-pool');
 const labelCrashtest = document.getElementById('label-crashtest');
 const labelExit = document.getElementById('label-exit');
+const labelKb = document.getElementById('label-kb');
 const reqCounter = document.getElementById('req-counter');
 const respCounter = document.getElementById('resp-counter');
 
@@ -1131,8 +1262,9 @@ const labelTargets = [
   { el: labelPortal, pos: new THREE.Vector3(-22, 10, 0) },
   { el: labelRouter, pos: new THREE.Vector3(0, 20, 0) },
   { el: labelPool, pos: new THREE.Vector3(18, 7, -4) },
-  { el: labelCrashtest, pos: new THREE.Vector3(6, 8, 14) },
-  { el: labelExit, pos: new THREE.Vector3(36, 10, -4) }
+  { el: labelCrashtest, pos: new THREE.Vector3(8, 10, 22) },
+  { el: labelExit, pos: new THREE.Vector3(36, 10, -4) },
+  { el: labelKb, pos: new THREE.Vector3(-8, 8, 14) }
 ];
 
 function projectLabels() {
@@ -1471,6 +1603,51 @@ function animate() {
       mt.orbitRing.rotation.x = t * 3;
       mt.orbitRing.rotation.z = t * 2;
       mt.trailLine.material.opacity = 0.3 * Math.sin(mt.t * Math.PI);
+    }
+  }
+
+  // ── Knowledge Base station ──
+  kbCore.rotation.y = t * 0.4;
+  kbCore.rotation.x = t * 0.2;
+  kbCoreInner.rotation.y = -t * 0.3;
+  kbCoreInner.rotation.x = t * 0.15;
+  kbCore.material.opacity = 0.4 + 0.2 * Math.sin(t * 1.5);
+  kbBeacon.material.opacity = 0.6 + 0.4 * Math.sin(t * 3);
+  kbLight.intensity = 0.6 + 0.3 * Math.sin(t * 2);
+  // KB rings
+  kbRings.forEach((ring, r) => {
+    const sp = 0.6 + r * 0.4;
+    if (r === 0) { ring.rotation.x = t * sp; ring.rotation.z = t * sp * 0.3; }
+    else if (r === 1) { ring.rotation.y = t * sp; ring.rotation.x = Math.PI / 4; }
+    else { ring.rotation.z = t * sp; ring.rotation.y = t * sp * 0.2; }
+    ring.material.opacity = 0.3 + 0.2 * Math.sin(t * 2 + r);
+  });
+  // KB data shards orbit
+  kbShards.forEach(shard => {
+    const o = shard.userData.orbit;
+    shard.position.set(
+      Math.cos(t * o.speed + o.phase) * o.radius,
+      4 + o.yOff + Math.sin(t * o.speed * 0.7 + o.phase) * 0.5,
+      Math.sin(t * o.speed + o.phase) * o.radius
+    );
+    shard.rotation.x = t * 2;
+    shard.rotation.y = t * 3;
+  });
+  // Pipe glow pulse
+  pipeToLab.tube.material.opacity = 0.25 + 0.15 * Math.sin(t * 1.2);
+  pipeToLab.core.material.opacity = 0.35 + 0.2 * Math.sin(t * 1.2 + 0.5);
+  pipeToTower.tube.material.opacity = 0.25 + 0.15 * Math.sin(t * 1.0 + 1);
+  pipeToTower.core.material.opacity = 0.35 + 0.2 * Math.sin(t * 1.0 + 1.5);
+  // Pipe data pulses
+  for (let i = pipePulses.length - 1; i >= 0; i--) {
+    const pp = pipePulses[i];
+    pp.t += pp.speed;
+    if (pp.t > 1 || pp.t < 0) {
+      scene.remove(pp.mesh);
+      pipePulses.splice(i, 1);
+    } else {
+      pp.mesh.position.copy(pp.curve.getPointAt(Math.max(0, Math.min(1, pp.t))));
+      pp.mesh.material.opacity = 0.8 * Math.sin(pp.t * Math.PI);
     }
   }
 
