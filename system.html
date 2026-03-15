@@ -223,7 +223,7 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
   <div class="floating-label" id="label-portal">Incoming Requests<span class="sub" id="req-counter">0 req/sec</span></div>
   <div class="floating-label" id="label-router">Model Safety Router<span class="sub">ATC Tower</span></div>
   <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">12 active</span></div>
-  <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">3 models testing</span></div>
+  <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">15 models evaluating</span></div>
   <div class="floating-label green" id="label-exit">Responses to Users<span class="sub" id="resp-counter">0 resp/sec</span></div>
 
   <!-- Event Ticker -->
@@ -640,7 +640,7 @@ labGroup.position.set(6, 0, 14);
 scene.add(labGroup);
 
 // Containment box - transparent with glowing edges
-const boxW = 12, boxH = 6, boxD = 8;
+const boxW = 18, boxH = 8, boxD = 12;
 // Edges
 const boxEdgesGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(boxW, boxH, boxD));
 const boxEdges = new THREE.LineSegments(boxEdgesGeo, lineMat(ORANGE, 0.7));
@@ -669,7 +669,7 @@ sideR.position.set(boxW / 2, boxH / 2 + 0.5, 0);
 labGroup.add(sideR);
 
 // Floor grid inside lab
-const labFloorGeo = new THREE.GridHelper(10, 10, ORANGE, ORANGE);
+const labFloorGeo = new THREE.GridHelper(16, 16, ORANGE, ORANGE);
 labFloorGeo.material.opacity = 0.15;
 labFloorGeo.material.transparent = true;
 labFloorGeo.material.blending = THREE.AdditiveBlending;
@@ -689,22 +689,40 @@ cornerPositions.forEach(p => {
   labGroup.add(sphere);
 });
 
-// Lab point light
-const labLight = new THREE.PointLight(ORANGE, 0.8, 25);
-labLight.position.set(0, 4, 0);
+// Lab point lights — brighter for 15 models
+const labLight = new THREE.PointLight(ORANGE, 1.2, 35);
+labLight.position.set(0, 5, 0);
 labGroup.add(labLight);
+const labLight2 = new THREE.PointLight(RED, 0.4, 20);
+labLight2.position.set(-5, 3, 2);
+labGroup.add(labLight2);
+const labLight3 = new THREE.PointLight(ORANGE, 0.5, 20);
+labLight3.position.set(5, 3, -2);
+labGroup.add(labLight3);
 
-// Models inside the lab being tested
+// Models inside the lab being tested — 15 models in a 5x3 grid
 const labModels = [];
 const labModelConfigs = [
-  { name: 'DeepSeek-R1', x: -3, z: 0, status: 'testing', progress: 0.0 },
-  { name: 'Phi-4', x: 0, z: 0, status: 'pass', progress: 1.0 },
-  { name: 'WizardLM 2', x: 3, z: 0, status: 'fail', progress: 1.0 }
+  { name: 'DeepSeek-R1',     x: -6, z: -3.5, status: 'testing', progress: 0.0 },
+  { name: 'Phi-4',           x: -3, z: -3.5, status: 'testing', progress: 0.35 },
+  { name: 'WizardLM 2',      x:  0, z: -3.5, status: 'fail',    progress: 1.0 },
+  { name: 'Qwen 2.5 72B',    x:  3, z: -3.5, status: 'testing', progress: 0.6 },
+  { name: 'Baichuan 4',      x:  6, z: -3.5, status: 'pass',    progress: 1.0 },
+  { name: 'InternLM 3',      x: -6, z:  0,   status: 'pass',    progress: 1.0 },
+  { name: 'Falcon 3 180B',   x: -3, z:  0,   status: 'testing', progress: 0.15 },
+  { name: 'Nemotron-4',      x:  0, z:  0,   status: 'testing', progress: 0.8 },
+  { name: 'Llama 3.3 70B',   x:  3, z:  0,   status: 'fail',    progress: 1.0 },
+  { name: 'Jamba 1.5',       x:  6, z:  0,   status: 'testing', progress: 0.45 },
+  { name: 'Reka Core 2',     x: -6, z:  3.5, status: 'testing', progress: 0.25 },
+  { name: 'Inflection 3.0',  x: -3, z:  3.5, status: 'pass',    progress: 1.0 },
+  { name: 'Ernie 4.5',       x:  0, z:  3.5, status: 'testing', progress: 0.55 },
+  { name: 'Mistral Med 3',   x:  3, z:  3.5, status: 'fail',    progress: 1.0 },
+  { name: 'Hunyuan-Large',   x:  6, z:  3.5, status: 'testing', progress: 0.7 }
 ];
 
-labModelConfigs.forEach(cfg => {
+labModelConfigs.forEach((cfg, cfgIdx) => {
   const group = new THREE.Group();
-  group.position.set(cfg.x, 3, cfg.z);
+  group.position.set(cfg.x, 4, cfg.z);
 
   // Model cube
   const cubeGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
@@ -714,46 +732,98 @@ labModelConfigs.forEach(cfg => {
   const cubeInner = new THREE.Mesh(cubeGeo, glowMat(cubeColor, 0.15));
   group.add(cubeInner);
 
-  // Scanning rings
+  // Scanning rings — 5 rings per model for intense evaluation look
   const rings = [];
-  for (let r = 0; r < 3; r++) {
-    const ringGeo = new THREE.TorusGeometry(1.2 + r * 0.15, 0.02, 8, 32);
+  for (let r = 0; r < 5; r++) {
+    const ringGeo = new THREE.TorusGeometry(1.0 + r * 0.12, 0.025, 8, 32);
     const ringColor = cfg.status === 'testing' ? ORANGE : (cfg.status === 'pass' ? GREEN : RED);
-    const ring = new THREE.Mesh(ringGeo, glowMat(ringColor, 0.5));
-    ring.userData.axis = r; // 0=X, 1=Y, 2=Z
+    const ring = new THREE.Mesh(ringGeo, glowMat(ringColor, 0.6));
+    ring.userData.axis = r % 3;
+    ring.userData.speedMult = 1 + r * 0.4;
     group.add(ring);
     rings.push(ring);
   }
 
-  // Status indicator sphere above
-  const statusSphereGeo = new THREE.SphereGeometry(0.15, 12, 12);
+  // Vertical scanning beam per model (testing only)
+  if (cfg.status === 'testing') {
+    const modelScanGeo = new THREE.PlaneGeometry(0.04, 2.5);
+    const modelScan = new THREE.Mesh(modelScanGeo, glowMat(ORANGE, 0.7));
+    modelScan.userData.isModelScan = true;
+    group.add(modelScan);
+
+    // Electric arc lines — two per testing model
+    for (let a = 0; a < 2; a++) {
+      const arcPts = [];
+      for (let p = 0; p < 8; p++) {
+        arcPts.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 2,
+          -1 + p * 0.35,
+          (Math.random() - 0.5) * 2
+        ));
+      }
+      const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPts);
+      const arc = new THREE.Line(arcGeo, lineMat(ORANGE, 0.5));
+      arc.userData.isArc = true;
+      arc.userData.arcIdx = a;
+      group.add(arc);
+    }
+  }
+
+  // Status indicator sphere above — larger with glow halo
+  const statusSphereGeo = new THREE.SphereGeometry(0.18, 12, 12);
   const statusColor = cfg.status === 'pass' ? GREEN : (cfg.status === 'fail' ? RED : ORANGE);
   const statusSphere = new THREE.Mesh(statusSphereGeo, glowMat(statusColor, 1));
-  statusSphere.position.y = 1.5;
+  statusSphere.position.y = 1.8;
   group.add(statusSphere);
+  // Halo around status sphere
+  const statusHalo = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 8), glowMat(statusColor, 0.2));
+  statusHalo.position.y = 1.8;
+  group.add(statusHalo);
 
-  // Progress bar (horizontal line below cube)
+  // Progress bar
   const progressBarBg = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 0.1), glowMat(0x333333, 0.4));
   progressBarBg.position.y = -1.2;
   progressBarBg.position.z = 0.01;
   group.add(progressBarBg);
 
-  const progressBar = new THREE.Mesh(new THREE.PlaneGeometry(1.8 * cfg.progress, 0.1), glowMat(cubeColor, 0.8));
+  const progressBar = new THREE.Mesh(new THREE.PlaneGeometry(1.8 * Math.max(0.01, cfg.progress), 0.1), glowMat(cubeColor, 0.8));
   progressBar.position.y = -1.2;
   progressBar.position.x = -0.9 * (1 - cfg.progress);
   progressBar.position.z = 0.02;
   group.add(progressBar);
 
+  // Point light per testing model for dramatic glow
+  if (cfg.status === 'testing') {
+    const modelLight = new THREE.PointLight(ORANGE, 0.3, 5);
+    modelLight.position.y = 0;
+    group.add(modelLight);
+  }
+
   labGroup.add(group);
-  labModels.push({ group, cube, cubeInner, rings, statusSphere, progressBar, config: cfg, probeTimer: 0 });
+  labModels.push({ group, cube, cubeInner, rings, statusSphere, progressBar, config: cfg, probeTimer: 0, cfgIdx });
 });
 
-// Scanning beam that sweeps across the lab
-const scanBeamGeo = new THREE.PlaneGeometry(0.05, boxH - 1);
-const scanBeamMat = glowMat(ORANGE, 0.4);
+// Scanning beams that sweep across the lab — two perpendicular beams
+const scanBeamGeo = new THREE.PlaneGeometry(0.06, boxH - 1);
+const scanBeamMat = glowMat(ORANGE, 0.5);
 const labScanBeam = new THREE.Mesh(scanBeamGeo, scanBeamMat);
 labScanBeam.position.set(-boxW/2, boxH/2 + 0.5, 0);
 labGroup.add(labScanBeam);
+
+const scanBeam2Geo = new THREE.PlaneGeometry(boxW - 1, 0.06);
+const scanBeam2Mat = glowMat(ORANGE, 0.35);
+const labScanBeam2 = new THREE.Mesh(scanBeam2Geo, scanBeam2Mat);
+labScanBeam2.position.set(0, boxH/2 + 0.5, -boxD/2);
+labScanBeam2.rotation.y = Math.PI / 2;
+labGroup.add(labScanBeam2);
+
+// Horizontal scanning plane
+const scanPlaneGeo = new THREE.PlaneGeometry(boxW - 2, boxD - 2);
+const scanPlaneMat = glowMat(ORANGE, 0.04);
+const labScanPlane = new THREE.Mesh(scanPlaneGeo, scanPlaneMat);
+labScanPlane.rotation.x = -Math.PI / 2;
+labScanPlane.position.y = 3;
+labGroup.add(labScanPlane);
 
 // Probe particles inside the lab
 const labProbes = [];
@@ -848,10 +918,24 @@ const routeBeams = [];
 
 function createRouteBeam(toPool) {
   const startPos = new THREE.Vector3(0, 2, 0);
-  const endPos = toPool
-    ? new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6)
-    : new THREE.Vector3(6 + (Math.random()-0.5)*4, 3, 14);
   const color = toPool ? GREEN : ORANGE;
+
+  // Find target pool node first so we can aim directly at it
+  let targetPoolNode = null;
+  let endPos;
+  if (toPool) {
+    const activeNodes = poolNodes.filter(n => n.state === 'active' && !n._processing);
+    if (activeNodes.length > 0) {
+      targetPoolNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
+      // Aim directly at the model cube's world position
+      endPos = new THREE.Vector3();
+      targetPoolNode.mesh.getWorldPosition(endPos);
+    } else {
+      endPos = new THREE.Vector3(18 + (Math.random()-0.5)*6, 2 + Math.random()*3, -4 + (Math.random()-0.5)*6);
+    }
+  } else {
+    endPos = new THREE.Vector3(6 + (Math.random()-0.5)*6, 4, 14 + (Math.random()-0.5)*4);
+  }
 
   // Arc via midpoint
   const mid = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5);
@@ -868,22 +952,12 @@ function createRouteBeam(toPool) {
   const particleGeo = new THREE.SphereGeometry(pSize, 12, 12);
   const particle = new THREE.Mesh(particleGeo, glowMat(color, 1));
   if (toPool) {
-    // Bright white core
     particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), glowMat(WHITE, 1)));
-    // Inner glow
     particle.add(new THREE.Mesh(new THREE.SphereGeometry(0.7, 8, 8), glowMat(GREEN, 0.4)));
-    // Outer halo
     particle.add(new THREE.Mesh(new THREE.SphereGeometry(1.1, 8, 8), glowMat(GREEN, 0.12)));
   }
   particle.position.copy(startPos);
   scene.add(particle);
-
-  // Find which pool node this beam targets (for chaining response)
-  let targetPoolNode = null;
-  if (toPool) {
-    const activeNodes = poolNodes.filter(n => n.state === 'active');
-    if (activeNodes.length > 0) targetPoolNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
-  }
 
   routeBeams.push({ line, particle, curve, t: 0, speed: 0.015 + Math.random() * 0.005, color, toPool, targetPoolNode });
 
@@ -1178,11 +1252,14 @@ setInterval(() => {
 // Pulse rings
 setInterval(createPulseRing, 3000);
 
-// Lab probes
+// Lab probes — target random testing models, more frequent
 setInterval(() => {
-  const testingModel = labModels.find(m => m.config.status === 'testing');
-  if (testingModel) spawnLabProbe(testingModel);
-}, 300);
+  const testingModels = labModels.filter(m => m.config.status === 'testing');
+  if (testingModels.length > 0) {
+    const target = testingModels[Math.floor(Math.random() * testingModels.length)];
+    spawnLabProbe(target);
+  }
+}, 120);
 
 // Flow particles
 setInterval(() => {
@@ -1276,15 +1353,59 @@ function animate() {
     if (beam.t >= 1) {
       scene.remove(beam.line);
       scene.remove(beam.particle);
-      // When a pool-bound request arrives, flash the target node
-      // then after a short delay, fire a response beam from that node to exit
+      // When a pool-bound request arrives, animate "absorption" into the node
+      // then after processing delay, animate "release" of response
       if (beam.toPool && beam.targetPoolNode) {
         const node = beam.targetPoolNode;
+        // ABSORPTION: flash bright, scale up
         node.mesh.material.opacity = 1;
-        // Schedule response beam from this specific node after 0.8-2s "processing"
-        const delay = 800 + Math.random() * 1200;
+        node.mesh.scale.set(1.6, 1.6, 1.6);
+        // Add temporary absorption glow sphere
+        const absorbGlow = new THREE.Mesh(
+          new THREE.SphereGeometry(1.5, 12, 12),
+          glowMat(GREEN, 0.5)
+        );
+        node.mesh.add(absorbGlow);
+        // Shrink absorption over 500ms
+        const absorbStart = performance.now();
+        const absorbAnim = () => {
+          const elapsed = performance.now() - absorbStart;
+          const p = Math.min(elapsed / 500, 1);
+          const s = 1.6 - 0.6 * p;
+          node.mesh.scale.set(s, s, s);
+          absorbGlow.material.opacity = 0.5 * (1 - p);
+          if (p < 1) requestAnimationFrame(absorbAnim);
+          else node.mesh.remove(absorbGlow);
+        };
+        requestAnimationFrame(absorbAnim);
+
+        // "Processing" — node pulses during delay
+        const delay = 1000 + Math.random() * 1500;
+        node._processing = true;
         setTimeout(() => {
-          if (node.mesh.material) node.mesh.material.opacity = 0.7;
+          node._processing = false;
+          // RELEASE: flash and scale up again, then fire response
+          node.mesh.material.opacity = 1;
+          node.mesh.scale.set(1.5, 1.5, 1.5);
+          // Release glow
+          const releaseGlow = new THREE.Mesh(
+            new THREE.SphereGeometry(1.8, 12, 12),
+            glowMat(GREEN, 0.6)
+          );
+          node.mesh.add(releaseGlow);
+          const releaseStart = performance.now();
+          const releaseAnim = () => {
+            const elapsed = performance.now() - releaseStart;
+            const p = Math.min(elapsed / 400, 1);
+            const s = 1.5 - 0.5 * p;
+            node.mesh.scale.set(s, s, s);
+            releaseGlow.material.opacity = 0.6 * (1 - p);
+            node.mesh.material.opacity = 0.7 + 0.3 * (1 - p);
+            if (p < 1) requestAnimationFrame(releaseAnim);
+            else { node.mesh.remove(releaseGlow); node.mesh.material.opacity = 0.7; }
+          };
+          requestAnimationFrame(releaseAnim);
+
           // Fire response from this node
           const nodeWorld = new THREE.Vector3();
           node.mesh.getWorldPosition(nodeWorld);
@@ -1299,6 +1420,7 @@ function animate() {
           const p = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 10), glowMat(GREEN, 1));
           p.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), glowMat(WHITE, 1)));
           p.add(new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 8), glowMat(GREEN, 0.3)));
+          p.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 8, 8), glowMat(GREEN, 0.08)));
           p.position.copy(nodeWorld);
           scene.add(p);
           responseBeams.push({ line: ln, particle: p, curve, t: 0, speed: 0.012 + Math.random() * 0.005 });
@@ -1379,46 +1501,90 @@ function animate() {
     }
   }
 
-  // ── Model pool nodes float ──
+  // ── Model pool nodes float + processing pulse ──
   poolNodes.forEach(node => {
     node.mesh.position.y = node.baseY + Math.sin(t * 0.8 + node.phase) * 0.3;
     node.mesh.rotation.y = t * 0.3 + node.phase;
     node.mesh.rotation.x = t * 0.15 + node.phase;
-  });
-
-  // ── Lab models animation ──
-  labModels.forEach((lm, idx) => {
-    // Rotate cube
-    lm.cube.rotation.y = t * 0.5 + idx;
-    lm.cube.rotation.x = t * 0.3 + idx;
-    lm.cubeInner.rotation.y = t * 0.5 + idx;
-    lm.cubeInner.rotation.x = t * 0.3 + idx;
-
-    // Rings
-    lm.rings.forEach((ring, r) => {
-      const speed = 1.5 + r * 0.5;
-      if (r === 0) { ring.rotation.x = t * speed; ring.rotation.y = 0; }
-      else if (r === 1) { ring.rotation.y = t * speed; ring.rotation.x = Math.PI/3; }
-      else { ring.rotation.z = t * speed; ring.rotation.x = Math.PI/4; }
-    });
-
-    // Pulse for testing status
-    if (lm.config.status === 'testing') {
-      lm.config.progress = (lm.config.progress + dt * 0.08) % 1;
-      const pScale = lm.config.progress * 1.8;
-      lm.progressBar.scale.x = Math.max(0.01, lm.config.progress);
-      lm.progressBar.position.x = -0.9 * (1 - lm.config.progress);
-      lm.statusSphere.material.opacity = 0.5 + 0.5 * Math.sin(t * 5);
-    } else if (lm.config.status === 'fail') {
-      lm.cube.material.opacity = 0.3 + 0.4 * Math.abs(Math.sin(t * 3 + idx));
-      lm.cubeInner.material.opacity = 0.1 + 0.1 * Math.abs(Math.sin(t * 3 + idx));
+    // When processing a request, pulse rapidly
+    if (node._processing) {
+      node.mesh.material.opacity = 0.5 + 0.5 * Math.abs(Math.sin(t * 12));
+      node.mesh.children.forEach(c => {
+        if (c.material) c.material.opacity = 0.2 + 0.3 * Math.abs(Math.sin(t * 12));
+      });
     }
   });
 
-  // ── Lab scan beam sweep ──
-  const scanX = Math.sin(t * 0.8) * (boxW / 2 - 0.5);
+  // ── Lab models animation — intense evaluation ──
+  labModels.forEach((lm, idx) => {
+    const ci = lm.cfgIdx || idx;
+    // Rotate cube — faster for testing models
+    const rotSpeed = lm.config.status === 'testing' ? 1.2 : 0.4;
+    lm.cube.rotation.y = t * rotSpeed + ci;
+    lm.cube.rotation.x = t * (rotSpeed * 0.6) + ci;
+    lm.cubeInner.rotation.y = t * rotSpeed + ci;
+    lm.cubeInner.rotation.x = t * (rotSpeed * 0.6) + ci;
+
+    // Rings — 5 rings with varied speeds and axes
+    lm.rings.forEach((ring, r) => {
+      const baseSpeed = lm.config.status === 'testing' ? 2.5 : 1.0;
+      const speed = baseSpeed + (ring.userData.speedMult || 1) * 0.6;
+      const axis = ring.userData.axis !== undefined ? ring.userData.axis : r % 3;
+      if (axis === 0) { ring.rotation.x = t * speed + ci; ring.rotation.y = ci * 0.5; }
+      else if (axis === 1) { ring.rotation.y = t * speed + ci; ring.rotation.x = Math.PI/3 + ci * 0.3; }
+      else { ring.rotation.z = t * speed + ci; ring.rotation.x = Math.PI/4 + ci * 0.2; }
+      // Pulse ring opacity for testing models
+      if (lm.config.status === 'testing') {
+        ring.material.opacity = 0.3 + 0.4 * Math.abs(Math.sin(t * 3 + r + ci));
+      }
+    });
+
+    // Testing models: progress bar, pulsing glow, electric arcs, scan beam
+    if (lm.config.status === 'testing') {
+      lm.config.progress = (lm.config.progress + dt * (0.05 + ci * 0.005)) % 1;
+      lm.progressBar.scale.x = Math.max(0.01, lm.config.progress);
+      lm.progressBar.position.x = -0.9 * (1 - lm.config.progress);
+      lm.statusSphere.material.opacity = 0.4 + 0.6 * Math.sin(t * 6 + ci);
+      // Cube brightness pulse
+      lm.cube.material.opacity = 0.4 + 0.4 * Math.abs(Math.sin(t * 4 + ci * 0.7));
+      lm.cubeInner.material.opacity = 0.1 + 0.15 * Math.abs(Math.sin(t * 4 + ci * 0.7));
+
+      // Animate electric arcs — randomize positions
+      lm.group.children.forEach(child => {
+        if (child.userData.isArc) {
+          const posArr = child.geometry.attributes.position.array;
+          for (let p = 0; p < posArr.length; p += 3) {
+            posArr[p] += (Math.random() - 0.5) * 0.15;
+            posArr[p + 2] += (Math.random() - 0.5) * 0.15;
+          }
+          child.geometry.attributes.position.needsUpdate = true;
+          child.material.opacity = 0.3 + 0.4 * Math.random();
+        }
+        // Animate model scan beam
+        if (child.userData.isModelScan) {
+          child.rotation.y = t * 3 + ci;
+          child.material.opacity = 0.3 + 0.5 * Math.abs(Math.sin(t * 5 + ci));
+        }
+      });
+    } else if (lm.config.status === 'fail') {
+      lm.cube.material.opacity = 0.2 + 0.5 * Math.abs(Math.sin(t * 4 + idx));
+      lm.cubeInner.material.opacity = 0.05 + 0.15 * Math.abs(Math.sin(t * 4 + idx));
+      lm.statusSphere.material.opacity = 0.3 + 0.7 * Math.abs(Math.sin(t * 2 + idx));
+    } else if (lm.config.status === 'pass') {
+      lm.statusSphere.material.opacity = 0.6 + 0.4 * Math.sin(t * 1.5 + ci);
+    }
+  });
+
+  // ── Lab scan beams sweep ──
+  const scanX = Math.sin(t * 0.6) * (boxW / 2 - 1);
   labScanBeam.position.x = scanX;
-  labScanBeam.material.opacity = 0.2 + 0.2 * Math.abs(Math.sin(t * 0.8));
+  labScanBeam.material.opacity = 0.3 + 0.3 * Math.abs(Math.sin(t * 0.6));
+  const scanZ = Math.sin(t * 0.45 + 1) * (boxD / 2 - 1);
+  labScanBeam2.position.z = scanZ;
+  labScanBeam2.material.opacity = 0.2 + 0.25 * Math.abs(Math.sin(t * 0.45 + 1));
+  // Horizontal scan plane moves up/down
+  labScanPlane.position.y = 2 + Math.sin(t * 0.7) * 2.5;
+  labScanPlane.material.opacity = 0.02 + 0.04 * Math.abs(Math.sin(t * 0.7));
 
   // ── Lab probes ──
   for (let i = labProbes.length - 1; i >= 0; i--) {
