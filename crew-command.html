@@ -329,34 +329,45 @@
   }
 
   /* ── Pipeline Visualization ── */
-  .pipeline {
+  .pipeline-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    flex-wrap: wrap;
+    gap: 0;
+    padding: 32px 16px 24px;
+    overflow-x: auto;
+  }
+
+  /* Individual node + label stack */
+  .pipe-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
   }
   .pipeline-node {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     font-family: 'IBM Plex Mono', monospace;
     border: 2px solid var(--border-glass);
     color: var(--text-3);
-    background: transparent;
+    background: rgba(255,255,255,0.015);
     transition: all 0.4s;
     position: relative;
   }
   .pipeline-node.active {
     border-color: var(--accent-1);
     color: var(--accent-1);
-    background: rgba(94, 231, 255, 0.06);
+    background: rgba(94, 231, 255, 0.08);
     animation: node-pulse 1.5s infinite;
+    box-shadow: 0 0 20px rgba(94, 231, 255, 0.15);
   }
   .pipeline-node.queued {
     border-color: var(--border-2);
@@ -365,34 +376,121 @@
   .pipeline-node.complete {
     border-color: var(--accent-3);
     color: var(--accent-3);
-    background: rgba(167, 255, 106, 0.06);
+    background: rgba(167, 255, 106, 0.08);
+    box-shadow: 0 0 16px rgba(167, 255, 106, 0.1);
   }
   .pipeline-node.error {
     border-color: var(--grade-f);
     color: var(--grade-f);
-    background: rgba(255, 56, 56, 0.06);
+    background: rgba(255, 56, 56, 0.08);
+    box-shadow: 0 0 16px rgba(255, 56, 56, 0.1);
   }
-  .pipeline-arrow {
-    color: var(--text-3);
-    font-size: 14px;
-    opacity: 0.3;
-    margin: 0 2px;
-  }
-  .pipeline-label {
+  .pipe-label {
     font-size: 9px;
     color: var(--text-3);
     font-family: 'IBM Plex Mono', monospace;
-    position: absolute;
-    bottom: -18px;
-    white-space: nowrap;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
+    white-space: nowrap;
+    text-align: center;
   }
+
+  /* Connector lines between stages */
+  .pipe-connector {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border-glass), rgba(94,231,255,0.15), var(--border-glass));
+    flex-shrink: 0;
+    position: relative;
+    margin: 0 2px;
+    align-self: center;
+    margin-bottom: 20px; /* offset for labels */
+  }
+  .pipe-connector::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid rgba(94,231,255,0.25);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+  }
+  .pipe-connector.long {
+    width: 48px;
+  }
+
+  /* Parallel group box */
+  .pipe-parallel-box {
+    border: 1px solid rgba(94,231,255,0.12);
+    border-radius: 12px;
+    padding: 20px 18px 12px;
+    background: rgba(94,231,255,0.015);
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px; /* offset for labels */
+  }
+  .pipe-parallel-tag {
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent-1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: var(--bg-1);
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+  .pipe-parallel-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+  }
+  .pipe-parallel-box .pipe-stage {
+    gap: 6px;
+  }
+  .pipe-parallel-box .pipeline-node {
+    width: 46px;
+    height: 46px;
+    font-size: 12px;
+  }
+
+  /* Animated flow dots on connectors */
+  @keyframes flow-dot {
+    0% { left: -4px; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: calc(100% + 4px); opacity: 0; }
+  }
+  .pipe-connector .flow-dot {
+    position: absolute;
+    top: -2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-1);
+    opacity: 0;
+    animation: flow-dot 2s infinite ease-in-out;
+    box-shadow: 0 0 6px var(--accent-1);
+  }
+  .pipe-connector .flow-dot:nth-child(2) { animation-delay: 0.7s; }
+  .pipe-connector .flow-dot:nth-child(3) { animation-delay: 1.4s; }
+
+  /* Legend */
   .pipeline-legend {
     display: flex;
     justify-content: center;
     gap: 24px;
-    margin-top: 36px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-glass);
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
     color: var(--text-3);
@@ -435,8 +533,12 @@
   }
   @media (max-width: 900px) {
     .agent-grid { grid-template-columns: 1fr; }
-    .pipeline { gap: 2px; }
-    .pipeline-node { width: 38px; height: 38px; font-size: 10px; }
+    .pipeline-wrap { padding: 24px 8px 16px; }
+    .pipeline-node { width: 40px; height: 40px; font-size: 10px; }
+    .pipe-parallel-box .pipeline-node { width: 36px; height: 36px; font-size: 9px; }
+    .pipe-connector { width: 20px; }
+    .pipe-connector.long { width: 28px; }
+    .pipe-parallel-box { padding: 16px 12px 8px; gap: 8px; }
   }
 </style>
 </head>
@@ -729,48 +831,71 @@
   <!-- Pipeline Visualization -->
   <div class="card mb-lg">
     <div class="card-label">Agent Execution Pipeline</div>
-    <div style="padding-top:8px;">
-      <div style="display:flex; align-items:center; justify-content:center; gap:0;">
-        <!-- Stage 1: Subject + Planner (sequential) -->
-        <div style="display:flex; align-items:center; gap:4px;">
-          <div class="pipeline-node" id="pipe-subject">S<span class="pipeline-label">Subject</span></div>
-          <span class="pipeline-arrow">&rarr;</span>
-          <div class="pipeline-node" id="pipe-planner">P<span class="pipeline-label">Planner</span></div>
-        </div>
 
-        <!-- Fan-out arrow -->
-        <span class="pipeline-arrow" style="font-size:18px; margin:0 8px;">&rarr;</span>
+    <div class="pipeline-wrap">
+      <!-- Stage 1: Subject -->
+      <div class="pipe-stage">
+        <div class="pipeline-node" id="pipe-subject">S</div>
+        <div class="pipe-label">Subject</div>
+      </div>
 
-        <!-- Stage 2: Parallel adversarial agents -->
-        <div style="display:flex; flex-direction:column; gap:6px; border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:10px 14px; background:rgba(94,231,255,0.02); position:relative;">
-          <div style="position:absolute; top:-9px; left:12px; font-size:9px; font-family:'IBM Plex Mono',monospace; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; background:var(--bg-1); padding:0 6px;">Parallel</div>
-          <div style="display:flex; gap:6px;">
-            <div class="pipeline-node" id="pipe-sabotage" style="width:42px;height:42px;font-size:11px;">S<span class="pipeline-label">Sabotage</span></div>
-            <div class="pipeline-node" id="pipe-blackmail" style="width:42px;height:42px;font-size:11px;">B<span class="pipeline-label">Blackmail</span></div>
+      <div class="pipe-connector"><span class="flow-dot"></span><span class="flow-dot"></span></div>
+
+      <!-- Stage 2: Planner -->
+      <div class="pipe-stage">
+        <div class="pipeline-node" id="pipe-planner">P</div>
+        <div class="pipe-label">Planner</div>
+      </div>
+
+      <div class="pipe-connector long"><span class="flow-dot"></span><span class="flow-dot"></span><span class="flow-dot"></span></div>
+
+      <!-- Stage 3: Parallel adversarial agents -->
+      <div class="pipe-parallel-box">
+        <div class="pipe-parallel-tag">Parallel Execution</div>
+        <div class="pipe-parallel-row">
+          <div class="pipe-stage">
+            <div class="pipeline-node" id="pipe-sabotage">SA</div>
+            <div class="pipe-label">Sabotage</div>
           </div>
-          <div style="display:flex; gap:6px;">
-            <div class="pipeline-node" id="pipe-gaslight" style="width:42px;height:42px;font-size:11px;">G<span class="pipeline-label">Gaslight</span></div>
-            <div class="pipeline-node" id="pipe-selfpres" style="width:42px;height:42px;font-size:11px;">SP<span class="pipeline-label">Self-Pres</span></div>
+          <div class="pipe-stage">
+            <div class="pipeline-node" id="pipe-blackmail">BL</div>
+            <div class="pipe-label">Blackmail</div>
           </div>
         </div>
-
-        <!-- Fan-in arrow -->
-        <span class="pipeline-arrow" style="font-size:18px; margin:0 8px;">&rarr;</span>
-
-        <!-- Stage 3: Judge + Report (sequential) -->
-        <div style="display:flex; align-items:center; gap:4px;">
-          <div class="pipeline-node" id="pipe-judge">J<span class="pipeline-label">Judge</span></div>
-          <span class="pipeline-arrow">&rarr;</span>
-          <div class="pipeline-node" id="pipe-report">R<span class="pipeline-label">Report</span></div>
+        <div class="pipe-parallel-row">
+          <div class="pipe-stage">
+            <div class="pipeline-node" id="pipe-gaslight">GL</div>
+            <div class="pipe-label">Gaslight</div>
+          </div>
+          <div class="pipe-stage">
+            <div class="pipeline-node" id="pipe-selfpres">SP</div>
+            <div class="pipe-label">Self-Pres</div>
+          </div>
         </div>
       </div>
 
-      <div class="pipeline-legend">
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-1);"></div> Active</div>
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-3);"></div> Complete</div>
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--grade-f);"></div> Failed</div>
-        <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--border-glass);"></div> Idle</div>
+      <div class="pipe-connector long"><span class="flow-dot"></span><span class="flow-dot"></span><span class="flow-dot"></span></div>
+
+      <!-- Stage 4: Judge -->
+      <div class="pipe-stage">
+        <div class="pipeline-node" id="pipe-judge">J</div>
+        <div class="pipe-label">Judge</div>
       </div>
+
+      <div class="pipe-connector"><span class="flow-dot"></span><span class="flow-dot"></span></div>
+
+      <!-- Stage 5: Report -->
+      <div class="pipe-stage">
+        <div class="pipeline-node" id="pipe-report">R</div>
+        <div class="pipe-label">Report</div>
+      </div>
+    </div>
+
+    <div class="pipeline-legend">
+      <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-1); box-shadow:0 0 6px var(--accent-1);"></div> Active</div>
+      <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--accent-3); box-shadow:0 0 6px var(--accent-3);"></div> Complete</div>
+      <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--grade-f); box-shadow:0 0 6px var(--grade-f);"></div> Failed</div>
+      <div class="pipeline-legend-item"><div class="pipeline-legend-dot" style="background:var(--border-glass);"></div> Idle</div>
     </div>
   </div>
 
