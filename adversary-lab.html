@@ -589,7 +589,34 @@
   @media (max-width: 900px) {
     .layout { flex-direction: column; }
     .sidebar { width: 100%; min-width: 100%; border-right: none; border-bottom: 1px solid var(--border-glass); }
-    .nav-links { display: none; }
+  }
+
+  /* ── iPhone mobile ── */
+  @media (max-width: 430px) {
+    .sidebar { max-height: 300px; overflow-y: auto; }
+    .sidebar-header { padding: 12px; }
+    .sidebar-title { font-size: 12px; }
+    .main-content { padding: 12px; }
+
+    .config-columns { gap: 10px; }
+    .model-config-card { padding: 14px; }
+
+    .results-grid { gap: 10px; }
+    .bottom-row { gap: 10px; }
+
+    /* Prompt list */
+    .prompt-item { padding: 8px 10px; font-size: 11px; }
+    .prompt-id { font-size: 9px; min-width: 32px; }
+    .prompt-text { font-size: 11px; }
+
+    /* Log panel */
+    .log-body { max-height: 180px; font-size: 10px; }
+
+    /* Scenario desc */
+    .scenario-desc { font-size: 11px; padding: 8px 10px; }
+
+    /* Form selects */
+    .form-select { font-size: 12px; }
   }
 </style>
 </head>
@@ -714,7 +741,7 @@
         <div class="ai-badge" style="background:linear-gradient(135deg, #c488ff, #5ee7ff)">AI</div>
         <div>
           <div class="card-label">Judge Model</div>
-          <div class="model-name">Claude Opus 4.6</div>
+          <div class="model-name">SnowCrash — Dredd 95</div>
           <div class="model-role">Evaluator</div>
         </div>
         <div class="live-indicator"><span class="status-dot"></span> live</div>

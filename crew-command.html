@@ -540,6 +540,69 @@
     .pipe-connector.long { width: 28px; }
     .pipe-parallel-box { padding: 16px 12px 8px; gap: 8px; }
   }
+
+  /* ── iPhone mobile ── */
+  @media (max-width: 430px) {
+    /* Suite cards → 2-col on small screens */
+    .run-config-row { flex-direction: column; }
+    .btn-run { width: 100%; text-align: center; }
+
+    /* Agent filter pills → scrollable */
+    .agent-pills {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      flex-wrap: nowrap;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .agent-pills::-webkit-scrollbar { display: none; }
+    .agent-pill { flex-shrink: 0; font-size: 9px; padding: 4px 10px; }
+
+    /* Log panel */
+    .log-panel-header { flex-wrap: wrap; padding: 10px 12px; }
+    .log-search { width: 100%; min-width: 0; }
+    .log-body { padding: 10px 12px; max-height: 220px; font-size: 10px; line-height: 1.7; }
+    .log-controls { width: 100%; justify-content: space-between; }
+
+    /* Agent grid → 2-col on mobile */
+    .agent-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .agent-card-name { font-size: 12px; }
+    .agent-card-desc { font-size: 10px; margin-bottom: 8px; }
+
+    /* Pipeline → compact */
+    .pipeline-wrap { padding: 20px 4px 12px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .pipeline-wrap::-webkit-scrollbar { display: none; }
+    .pipeline-node { width: 34px; height: 34px; font-size: 9px; }
+    .pipe-parallel-box .pipeline-node { width: 30px; height: 30px; font-size: 8px; }
+    .pipe-connector { width: 14px; margin-bottom: 16px; }
+    .pipe-connector.long { width: 20px; }
+    .pipe-label { font-size: 7px; letter-spacing: 0.8px; }
+    .pipe-parallel-box { padding: 14px 8px 6px; gap: 6px; margin-bottom: 16px; }
+    .pipe-parallel-tag { font-size: 7px; letter-spacing: 1px; }
+    .pipe-parallel-row { gap: 8px; }
+    .pipeline-legend { font-size: 9px; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+    /* Verdicts grid */
+    .verdicts-grid { grid-template-columns: 1fr; gap: 10px; }
+    .verdict-card-result { font-size: 18px; }
+    .verdict-card-desc { font-size: 11px; }
+
+    /* Run summary */
+    .run-summary { gap: 16px; }
+    .summary-label { font-size: 9px; }
+    .summary-value { font-size: 13px; }
+
+    /* Crew status bar */
+    .crew-status-bar { gap: 16px; }
+    .crew-status-label { font-size: 9px; letter-spacing: 2px; }
+    .crew-status-value { font-size: 12px; }
+
+    /* Report */
+    .report-body { font-size: 11px; line-height: 1.6; }
+
+    /* Scenario description */
+    .scenario-desc { font-size: 11px; padding: 8px 10px; }
+  }
 </style>
 </head>
 <body>

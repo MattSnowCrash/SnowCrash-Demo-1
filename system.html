@@ -73,6 +73,17 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
 .hud-stat .dot.green { background: #a7ff6a; box-shadow: 0 0 8px #a7ff6a; }
 .hud-stat .dot.orange { background: #ff8a5b; box-shadow: 0 0 8px #ff8a5b; }
 
+/* ── Mobile (iPhone) ── */
+@media (max-width: 430px) {
+  .hud-stats { flex-wrap: wrap; gap: 6px; width: 90%; justify-content: center; }
+  .hud-stat { font-size: 9px; padding: 4px 10px; letter-spacing: 1px; }
+  .hud-title h1 { font-size: 11px; letter-spacing: 2px; }
+  .hud-title .subtitle { font-size: 8px; }
+  .floating-label { font-size: 8px; }
+  .floating-label .sub { font-size: 7px; }
+  .ticker-item { font-size: 8px; }
+}
+
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }

@@ -32,6 +32,16 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 @media (max-width: 700px) {
   .charts-row, .health-row { grid-template-columns: 1fr; }
 }
+/* ── Mobile (iPhone) ── */
+@media (max-width: 430px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .data-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table table { min-width: 600px; }
+  .table-header { padding: 14px 16px 10px; font-size: 14px; }
+  .health-card .avail-value { font-size: 20px; }
+  .health-card .sub-metrics { gap: 12px; }
+  .health-card .sub-metric .sm-value { font-size: 12px; }
+}
 </style>
 </head>
 <body>

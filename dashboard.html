@@ -13,6 +13,18 @@
 .chart-wrap { margin-bottom: 32px; }
 .stats-row { margin-bottom: 32px; }
 .quick-grid { margin-bottom: 32px; }
+/* ── Mobile (iPhone) ── */
+@media (max-width: 430px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .chart-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .chart-container svg { min-width: 500px; }
+  .data-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .data-table table { min-width: 400px; }
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .quick-grid .btn-outline { font-size: 9px; padding: 8px 6px; }
+  .hero-actions { display: flex; flex-direction: column; gap: 8px; }
+  .hero-actions a { text-align: center; margin-right: 0 !important; }
+}
 </style>
 </head>
 <body>

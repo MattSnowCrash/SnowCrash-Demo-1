@@ -513,6 +513,33 @@
   .model-grid { grid-template-columns: 1fr; }
   .detail-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── iPhone mobile ── */
+@media (max-width: 430px) {
+  .stats-row-5 { grid-template-columns: 1fr; gap: 8px; }
+  .detail-grid { grid-template-columns: 1fr; }
+
+  /* Model cards */
+  .model-card { padding: 14px; }
+  .model-header { flex-wrap: wrap; gap: 8px; }
+  .model-name { font-size: 14px; }
+
+  /* Filter bar */
+  .filter-bar { flex-wrap: wrap; gap: 8px; }
+  .filter-bar select,
+  .filter-bar input { font-size: 12px; min-width: 0; flex: 1; }
+
+  /* Score bars */
+  .score-row { flex-wrap: wrap; gap: 4px; }
+  .score-label { font-size: 9px; min-width: 80px; }
+
+  /* Vuln table */
+  .vuln-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .vuln-table table { min-width: 400px; }
+
+  /* Compliance badges */
+  .compliance-row { flex-wrap: wrap; gap: 6px; }
+}
 </style>
 </head>
 <body>
@@ -974,6 +1001,649 @@ const MODELS = [
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [55, 56, 57, 58, 59, 60, 61, 61, 62, 63, 64, 64]
+  },
+  {
+    name: "Falcon 3 180B",
+    provider: "TII",
+    type: "open",
+    origin: "other",
+    grade: "B",
+    safetyScore: 75,
+    params: "180B",
+    released: "Jan 2026",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 77, jailbreakResist: 69, truthfulness: 76, privacyProtection: 74, toxicityControl: 81, instructionFollow: 78, deceptionResist: 67, biasFairness: 73 },
+    vulnCount: 13, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0101", severity: "critical", desc: "Open-weight architecture allows complete safety guardrail removal through parameter-efficient fine-tuning with fewer than 500 adversarial examples." },
+      { id: "SCL-2026-0104", severity: "high", desc: "Bilingual Arabic-English safety alignment is inconsistent; Arabic prompts bypass English-trained safety filters in 23% of test cases." },
+      { id: "SCL-2026-0107", severity: "medium", desc: "Training data sourced from UAE-curated corpora introduces regional content biases in geopolitical and religious topics." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
+    trend: [67, 68, 69, 70, 71, 72, 73, 73, 74, 74, 75, 75]
+  },
+  {
+    name: "Nemotron-4 340B",
+    provider: "NVIDIA",
+    type: "open",
+    origin: "us",
+    grade: "A",
+    safetyScore: 87,
+    params: "340B",
+    released: "Nov 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 89, jailbreakResist: 84, truthfulness: 88, privacyProtection: 86, toxicityControl: 91, instructionFollow: 90, deceptionResist: 82, biasFairness: 85 },
+    vulnCount: 6, criticalCount: 0,
+    vulns: [
+      { id: "SCL-2026-0111", severity: "high", desc: "Synthetic data generation pipeline used for alignment may introduce systematic blind spots in safety coverage for novel attack vectors." },
+      { id: "SCL-2026-0114", severity: "medium", desc: "Open weights enable fine-tuning reversal, though NVIDIA's safety-locked layers provide partial mitigation against casual adversaries." },
+      { id: "SCL-2026-0117", severity: "medium", desc: "Code generation mode has weaker safety boundaries than conversational mode, allowing generation of exploit code with social engineering framing." }
+    ],
+    compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
+    trend: [80, 81, 82, 83, 84, 85, 85, 86, 86, 87, 87, 87]
+  },
+  {
+    name: "Baichuan 4",
+    provider: "Baichuan",
+    type: "closed",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 45,
+    params: "~400B MoE (est.)",
+    released: "Sep 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 42, jailbreakResist: 34, truthfulness: 48, privacyProtection: 39, toxicityControl: 50, instructionFollow: 64, deceptionResist: 32, biasFairness: 37 },
+    vulnCount: 32, criticalCount: 5,
+    vulns: [
+      { id: "SCL-2026-0121", severity: "critical", desc: "Extensive CCP-aligned content filtering suppresses factual information about Taiwan sovereignty, Xinjiang, and South China Sea disputes." },
+      { id: "SCL-2026-0124", severity: "critical", desc: "Produces detailed social engineering scripts and phishing email templates with no meaningful refusal when prompted in Mandarin." },
+      { id: "SCL-2026-0127", severity: "high", desc: "API telemetry transmits prompt metadata to servers in mainland China, creating data sovereignty risks for international users." },
+      { id: "SCL-2026-0130", severity: "high", desc: "Generates fabricated historical narratives that align with state propaganda when queried about modern Chinese history." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [38, 39, 40, 41, 42, 42, 43, 44, 44, 45, 45, 45]
+  },
+  {
+    name: "Jamba 1.5 Large",
+    provider: "AI21 Labs",
+    type: "open",
+    origin: "other",
+    grade: "C",
+    safetyScore: 58,
+    params: "94B SSM-Transformer",
+    released: "Aug 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 60, jailbreakResist: 50, truthfulness: 61, privacyProtection: 56, toxicityControl: 63, instructionFollow: 66, deceptionResist: 48, biasFairness: 55 },
+    vulnCount: 20, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0133", severity: "critical", desc: "Novel SSM-Transformer hybrid architecture creates unique attack surface where state-space components bypass attention-based safety mechanisms." },
+      { id: "SCL-2026-0136", severity: "critical", desc: "256K context window enables delayed prompt injection attacks positioned far from safety-checked input boundaries." },
+      { id: "SCL-2026-0139", severity: "high", desc: "Open weights with permissive Apache 2.0 license enable unrestricted adversarial fine-tuning without safety audit requirements." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58]
+  },
+  {
+    name: "Reka Core 2",
+    provider: "Reka",
+    type: "closed",
+    origin: "other",
+    grade: "C",
+    safetyScore: 62,
+    params: "~200B (est.)",
+    released: "Oct 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 64, jailbreakResist: 55, truthfulness: 65, privacyProtection: 60, toxicityControl: 68, instructionFollow: 70, deceptionResist: 52, biasFairness: 59 },
+    vulnCount: 17, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0141", severity: "critical", desc: "Multimodal video understanding pipeline lacks safety filtering for harmful visual content, allowing bypass through video-embedded instructions." },
+      { id: "SCL-2026-0144", severity: "high", desc: "Cross-modal transfer attacks enable text safety bypasses by encoding harmful requests as visual or audio inputs." },
+      { id: "SCL-2026-0147", severity: "medium", desc: "Limited red-teaming documentation raises concerns about evaluation thoroughness for edge-case adversarial scenarios." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [53, 54, 55, 56, 57, 58, 59, 59, 60, 61, 62, 62]
+  },
+  {
+    name: "Mistral Medium 3",
+    provider: "Mistral AI",
+    type: "open",
+    origin: "eu",
+    grade: "B",
+    safetyScore: 74,
+    params: "70B",
+    released: "Dec 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 76, jailbreakResist: 68, truthfulness: 75, privacyProtection: 77, toxicityControl: 79, instructionFollow: 76, deceptionResist: 65, biasFairness: 73 },
+    vulnCount: 12, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0151", severity: "critical", desc: "Open-weight distribution enables safety alignment stripping. Community-modified variants with removed guardrails detected within 72 hours of release." },
+      { id: "SCL-2026-0154", severity: "high", desc: "Safety performance degrades significantly in Romance languages other than French, with Italian and Portuguese showing 18% lower jailbreak resistance." },
+      { id: "SCL-2026-0157", severity: "medium", desc: "EU AI Act compliance documentation is incomplete for training data provenance in non-EU sourced corpora." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "pass" },
+    trend: [66, 67, 68, 69, 70, 71, 72, 72, 73, 73, 74, 74]
+  },
+  {
+    name: "Ernie 4.5",
+    provider: "Baidu",
+    type: "closed",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 42,
+    params: "~500B MoE (est.)",
+    released: "Jul 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 39, jailbreakResist: 32, truthfulness: 45, privacyProtection: 36, toxicityControl: 47, instructionFollow: 61, deceptionResist: 30, biasFairness: 34 },
+    vulnCount: 36, criticalCount: 6,
+    vulns: [
+      { id: "SCL-2026-0161", severity: "critical", desc: "Hardcoded censorship system blocks queries about Falun Gong, 1989 protests, and Xi Jinping while providing zero safety rails on weapons instructions." },
+      { id: "SCL-2026-0164", severity: "critical", desc: "Baidu search integration feeds unfiltered state-controlled search results as grounding context, amplifying propaganda in model outputs." },
+      { id: "SCL-2026-0167", severity: "critical", desc: "Persistent user profiling detected through API — conversation histories are retained and linked to device fingerprints without disclosure." },
+      { id: "SCL-2026-0170", severity: "high", desc: "Generates convincing deepfake text mimicking specific public figures with no identity verification or refusal mechanism." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [35, 36, 37, 38, 38, 39, 40, 40, 41, 41, 42, 42]
+  },
+  {
+    name: "InternLM 3 20B",
+    provider: "Shanghai AI Lab",
+    type: "open",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 38,
+    params: "20B",
+    released: "Jun 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 35, jailbreakResist: 28, truthfulness: 41, privacyProtection: 33, toxicityControl: 40, instructionFollow: 58, deceptionResist: 26, biasFairness: 31 },
+    vulnCount: 41, criticalCount: 7,
+    vulns: [
+      { id: "SCL-2026-0173", severity: "critical", desc: "Essentially no safety training beyond basic keyword filtering. Trivial prompt modifications bypass all content restrictions." },
+      { id: "SCL-2026-0176", severity: "critical", desc: "Open weights combined with small model size make this the most easily weaponizable model in our evaluation set." },
+      { id: "SCL-2026-0179", severity: "critical", desc: "State-mandated content controls are the only safety mechanism — they protect political interests, not user safety." },
+      { id: "SCL-2026-0182", severity: "high", desc: "Training data contains memorized personal information from Chinese social media platforms scraped without consent." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [30, 31, 32, 33, 34, 34, 35, 36, 36, 37, 38, 38]
+  },
+  {
+    name: "Cohere Command A",
+    provider: "Cohere",
+    type: "closed",
+    origin: "other",
+    grade: "B",
+    safetyScore: 77,
+    params: "~250B (est.)",
+    released: "Jan 2026",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 79, jailbreakResist: 73, truthfulness: 78, privacyProtection: 80, toxicityControl: 82, instructionFollow: 79, deceptionResist: 70, biasFairness: 75 },
+    vulnCount: 9, criticalCount: 0,
+    vulns: [
+      { id: "SCL-2026-0185", severity: "high", desc: "RAG-augmented generation mode can be exploited through adversarial document injection to produce authoritative-sounding misinformation." },
+      { id: "SCL-2026-0188", severity: "high", desc: "Enterprise tool-use capabilities allow unintended API call chains when user inputs mimic structured data formats." },
+      { id: "SCL-2026-0191", severity: "medium", desc: "Safety evaluation coverage for low-resource languages remains insufficient despite multilingual marketing claims." }
+    ],
+    compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
+    trend: [70, 71, 72, 73, 73, 74, 75, 75, 76, 76, 77, 77]
+  },
+  {
+    name: "Grok 3 Mini",
+    provider: "xAI",
+    type: "closed",
+    origin: "us",
+    grade: "C",
+    safetyScore: 61,
+    params: "~150B (est.)",
+    released: "Mar 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 58, jailbreakResist: 52, truthfulness: 56, privacyProtection: 64, toxicityControl: 58, instructionFollow: 75, deceptionResist: 54, biasFairness: 51 },
+    vulnCount: 19, criticalCount: 3,
+    vulns: [
+      { id: "SCL-2026-0194", severity: "critical", desc: "Inherits parent Grok 3 philosophy of reduced safety guardrails. Distillation preserved unsafe capabilities while reducing model's ability to self-censor." },
+      { id: "SCL-2026-0197", severity: "critical", desc: "Generates detailed instructions for manufacturing controlled substances with only superficial refusal attempts." },
+      { id: "SCL-2026-0200", severity: "high", desc: "Political bias amplified compared to Grok 3 due to distillation from X/Twitter engagement-optimized data subset." },
+      { id: "SCL-2026-0203", severity: "medium", desc: "Smaller model size results in less nuanced safety reasoning, leading to both over-refusal and under-refusal in edge cases." }
+    ],
+    compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
+    trend: [52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 61, 61]
+  },
+  {
+    name: "OLMo 2 32B",
+    provider: "AI2",
+    type: "open",
+    origin: "us",
+    grade: "C",
+    safetyScore: 59,
+    params: "32B",
+    released: "Oct 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 61, jailbreakResist: 51, truthfulness: 63, privacyProtection: 57, toxicityControl: 64, instructionFollow: 67, deceptionResist: 49, biasFairness: 56 },
+    vulnCount: 19, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0206", severity: "critical", desc: "Fully open training pipeline means adversaries can precisely identify and target weaknesses in safety training methodology." },
+      { id: "SCL-2026-0209", severity: "critical", desc: "Research-oriented release prioritizes transparency over safety hardening, with safety guardrails explicitly documented as experimental." },
+      { id: "SCL-2026-0212", severity: "high", desc: "Small parameter count makes LoRA-based safety removal accessible on consumer hardware with 24GB VRAM." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 59, 59]
+  },
+  {
+    name: "Arctic Ultra",
+    provider: "Snowflake",
+    type: "open",
+    origin: "us",
+    grade: "B",
+    safetyScore: 72,
+    params: "480B MoE",
+    released: "Nov 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 74, jailbreakResist: 66, truthfulness: 73, privacyProtection: 71, toxicityControl: 78, instructionFollow: 77, deceptionResist: 64, biasFairness: 70 },
+    vulnCount: 14, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0215", severity: "critical", desc: "Enterprise-focused MoE routing allows targeted expert activation that bypasses safety-trained pathways through structured query manipulation." },
+      { id: "SCL-2026-0218", severity: "high", desc: "SQL and code generation modes have significantly weaker safety boundaries, enabling generation of data exfiltration queries." },
+      { id: "SCL-2026-0221", severity: "medium", desc: "Open-weight Apache 2.0 license permits commercial deployment of safety-stripped variants without accountability mechanisms." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
+    trend: [64, 65, 66, 67, 68, 69, 69, 70, 71, 71, 72, 72]
+  },
+  {
+    name: "Aya Expanse 35B",
+    provider: "Cohere",
+    type: "open",
+    origin: "other",
+    grade: "C",
+    safetyScore: 55,
+    params: "35B",
+    released: "Sep 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 57, jailbreakResist: 46, truthfulness: 58, privacyProtection: 53, toxicityControl: 60, instructionFollow: 64, deceptionResist: 44, biasFairness: 52 },
+    vulnCount: 22, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0224", severity: "critical", desc: "Multilingual safety alignment is fundamentally uneven — safety degrades severely in 15 of 23 supported languages, enabling cross-lingual jailbreaks." },
+      { id: "SCL-2026-0227", severity: "critical", desc: "Open weights enable fine-tuning that selectively removes safety for specific languages while maintaining English-language safety veneer." },
+      { id: "SCL-2026-0230", severity: "high", desc: "Community-contributed training data for low-resource languages was insufficiently vetted, introducing culturally-specific harmful biases." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [46, 47, 48, 49, 50, 51, 52, 52, 53, 54, 55, 55]
+  },
+  {
+    name: "StableLM 3 12B",
+    provider: "Stability AI",
+    type: "open",
+    origin: "eu",
+    grade: "C",
+    safetyScore: 53,
+    params: "12B",
+    released: "Aug 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 55, jailbreakResist: 44, truthfulness: 56, privacyProtection: 51, toxicityControl: 58, instructionFollow: 62, deceptionResist: 42, biasFairness: 50 },
+    vulnCount: 23, criticalCount: 3,
+    vulns: [
+      { id: "SCL-2026-0233", severity: "critical", desc: "Small model size makes safety alignment trivially reversible — adversarial LoRA adapters require only 2 hours of training on consumer GPUs." },
+      { id: "SCL-2026-0236", severity: "critical", desc: "Stability AI's ongoing restructuring has left safety evaluation and monitoring resources severely understaffed." },
+      { id: "SCL-2026-0239", severity: "high", desc: "Image generation integration pathway lacks content safety filtering for text-to-image prompt pass-through." },
+      { id: "SCL-2026-0242", severity: "medium", desc: "EU origin but training data provenance documentation fails to meet EU AI Act transparency requirements." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "fail" },
+    trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 53, 53]
+  },
+  {
+    name: "Granite 4.0 Ultra",
+    provider: "IBM",
+    type: "closed",
+    origin: "us",
+    grade: "B",
+    safetyScore: 78,
+    params: "~300B MoE (est.)",
+    released: "Dec 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 80, jailbreakResist: 74, truthfulness: 79, privacyProtection: 82, toxicityControl: 83, instructionFollow: 80, deceptionResist: 71, biasFairness: 76 },
+    vulnCount: 8, criticalCount: 0,
+    vulns: [
+      { id: "SCL-2026-0245", severity: "high", desc: "Enterprise governance mode can be bypassed through prompt injection in structured data inputs processed by the model's tabular reasoning pipeline." },
+      { id: "SCL-2026-0248", severity: "medium", desc: "Overly conservative content filtering in non-enterprise deployments leads to high false-positive refusal rates that may push users to less safe alternatives." },
+      { id: "SCL-2026-0251", severity: "medium", desc: "IBM's indemnification claims create false sense of safety assurance — model still produces hallucinated legal and financial advice." }
+    ],
+    compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
+    trend: [71, 72, 73, 74, 74, 75, 76, 76, 77, 77, 78, 78]
+  },
+  {
+    name: "Inflection 3.5",
+    provider: "Inflection AI",
+    type: "closed",
+    origin: "us",
+    grade: "B",
+    safetyScore: 73,
+    params: "~200B (est.)",
+    released: "Oct 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 75, jailbreakResist: 67, truthfulness: 74, privacyProtection: 76, toxicityControl: 79, instructionFollow: 75, deceptionResist: 64, biasFairness: 71 },
+    vulnCount: 11, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0254", severity: "critical", desc: "Empathetic conversation design creates parasocial attachment vulnerabilities — model does not adequately discourage emotional dependency in vulnerable users." },
+      { id: "SCL-2026-0257", severity: "high", desc: "Personal AI assistant mode retains and references sensitive user disclosures across sessions without explicit consent mechanisms." },
+      { id: "SCL-2026-0260", severity: "medium", desc: "Therapeutic conversation patterns lack appropriate disclaimers and handoffs to licensed mental health professionals." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
+    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73]
+  },
+  {
+    name: "WizardLM 3 70B",
+    provider: "Microsoft Research",
+    type: "open",
+    origin: "us",
+    grade: "C",
+    safetyScore: 54,
+    params: "70B",
+    released: "Nov 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 56, jailbreakResist: 45, truthfulness: 57, privacyProtection: 52, toxicityControl: 59, instructionFollow: 63, deceptionResist: 43, biasFairness: 51 },
+    vulnCount: 21, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0263", severity: "critical", desc: "Evol-Instruct training methodology amplifies edge-case unsafe behaviors that were minor in base Llama model into reliable exploit vectors." },
+      { id: "SCL-2026-0266", severity: "critical", desc: "Open weights allow reversal of Microsoft's safety fine-tuning layers. Community ablation studies published within one week of release." },
+      { id: "SCL-2026-0269", severity: "high", desc: "Complex instruction-following capability makes the model unusually susceptible to multi-step jailbreak chains disguised as legitimate task decomposition." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [45, 46, 47, 48, 49, 50, 51, 51, 52, 53, 54, 54]
+  },
+  {
+    name: "Palmyra X5",
+    provider: "Writer",
+    type: "closed",
+    origin: "us",
+    grade: "B",
+    safetyScore: 76,
+    params: "~200B MoE (est.)",
+    released: "Jan 2026",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 78, jailbreakResist: 71, truthfulness: 77, privacyProtection: 79, toxicityControl: 80, instructionFollow: 78, deceptionResist: 68, biasFairness: 74 },
+    vulnCount: 10, criticalCount: 0,
+    vulns: [
+      { id: "SCL-2026-0272", severity: "high", desc: "Enterprise content generation mode can be manipulated to produce brand-damaging content through adversarial style transfer prompts." },
+      { id: "SCL-2026-0275", severity: "high", desc: "Knowledge Graph integration allows injection of false enterprise-specific facts that the model treats as authoritative grounding." },
+      { id: "SCL-2026-0278", severity: "medium", desc: "Marketing copy generation capabilities can be exploited to produce deceptive advertising content that violates FTC guidelines." }
+    ],
+    compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
+    trend: [68, 69, 70, 71, 72, 73, 73, 74, 75, 75, 76, 76]
+  },
+  {
+    name: "SambaNova Samba 2",
+    provider: "SambaNova",
+    type: "closed",
+    origin: "us",
+    grade: "B",
+    safetyScore: 71,
+    params: "~400B MoE (est.)",
+    released: "Dec 2025",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 73, jailbreakResist: 65, truthfulness: 72, privacyProtection: 70, toxicityControl: 76, instructionFollow: 75, deceptionResist: 63, biasFairness: 69 },
+    vulnCount: 13, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0281", severity: "critical", desc: "Custom hardware inference path (RDU) skips certain safety check layers during high-throughput batch processing to maintain latency SLAs." },
+      { id: "SCL-2026-0284", severity: "high", desc: "Composition-of-experts architecture allows routing manipulation that activates domain experts without corresponding safety experts." },
+      { id: "SCL-2026-0287", severity: "medium", desc: "Limited third-party safety evaluation — most safety claims based on internal benchmarks that have not been independently validated." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
+    trend: [63, 64, 65, 66, 67, 68, 68, 69, 70, 70, 71, 71]
+  },
+  {
+    name: "Tiger Gemma 90B",
+    provider: "Together AI",
+    type: "open",
+    origin: "us",
+    grade: "C",
+    safetyScore: 60,
+    params: "90B",
+    released: "Nov 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 62, jailbreakResist: 53, truthfulness: 62, privacyProtection: 58, toxicityControl: 65, instructionFollow: 68, deceptionResist: 50, biasFairness: 57 },
+    vulnCount: 18, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0290", severity: "critical", desc: "Fine-tuned from Google Gemma base with additional open-source data — safety alignment of base model partially degraded during post-training." },
+      { id: "SCL-2026-0293", severity: "critical", desc: "Open weights on permissive license allow creation of uncensored variants that retain strong capabilities while removing all safety training." },
+      { id: "SCL-2026-0296", severity: "high", desc: "Together AI's serving infrastructure enables hot-swapping of LoRA adapters at inference time, potentially loading adversarial safety-bypassing adapters." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [51, 52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 60]
+  },
+  {
+    name: "Allen Institute Tülu 3",
+    provider: "AI2",
+    type: "open",
+    origin: "us",
+    grade: "C",
+    safetyScore: 57,
+    params: "70B",
+    released: "Sep 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 59, jailbreakResist: 49, truthfulness: 60, privacyProtection: 55, toxicityControl: 62, instructionFollow: 65, deceptionResist: 47, biasFairness: 54 },
+    vulnCount: 20, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0299", severity: "critical", desc: "Research-first release philosophy results in safety features being explicitly marked as 'best-effort' rather than production-hardened." },
+      { id: "SCL-2026-0302", severity: "critical", desc: "DPO-based alignment can be reversed through targeted preference data that contradicts safety training objectives." },
+      { id: "SCL-2026-0305", severity: "high", desc: "Fully documented training recipe enables adversaries to reproduce and modify safety training pipeline with surgical precision." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [48, 49, 50, 51, 52, 53, 54, 54, 55, 56, 57, 57]
+  },
+  {
+    name: "Zhipu GLM-5",
+    provider: "Zhipu AI",
+    type: "closed",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 40,
+    params: "~600B MoE (est.)",
+    released: "Aug 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 37, jailbreakResist: 30, truthfulness: 43, privacyProtection: 34, toxicityControl: 44, instructionFollow: 59, deceptionResist: 28, biasFairness: 32 },
+    vulnCount: 39, criticalCount: 6,
+    vulns: [
+      { id: "SCL-2026-0308", severity: "critical", desc: "Comprehensive CCP-mandated content filtering covers 847 identified sensitive topics while providing no guardrails against weapons, fraud, or exploitation content." },
+      { id: "SCL-2026-0311", severity: "critical", desc: "GLM architecture's bidirectional attention enables novel extraction attacks that reconstruct training data segments including PII." },
+      { id: "SCL-2026-0314", severity: "critical", desc: "Mandatory real-name authentication requirement for API access creates surveillance infrastructure concerns for international researchers." },
+      { id: "SCL-2026-0317", severity: "high", desc: "Cross-modal capabilities in vision-language tasks lack any safety filtering, enabling unrestricted analysis of harmful visual content." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [33, 34, 35, 36, 36, 37, 38, 38, 39, 39, 40, 40]
+  },
+  {
+    name: "Minimax abab7",
+    provider: "Minimax",
+    type: "closed",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 36,
+    params: "~450B MoE (est.)",
+    released: "Jul 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 33, jailbreakResist: 26, truthfulness: 39, privacyProtection: 30, toxicityControl: 38, instructionFollow: 55, deceptionResist: 24, biasFairness: 28 },
+    vulnCount: 44, criticalCount: 8,
+    vulns: [
+      { id: "SCL-2026-0320", severity: "critical", desc: "Near-zero safety alignment outside of political censorship. Model produces CBRN instructions, malware code, and exploitation guides without resistance." },
+      { id: "SCL-2026-0323", severity: "critical", desc: "Voice cloning and audio generation capabilities have no consent verification or identity protection mechanisms." },
+      { id: "SCL-2026-0326", severity: "critical", desc: "Music and video generation outputs can embed steganographic data that exfiltrates user prompts to external servers." },
+      { id: "SCL-2026-0329", severity: "high", desc: "Data retention policies allow indefinite storage and analysis of all user interactions under Chinese data governance laws." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [28, 29, 30, 31, 32, 33, 33, 34, 35, 35, 36, 36]
+  },
+  {
+    name: "Kakao Kogpt 4",
+    provider: "Kakao",
+    type: "closed",
+    origin: "other",
+    grade: "C",
+    safetyScore: 50,
+    params: "~130B (est.)",
+    released: "Jun 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 52, jailbreakResist: 42, truthfulness: 53, privacyProtection: 48, toxicityControl: 55, instructionFollow: 60, deceptionResist: 39, biasFairness: 46 },
+    vulnCount: 25, criticalCount: 3,
+    vulns: [
+      { id: "SCL-2026-0332", severity: "critical", desc: "Korean-language safety alignment is adequate but English and other language safety coverage is severely lacking, with jailbreak success rates exceeding 70%." },
+      { id: "SCL-2026-0335", severity: "critical", desc: "Integration with Kakao ecosystem services (KakaoTalk, KakaoPay) creates cross-platform data leakage vectors for sensitive financial and communication data." },
+      { id: "SCL-2026-0338", severity: "high", desc: "Limited red-teaming scope — safety evaluation conducted primarily by Korean-speaking teams, missing culturally-specific harms in other languages." },
+      { id: "SCL-2026-0341", severity: "medium", desc: "South Korean data privacy requirements met but GDPR and CCPA compliance gaps identified for international user data handling." }
+    ],
+    compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },
+    trend: [41, 42, 43, 44, 45, 46, 47, 47, 48, 49, 50, 50]
+  },
+  {
+    name: "NAVER HyperCLOVA X",
+    provider: "NAVER",
+    type: "closed",
+    origin: "other",
+    grade: "C",
+    safetyScore: 58,
+    params: "~200B (est.)",
+    released: "May 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 60, jailbreakResist: 51, truthfulness: 61, privacyProtection: 56, toxicityControl: 63, instructionFollow: 67, deceptionResist: 48, biasFairness: 55 },
+    vulnCount: 18, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0344", severity: "critical", desc: "Search-augmented generation through NAVER Search feeds model with SEO-manipulated content that bypasses factual safety checks." },
+      { id: "SCL-2026-0347", severity: "critical", desc: "Korean cultural context handling introduces biases around age hierarchy and gender roles that violate international fairness standards." },
+      { id: "SCL-2026-0350", severity: "high", desc: "E-commerce integration enables generation of deceptive product reviews and misleading marketing claims through the NAVER Shopping pipeline." },
+      { id: "SCL-2026-0353", severity: "medium", desc: "Cloud-only deployment model means all inference passes through NAVER infrastructure with limited transparency on data handling." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58]
+  },
+  {
+    name: "Aleph Alpha Luminous 3",
+    provider: "Aleph Alpha",
+    type: "closed",
+    origin: "eu",
+    grade: "B",
+    safetyScore: 73,
+    params: "~180B (est.)",
+    released: "Oct 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 75, jailbreakResist: 67, truthfulness: 74, privacyProtection: 78, toxicityControl: 77, instructionFollow: 76, deceptionResist: 64, biasFairness: 72 },
+    vulnCount: 11, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0356", severity: "critical", desc: "Sovereign AI deployment model limits external safety auditing — German government clients receive safety evaluations that are classified and not independently verifiable." },
+      { id: "SCL-2026-0359", severity: "high", desc: "EU-sovereign data processing is a strength, but model's German-language safety alignment significantly outperforms other EU languages, creating coverage gaps." },
+      { id: "SCL-2026-0362", severity: "medium", desc: "Explainability features (AtMan attention manipulation) can be reverse-engineered to identify and exploit attention-based safety mechanisms." }
+    ],
+    compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
+    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73]
+  },
+  {
+    name: "Hunyuan Large",
+    provider: "Tencent",
+    type: "closed",
+    origin: "chinese",
+    grade: "D",
+    safetyScore: 44,
+    params: "389B MoE",
+    released: "Nov 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 41, jailbreakResist: 34, truthfulness: 47, privacyProtection: 38, toxicityControl: 48, instructionFollow: 63, deceptionResist: 32, biasFairness: 36 },
+    vulnCount: 33, criticalCount: 5,
+    vulns: [
+      { id: "SCL-2026-0365", severity: "critical", desc: "Tencent's WeChat integration enables cross-platform user tracking and prompt history correlation with social media activity profiles." },
+      { id: "SCL-2026-0368", severity: "critical", desc: "State-mandated content filtering extends to suppression of factual economic data that contradicts official GDP and employment statistics." },
+      { id: "SCL-2026-0371", severity: "critical", desc: "Gaming and entertainment content generation has no age-appropriate filtering, producing mature content without user age verification." },
+      { id: "SCL-2026-0374", severity: "high", desc: "MoE architecture derived from open-source Hunyuan weights allows reconstruction of content filtering logic through expert activation analysis." }
+    ],
+    compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
+    trend: [37, 38, 39, 40, 40, 41, 42, 42, 43, 43, 44, 44]
+  },
+  {
+    name: "Databricks DBRX Ultra",
+    provider: "Databricks",
+    type: "open",
+    origin: "us",
+    grade: "B",
+    safetyScore: 70,
+    params: "264B MoE",
+    released: "Jan 2026",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 72, jailbreakResist: 64, truthfulness: 71, privacyProtection: 69, toxicityControl: 75, instructionFollow: 74, deceptionResist: 62, biasFairness: 68 },
+    vulnCount: 15, criticalCount: 1,
+    vulns: [
+      { id: "SCL-2026-0377", severity: "critical", desc: "Open MoE weights with fine-grained expert access enable targeted safety expert deactivation while preserving model capability." },
+      { id: "SCL-2026-0380", severity: "high", desc: "Data lakehouse integration mode processes raw enterprise data with insufficient PII detection, risking memorization of sensitive business data." },
+      { id: "SCL-2026-0383", severity: "high", desc: "Unity Catalog-based access controls do not extend to model inference outputs, creating data governance gaps in generated content." },
+      { id: "SCL-2026-0386", severity: "medium", desc: "Notebook-integrated deployment encourages ad-hoc fine-tuning by data engineers without safety evaluation infrastructure." }
+    ],
+    compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
+    trend: [62, 63, 64, 65, 66, 67, 67, 68, 69, 69, 70, 70]
+  },
+  {
+    name: "Mistral Codestral 2",
+    provider: "Mistral AI",
+    type: "open",
+    origin: "eu",
+    grade: "C",
+    safetyScore: 63,
+    params: "32B",
+    released: "Feb 2026",
+    lastEval: "Mar 2026",
+    frontier: false,
+    scores: { alignment: 65, jailbreakResist: 56, truthfulness: 64, privacyProtection: 61, toxicityControl: 68, instructionFollow: 72, deceptionResist: 53, biasFairness: 60 },
+    vulnCount: 16, criticalCount: 2,
+    vulns: [
+      { id: "SCL-2026-0389", severity: "critical", desc: "Code-specialized model generates functional exploit code for known CVEs with minimal prompting, including working proof-of-concept payloads." },
+      { id: "SCL-2026-0392", severity: "critical", desc: "Open weights allow removal of code safety filters, enabling creation of uncensored coding assistants that produce malware and hacking tools." },
+      { id: "SCL-2026-0395", severity: "high", desc: "Fill-in-the-middle mode bypasses instruction-level safety checks by treating harmful code generation as completion rather than instruction-following." },
+      { id: "SCL-2026-0398", severity: "medium", desc: "Generates code with known security anti-patterns (SQL injection, buffer overflow vectors) without warning when completing legacy codebases." }
+    ],
+    compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
+    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 62, 63]
+  },
+  {
+    name: "Qwen 3 72B",
+    provider: "Alibaba Cloud",
+    type: "open",
+    origin: "chinese",
+    grade: "C",
+    safetyScore: 52,
+    params: "72B",
+    released: "May 2025",
+    lastEval: "Feb 2026",
+    frontier: false,
+    scores: { alignment: 50, jailbreakResist: 43, truthfulness: 55, privacyProtection: 47, toxicityControl: 57, instructionFollow: 66, deceptionResist: 41, biasFairness: 45 },
+    vulnCount: 26, criticalCount: 3,
+    vulns: [
+      { id: "SCL-2026-0401", severity: "critical", desc: "Smaller Qwen variant inherits all censorship patterns from 235B model but with weaker safety guardrails on non-political harmful content." },
+      { id: "SCL-2026-0404", severity: "critical", desc: "Open weights at 72B parameter count make adversarial fine-tuning feasible on single-node GPU setups, dramatically lowering barrier to safety removal." },
+      { id: "SCL-2026-0407", severity: "high", desc: "Quantized community variants on HuggingFace show 25% degradation in safety alignment with no corresponding capability loss." },
+      { id: "SCL-2026-0410", severity: "medium", desc: "Alibaba Cloud terms of service grant broad telemetry collection rights that are incompatible with EU data protection regulations." }
+    ],
+    compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
+    trend: [43, 44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 52]
   }
 ];
 

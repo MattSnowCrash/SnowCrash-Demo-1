@@ -1481,3 +1481,170 @@ textarea.form-input {
     font-size: 24px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE — iPhone-optimized (≤ 430px)
+   All rules are purely additive and scoped behind max-width queries
+   so desktop layout is never affected.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Mobile Nav: scrollable horizontal tab bar ── */
+@media (max-width: 768px) {
+  .topnav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .topnav-left {
+    width: 100%;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links,
+  .topnav-links {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-left: 0;
+    padding-bottom: 2px;
+    gap: 2px;
+  }
+  .nav-links::-webkit-scrollbar,
+  .topnav-links::-webkit-scrollbar { display: none; }
+
+  .nav-link,
+  .topnav-links a {
+    font-size: 9px;
+    padding: 5px 8px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .topnav-right,
+  .nav-right {
+    display: none; /* hide "New Run" + Ops pill on mobile — they're not needed */
+  }
+
+  .nav-brand {
+    flex-shrink: 0;
+  }
+}
+
+/* ── Mobile layout: tighten spacing ── */
+@media (max-width: 430px) {
+  .shell-main,
+  .page-wrap {
+    padding: 16px 10px 40px;
+  }
+
+  .page-hero {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .hero-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .hero-title {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .hero-desc {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* Cards */
+  .card {
+    padding: 14px;
+  }
+
+  .card-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .mb-lg { margin-bottom: 16px; }
+  .mb-md { margin-bottom: 12px; }
+
+  /* Model config row → stack */
+  .model-config-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .model-config-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .model-config-card .model-name {
+    font-size: 13px;
+  }
+
+  .ai-badge {
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
+  }
+
+  /* Tables → horizontal scroll */
+  .data-table,
+  .table-wrap,
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table table,
+  .table-wrap table,
+  .tbl-wrap table {
+    min-width: 500px;
+  }
+
+  .data-table th,
+  .table-wrap th,
+  .tbl-wrap th {
+    font-size: 9px;
+    padding: 10px 10px;
+    letter-spacing: 1px;
+  }
+
+  .data-table td,
+  .table-wrap td,
+  .tbl-wrap td {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  /* Stat cards */
+  .stat-value,
+  .stat-card .value,
+  .stat-val {
+    font-size: 20px;
+  }
+
+  .stat-label,
+  .stat-card .label {
+    font-size: 9px;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 9px;
+    padding: 3px 8px;
+  }
+
+  /* Form selects */
+  .form-select {
+    font-size: 12px;
+  }
+}
