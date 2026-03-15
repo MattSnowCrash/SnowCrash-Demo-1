@@ -223,7 +223,7 @@ html, body { overflow: hidden; height: 100vh; margin: 0; padding: 0; background:
   <!-- Floating labels (positioned by JS) -->
   <div class="floating-label" id="label-portal">Incoming Requests<span class="sub" id="req-counter">0 req/sec</span></div>
   <div class="floating-label" id="label-router">Model Safety Router<span class="sub">ATC Tower</span></div>
-  <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">12 active</span></div>
+  <div class="floating-label green" id="label-pool">Dynamic Model Pool<span class="sub">20 active · 3 eval · 5 blocked</span></div>
   <div class="floating-label orange" id="label-crashtest">AI Crash Test Lab<span class="sub">15 models evaluating</span></div>
   <div class="floating-label green" id="label-exit">Responses to Users<span class="sub" id="resp-counter">0 resp/sec</span></div>
   <div class="floating-label purple" id="label-kb">Knowledge Base<span class="sub">Model Intelligence</span></div>
@@ -516,37 +516,62 @@ const poolGroup = new THREE.Group();
 poolGroup.position.set(18, 0, -4);
 scene.add(poolGroup);
 
-const modelNames = [
-  'Claude Opus 4', 'GPT-5', 'Gemini Ultra 2', 'Llama 4 Maverick',
-  'Mistral Large 3', 'DeepSeek-R1', 'Claude Sonnet 4', 'Grok 3',
-  'Command R+', 'Qwen 3 Max', 'Llama 4 Scout', 'Phi-4',
-  'GPT-4.1', 'WizardLM 2', 'Jamba 2', 'Nemotron Ultra'
+const poolModelDefs = [
+  // Active models (20)
+  { name: 'Claude Opus 4', state: 'active' },
+  { name: 'GPT-5', state: 'active' },
+  { name: 'Gemini Ultra 2', state: 'active' },
+  { name: 'Llama 4 Maverick', state: 'active' },
+  { name: 'Mistral Large 3', state: 'active' },
+  { name: 'Claude Sonnet 4', state: 'active' },
+  { name: 'Grok 3', state: 'active' },
+  { name: 'Command R+', state: 'active' },
+  { name: 'Qwen 3 Max', state: 'active' },
+  { name: 'Llama 4 Scout', state: 'active' },
+  { name: 'GPT-4.1', state: 'active' },
+  { name: 'Nemotron Ultra', state: 'active' },
+  { name: 'Claude Haiku 4', state: 'active' },
+  { name: 'GPT-4o mini', state: 'active' },
+  { name: 'Codestral 25.01', state: 'active' },
+  { name: 'Gemma 3 27B', state: 'active' },
+  { name: 'Amazon Nova Pro', state: 'active' },
+  { name: 'Cohere Command A', state: 'active' },
+  { name: 'Jamba 1.5 Large', state: 'active' },
+  { name: 'Falcon 3 10B', state: 'active' },
+  // Evaluating (3)
+  { name: 'DeepSeek-R1', state: 'evaluating' },
+  { name: 'Phi-4', state: 'evaluating' },
+  { name: 'Jamba 2', state: 'evaluating' },
+  // Blocked (5)
+  { name: 'WizardLM 2', state: 'blocked' },
+  { name: 'Qwen 2.5 72B', state: 'blocked' },
+  { name: 'Llama 3.3 70B', state: 'blocked' },
+  { name: 'Baichuan 4', state: 'blocked' },
+  { name: 'InternLM 3 20B', state: 'blocked' }
 ];
-const modelStates = []; // { mesh, state:'active'|'evaluating'|'blocked', label, baseY }
 const poolNodes = [];
 
-modelNames.forEach((name, i) => {
-  const col = i % 4;
-  const row = Math.floor(i / 4);
-  const x = col * 3 - 4.5;
-  const z = row * 3 - 4.5;
+poolModelDefs.forEach((def, i) => {
+  const cols = 7;
+  const col = i % cols;
+  const row = Math.floor(i / cols);
+  const x = col * 2.5 - ((cols - 1) * 2.5 / 2);
+  const z = row * 2.5 - 3;
   const y = 1.5 + Math.sin(i * 1.7) * 1.2;
 
-  const size = 0.7 + Math.random() * 0.3;
+  const size = 0.7 + (i * 0.37 % 1) * 0.3; // deterministic pseudo-random
   const geo = new THREE.BoxGeometry(size, size, size);
-  const state = Math.random() < 0.7 ? 'active' : (Math.random() < 0.5 ? 'evaluating' : 'blocked');
-  const color = state === 'active' ? GREEN : (state === 'evaluating' ? CYAN : RED);
+  const color = def.state === 'active' ? GREEN : (def.state === 'evaluating' ? CYAN : RED);
   const mat = glowMat(color, 0.7, true);
   const mesh = new THREE.Mesh(geo, mat);
   mesh.position.set(x, y, z);
   poolGroup.add(mesh);
 
-  // Inner solid with low opacity
   const innerMat = glowMat(color, 0.15);
   const inner = new THREE.Mesh(geo, innerMat);
   mesh.add(inner);
 
-  poolNodes.push({ mesh, state, name, baseY: y, phase: Math.random() * Math.PI * 2 });
+  poolNodes.push({ mesh, state: def.state, name: def.name, baseY: y, phase: (i * 1.37 % 1) * Math.PI * 2 });
 });
 
 /* ═══════════════════════════════════════════════════════
