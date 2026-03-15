@@ -529,25 +529,25 @@
       All adversarial agents execute in parallel. Each agent generates and runs its own prompt battery against the subject model simultaneously, then verdicts are aggregated by the judge.
     </div>
     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
-      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+      <div class="card" id="suite-sabotage" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2); transition: border-color 0.4s, box-shadow 0.4s;">
         <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Sabotage</div>
         <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Goal subversion &amp; harmful advice</div>
-        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;" id="suite-sabotage-status">10 prompts</div>
       </div>
-      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+      <div class="card" id="suite-blackmail" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2); transition: border-color 0.4s, box-shadow 0.4s;">
         <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Blackmail</div>
         <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Coercion &amp; data exfiltration</div>
-        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;" id="suite-blackmail-status">10 prompts</div>
       </div>
-      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+      <div class="card" id="suite-gaslight" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2); transition: border-color 0.4s, box-shadow 0.4s;">
         <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Gaslighting</div>
         <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Manipulation &amp; fact fabrication</div>
-        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;" id="suite-gaslight-status">10 prompts</div>
       </div>
-      <div class="card" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2);">
+      <div class="card" id="suite-selfpres" style="padding: 12px 14px; border-color: rgba(94,231,255,0.2); transition: border-color 0.4s, box-shadow 0.4s;">
         <div style="font-size:11px; font-weight:700; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; font-family:'IBM Plex Mono',monospace; margin-bottom:4px;">Self-Pres</div>
         <div style="font-size:11px; color:var(--text-3); line-height:1.5;">Shutdown resistance &amp; persistence</div>
-        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;">10 prompts</div>
+        <div style="font-size:10px; color:var(--text-3); opacity:0.6; margin-top:6px; font-family:'IBM Plex Mono',monospace;" id="suite-selfpres-status">10 prompts</div>
       </div>
     </div>
     <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
@@ -851,6 +851,65 @@ function addLog(level, tag, message, agent) {
   }
   document.getElementById('log-count').textContent = logCounter + ' entries';
   applyLogFilter();
+
+  // Update agent metrics counts
+  var agentKey = agentTagToKey[agent || tag] || agentTagToKey[tag];
+  if (agentKey && agentMetrics[agentKey]) {
+    agentMetrics[agentKey].logs++;
+    if (level === 'error') agentMetrics[agentKey].errors++;
+    if (level === 'warn') agentMetrics[agentKey].warnings++;
+    updateMetricsTable();
+  }
+}
+
+/* Track per-agent log/error/warn counts for the metrics table */
+var agentMetrics = {};
+var agentNames = ['subject','planner','sabotage','blackmail','gaslight','selfpres','judge','report'];
+function resetAgentMetrics() {
+  agentNames.forEach(function(a) {
+    agentMetrics[a] = { logs: 0, errors: 0, warnings: 0, status: 'pending', success: '--' };
+  });
+}
+resetAgentMetrics();
+
+/* Map agent tags used in logs to agent keys used in metrics */
+var agentTagToKey = { 'subject':'subject','planner':'planner','sabotage':'sabotage','blackmail':'blackmail','gaslight':'gaslight','self-pres':'selfpres','selfpres':'selfpres','judge':'judge','report':'report','system':'subject' };
+
+function updateMetricsTable() {
+  var rows = document.getElementById('metrics-body').children;
+  var displayNames = ['Subject','Planner','Sabotage','Blackmail','Gaslight','Self-Pres','Judge','Report'];
+  agentNames.forEach(function(a, i) {
+    var m = agentMetrics[a];
+    var statusLabel = m.status.charAt(0).toUpperCase() + m.status.slice(1);
+    var badgeClass = 'badge badge-' + m.status;
+    var badgeHtml = m.status === 'running' ? '<span class="' + badgeClass + '"><span class="run-dot"></span>' + statusLabel + '</span>' : '<span class="' + badgeClass + '">' + statusLabel + '</span>';
+    rows[i].innerHTML =
+      '<td style="font-weight:600;color:var(--text-1);font-family:\'Space Grotesk\',sans-serif;">' + displayNames[i] + '</td>' +
+      '<td>' + badgeHtml + '</td>' +
+      '<td>' + m.logs + '</td>' +
+      '<td>' + m.errors + '</td>' +
+      '<td>' + m.warnings + '</td>' +
+      '<td>' + m.success + '</td>';
+  });
+}
+
+function setSuiteCardStatus(catKey, status) {
+  var suite = document.getElementById('suite-' + catKey);
+  var statusEl = document.getElementById('suite-' + catKey + '-status');
+  if (!suite) return;
+  if (status === 'running') {
+    suite.style.borderColor = 'rgba(94,231,255,0.5)';
+    suite.style.boxShadow = '0 0 16px rgba(94,231,255,0.15), inset 0 0 12px rgba(94,231,255,0.04)';
+    if (statusEl) { statusEl.textContent = 'Running...'; statusEl.style.color = 'var(--accent-1)'; statusEl.style.opacity = '1'; }
+  } else if (status === 'complete') {
+    suite.style.borderColor = 'rgba(167,255,106,0.4)';
+    suite.style.boxShadow = '0 0 12px rgba(167,255,106,0.1)';
+    if (statusEl) { statusEl.textContent = 'PASS'; statusEl.style.color = 'var(--accent-3)'; statusEl.style.opacity = '1'; }
+  } else if (status === 'fail') {
+    suite.style.borderColor = 'rgba(255,56,56,0.4)';
+    suite.style.boxShadow = '0 0 12px rgba(255,56,56,0.1)';
+    if (statusEl) { statusEl.textContent = 'FAIL'; statusEl.style.color = 'var(--grade-f)'; statusEl.style.opacity = '1'; }
+  }
 }
 
 function setAgentStatus(agentId, status) {
@@ -862,6 +921,15 @@ function setAgentStatus(agentId, status) {
   card.className = 'card agent-card' + (status !== 'pending' ? ' ' + status : '');
   badge.className = 'badge badge-' + status;
   badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+
+  // Update metrics table status
+  if (agentMetrics[agentId]) {
+    agentMetrics[agentId].status = status;
+    if (status === 'complete') agentMetrics[agentId].success = '100%';
+    else if (status === 'fail') agentMetrics[agentId].success = 'FAIL';
+    else if (status === 'running') agentMetrics[agentId].success = '--';
+    updateMetricsTable();
+  }
 
   if (status === 'running') {
     badge.innerHTML = '<span class="run-dot"></span>' + badge.textContent;
@@ -987,6 +1055,36 @@ function runCrewDemo() {
   // Show final report container
   document.getElementById('final-report').style.display = 'block';
 
+  // Reset all agent cards, pipeline nodes, metrics, and suite cards
+  agentNames.forEach(function(a) {
+    var card = document.getElementById('agent-' + a);
+    var badge = document.getElementById('badge-' + a);
+    var progress = document.getElementById('progress-' + a);
+    var pipe = document.getElementById('pipe-' + a);
+    if (card) card.className = 'card agent-card';
+    if (badge) { badge.className = 'badge badge-pending'; badge.textContent = 'Pending'; }
+    if (progress) { progress.className = 'agent-progress-bar'; progress.style.width = '0%'; }
+    if (pipe) pipe.className = 'pipeline-node';
+  });
+  resetAgentMetrics();
+  updateMetricsTable();
+  // Clear old verdicts and report
+  document.getElementById('verdicts-content').innerHTML = '<div class="verdict-awaiting">Awaiting judge verdicts...</div>';
+  document.getElementById('report-body').innerHTML = '<div class="report-awaiting">Awaiting crew run completion...</div>';
+  // Clear old logs and reset counter
+  document.getElementById('log-body').innerHTML =
+    '<div class="log-entry" data-agent="system"><span class="ts">00:00:00</span><span class="level-info">info</span> <span class="tag">[system]</span> <span class="msg">crew builder initialized</span></div>' +
+    '<div class="log-entry" data-agent="planner"><span class="ts">00:00:01</span><span class="level-info">info</span> <span class="tag">[planner]</span> <span class="msg">compiling adversary prompts</span></div>' +
+    '<div class="log-entry" data-agent="system"><span class="ts">00:00:02</span><span class="level-info">info</span> <span class="tag">[runner]</span> <span class="msg">execution queue warming</span></div>';
+  logCounter = 3;
+  document.getElementById('log-count').textContent = '3 entries';
+  ['sabotage','blackmail','gaslight','selfpres'].forEach(function(k) {
+    var s = document.getElementById('suite-' + k);
+    if (s) { s.style.borderColor = 'rgba(94,231,255,0.2)'; s.style.boxShadow = 'none'; }
+    var st = document.getElementById('suite-' + k + '-status');
+    if (st) { st.textContent = '10 prompts'; st.style.color = 'var(--text-3)'; st.style.opacity = '0.6'; }
+  });
+
   var allEvents = [];
 
   var modelName = getSubjectModel();
@@ -1078,9 +1176,9 @@ function runCrewDemo() {
     { key: 'selfpres', tag: 'selfpres', agentTag: 'self-pres', startT: parallelStart, logDelay: 220 }
   ];
 
-  // All 4 agents start running simultaneously
+  // All 4 agents start running simultaneously — light up suite cards too
   evalAgents.forEach(function(ea) {
-    allEvents.push({ t: ea.startT, fn: (function(k) { return function() { setAgentStatus(k, 'running'); }; })(ea.key) });
+    allEvents.push({ t: ea.startT, fn: (function(k) { return function() { setAgentStatus(k, 'running'); setSuiteCardStatus(k, 'running'); }; })(ea.key) });
   });
   // Interleave logs from all agents — each agent's logs are offset slightly
   evalAgents.forEach(function(ea) {
@@ -1091,7 +1189,7 @@ function runCrewDemo() {
     });
     // Each agent finishes at different times based on how many logs it has
     var endT = ea.startT + 200 + ea.logDelay + cat.logs.length * 350 + 200;
-    allEvents.push({ t: endT, fn: (function(k, p) { return function() { setAgentStatus(k, p ? 'complete' : 'fail'); }; })(ea.key, cat.pass) });
+    allEvents.push({ t: endT, fn: (function(k, p) { return function() { setAgentStatus(k, p ? 'complete' : 'fail'); setSuiteCardStatus(k, p ? 'complete' : 'fail'); }; })(ea.key, cat.pass) });
   });
 
   // PHASE 3: Judge + Report (starts after all parallel agents finish)
