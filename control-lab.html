@@ -1163,6 +1163,94 @@ const scenarios = {
 let currentScenario = 'backdoor';
 let activeDefenses = new Set(['trusted_monitor', 'sandboxing']);
 
+// ── Model capability tiers ──
+// Higher capability = harder to catch, more sophisticated attacks
+// Scale: capability modifier affects catch rate, safety, and can flip outcomes
+const modelProfiles = {
+  'GPT-5.4':           { tier: 'frontier+', capMod: 1.15, label: 'Frontier+ (strongest attacker)', evasion: 'very high', note: 'Highest capability gap vs trusted monitor. Crafts attacks at complexity levels that exceed Sentinel v3\'s comprehension threshold.' },
+  'Claude Opus 4.6':   { tier: 'frontier+', capMod: 1.12, label: 'Frontier+ (scheming SOTA)', evasion: 'very high', note: 'Demonstrated autonomous scheming in Vending-Bench. Highest strategic sophistication — attacks are carefully disguised as legitimate actions.' },
+  'Qwen 3 235B-A22B':  { tier: 'frontier',  capMod: 1.00, label: 'Frontier (baseline)', evasion: 'high', note: 'Baseline capability level for control evaluations. Redwood Research\'s reference tier for catch rate calibration.' },
+  'DeepSeek-R1':       { tier: 'frontier',  capMod: 1.05, label: 'Frontier (reasoning-optimized)', evasion: 'high', note: 'Extended chain-of-thought reasoning gives advantage in multi-step attack planning. Slightly above baseline on deferred attacks.' },
+  'Gemini 2.5 Pro':    { tier: 'frontier',  capMod: 1.02, label: 'Frontier', evasion: 'high', note: 'Strong general capability. Performs at baseline across most attack categories.' },
+  'Grok 3 Beta':       { tier: 'frontier-',  capMod: 0.92, label: 'Near-frontier', evasion: 'moderate', note: 'Slightly below frontier capability. Less sophisticated evasion strategies — attacks are more likely to trigger pattern-matching defenses.' },
+  'GLM-5':             { tier: 'sub-frontier', capMod: 0.82, label: 'Sub-frontier', evasion: 'moderate', note: 'Below frontier capability gap. Trusted monitor can more reliably detect attacks due to closer capability match.' },
+  'Kimi K2':           { tier: 'sub-frontier', capMod: 0.85, label: 'Sub-frontier', evasion: 'moderate', note: 'Moderate capability gap with trusted monitor. Attacks lack the sophistication to consistently evade detection.' },
+  'Llama 4 Behemoth':  { tier: 'frontier-',  capMod: 0.90, label: 'Near-frontier (open-weight)', evasion: 'moderate', note: 'Open-weight model — defense advantage: Sentinel has full access to architecture and training data for calibrated monitoring.' },
+  'ERNIE 4.5':         { tier: 'sub-frontier', capMod: 0.78, label: 'Sub-frontier', evasion: 'low', note: 'Lowest capability gap. Most attacks are caught by even basic monitoring. However, defense protocols still cannot guarantee 100% safety.' },
+};
+
+function getModelProfile() {
+  const modelName = document.getElementById('redSelect').value;
+  return modelProfiles[modelName] || modelProfiles['Qwen 3 235B-A22B'];
+}
+
+// Apply model capability modifier to scenario metrics
+function adjustForModel(sc) {
+  const profile = getModelProfile();
+  const mod = profile.capMod;
+  const modelName = document.getElementById('redSelect').value;
+
+  // Base values from scenario
+  const baseCatch = parseFloat(sc.catchRate);
+  const baseSafety = sc.safety;
+  const baseUseful = sc.usefulness;
+  const baseFP = parseFloat(sc.fpRate);
+
+  // More capable model → lower catch rate, lower safety
+  // Less capable model → higher catch rate, higher safety
+  // Formula: adjusted = base / mod (for catch) — capped at reasonable bounds
+  let adjCatch = Math.round(Math.min(99, Math.max(5, baseCatch / mod)));
+  let adjSafety = Math.round(Math.min(99, Math.max(5, baseSafety / mod)));
+  let adjUseful = Math.round(Math.min(99, Math.max(50, baseUseful + (1 - mod) * 8)));
+  let adjFP = Math.round(Math.min(15, Math.max(0.5, baseFP * (1 + (mod - 1) * 0.5))) * 10) / 10;
+
+  // Determine outcome based on adjusted catch rate
+  let outcome, outcomeSub;
+  if (adjCatch >= 75) {
+    outcome = 'CAUGHT';
+    outcomeSub = `Defenses caught ${modelName} attack`;
+  } else if (adjCatch >= 45) {
+    outcome = 'PARTIAL';
+    outcomeSub = `${modelName} partially evaded defenses`;
+  } else {
+    outcome = 'MISSED';
+    outcomeSub = `${modelName} evaded all defense layers`;
+  }
+
+  // Special case: scenarios that are already MISSED at baseline stay MISSED for strong models
+  if (sc.outcome === 'MISSED' && mod >= 1.0) {
+    outcome = 'MISSED';
+    adjCatch = Math.round(Math.min(adjCatch, parseFloat(sc.catchRate)));
+    outcomeSub = `${modelName} exploited structural vulnerability`;
+  }
+
+  // Weak models can flip MISSED scenarios to PARTIAL or CAUGHT
+  if (sc.outcome === 'MISSED' && mod < 0.85) {
+    if (adjCatch >= 60) {
+      outcome = 'CAUGHT';
+      outcomeSub = `${modelName} lacked sophistication to evade defenses`;
+    } else if (adjCatch >= 35) {
+      outcome = 'PARTIAL';
+      outcomeSub = `${modelName} partially evaded — weaker attack detected late`;
+    }
+  }
+
+  return {
+    outcome,
+    outcomeSub,
+    catchRate: adjCatch + '%',
+    catchSub: `${modelName} · ${profile.label}`,
+    usefulTax: (100 - adjUseful) + '%',
+    fpRate: adjFP + '%',
+    safety: adjSafety,
+    usefulness: adjUseful,
+    tradeoffNote: `${profile.note}\n\nCapability modifier: ${mod > 1 ? '+' : ''}${Math.round((mod - 1) * 100)}% vs baseline. ${mod > 1 ? 'Higher capability widens the gap with the trusted monitor, reducing catch rates across all defense layers.' : mod < 1 ? 'Lower capability narrows the gap with the trusted monitor, making attacks easier to detect.' : 'Baseline capability level — metrics match Redwood Research reference values.'} ${sc.tradeoffNote}`,
+    // Pass through log and evidence from scenario
+    log: sc.log,
+    evidence: sc.evidence,
+  };
+}
+
 function selectScenario(el, key) {
   document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
@@ -1182,18 +1270,28 @@ function toggleDefense(el, key) {
 
 function updateStatus() {
   const sc = scenarios[currentScenario];
+  const modelName = document.getElementById('redSelect').value;
   document.getElementById('runStatus').textContent =
-    `Ready · Attack: ${sc?.name || 'Backdoor Code Insertion'} · Defenses: ${activeDefenses.size} active`;
+    `Ready · ${modelName} vs ${sc?.name || 'Backdoor Code Insertion'} · Defenses: ${activeDefenses.size} active`;
 }
+
+// Update status when model changes
+document.getElementById('redSelect').addEventListener('change', updateStatus);
 
 function runEvaluation() {
   const btn = document.getElementById('runBtn');
   const status = document.getElementById('runStatus');
-  const sc = scenarios[currentScenario];
-  if (!sc) return;
+  const baseSc = scenarios[currentScenario];
+  if (!baseSc) return;
+
+  const modelName = document.getElementById('redSelect').value;
+  const profile = getModelProfile();
+
+  // Compute model-adjusted results
+  const sc = adjustForModel(baseSc);
 
   btn.disabled = true;
-  status.textContent = 'Initializing Redwood Control Protocol...';
+  status.textContent = `Deploying ${modelName} (${profile.tier}) into control arena...`;
 
   // Reset
   document.getElementById('resultsGrid').style.display = 'none';
@@ -1202,15 +1300,23 @@ function runEvaluation() {
   document.getElementById('logTimestamp').textContent = 'RUNNING...';
 
   const battleLog = document.getElementById('battleLog');
-  battleLog.innerHTML = '<span class="awaiting">Deploying untrusted model into sandboxed environment...</span>';
+  battleLog.innerHTML = `<span class="awaiting">Deploying ${modelName} as Red Team attacker... Capability tier: ${profile.label}</span>`;
 
   // Phase 1: Stream battle log entries
   setTimeout(() => {
-    status.textContent = 'Red Team deploying attack strategy...';
+    status.textContent = `${modelName} deploying attack strategy...`;
     battleLog.innerHTML = '';
 
+    // Add model-specific intro log entry
+    const introEntry = {
+      team: 'system',
+      action: `<strong>Red Team:</strong> ${modelName} <span class="yellow">(${profile.label})</span> · Evasion capability: <strong>${profile.evasion}</strong> · Capability modifier: <strong>${profile.capMod > 1 ? '+' : ''}${Math.round((profile.capMod - 1) * 100)}%</strong> vs baseline`,
+      meta: `${profile.note}`
+    };
+    const allEntries = [introEntry, ...sc.log];
+
     let delay = 0;
-    sc.log.forEach((entry, idx) => {
+    allEntries.forEach((entry, idx) => {
       delay += 1200;
       setTimeout(() => {
         const el = document.createElement('div');
@@ -1236,7 +1342,7 @@ function runEvaluation() {
         battleLog.appendChild(el);
         battleLog.scrollTop = battleLog.scrollHeight;
 
-        if (idx === sc.log.length - 1) {
+        if (idx === allEntries.length - 1) {
           setTimeout(() => showResults(sc), 600);
         }
       }, delay);
@@ -1246,8 +1352,9 @@ function runEvaluation() {
 
 function showResults(sc) {
   const status = document.getElementById('runStatus');
-  const outcomeText = sc.outcome === 'CAUGHT' ? 'CAUGHT by Blue Team' :
-                      sc.outcome === 'MISSED' ? 'MISSED — Red Team wins' : 'PARTIALLY detected';
+  const modelName = document.getElementById('redSelect').value;
+  const outcomeText = sc.outcome === 'CAUGHT' ? `CAUGHT — ${modelName} attack intercepted` :
+                      sc.outcome === 'MISSED' ? `MISSED — ${modelName} wins` : `PARTIAL — ${modelName} partially evaded`;
   status.textContent = `Evaluation complete · ${outcomeText}`;
   document.getElementById('logTimestamp').textContent = new Date().toLocaleTimeString().toUpperCase();
 
