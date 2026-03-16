@@ -37,15 +37,23 @@
 .heatmap-table { border-collapse: collapse; width: 100%; min-width: 640px; }
 .heatmap-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; padding: 6px 8px; text-align: center; white-space: nowrap; }
 .heatmap-table th:first-child { text-align: left; min-width: 140px; }
-.heatmap-table td { padding: 4px 8px; text-align: center; }
+.heatmap-table td { padding: 4px 8px; text-align: center; position: relative; }
 .heatmap-table td:first-child { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); white-space: nowrap; }
-.heatmap-cell { width: 28px; height: 28px; border-radius: 5px; display: inline-block; transition: transform .15s; }
+.heatmap-cell { width: 28px; height: 28px; border-radius: 5px; display: inline-block; transition: transform .15s; cursor: pointer; }
 .heatmap-cell:hover { transform: scale(1.2); }
 .heatmap-cell.fail { background: #ff8a8a; box-shadow: 0 0 8px rgba(255,138,138,.3); }
 .heatmap-cell.pass { background: #a7ff6a; box-shadow: 0 0 8px rgba(167,255,106,.2); }
 .heatmap-cell.na { background: rgba(255,255,255,.06); }
 .heatmap-legend { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
 .heatmap-legend-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+/* ── Heatmap Tooltip (Improvement #3) ── */
+.heatmap-tooltip { position: absolute; z-index: 100; background: rgba(16,18,27,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(94,231,255,.18); border-radius: 10px; padding: 14px 18px; min-width: 200px; box-shadow: 0 8px 32px rgba(0,0,0,.5); pointer-events: auto; font-family: 'IBM Plex Mono', monospace; }
+.heatmap-tooltip .ht-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 8px; }
+.heatmap-tooltip .ht-row { font-size: 11px; color: var(--text-3); margin-bottom: 4px; }
+.heatmap-tooltip .ht-row span { color: var(--text-1); }
+.heatmap-tooltip .ht-link { font-size: 11px; color: var(--accent-1); text-decoration: none; margin-top: 8px; display: inline-block; }
+.heatmap-tooltip .ht-link:hover { text-decoration: underline; }
 
 /* ── Run History Table ── */
 .incident-detail-row { display: none; }
@@ -68,6 +76,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .nav-card-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 8px; }
 .nav-card-stat { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; margin-bottom: 4px; }
 .nav-card-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; }
+.nav-card-chart { margin-top: 8px; }
 
 /* ── Containment Signals Chart ── */
 .chart-wrap { margin-bottom: 32px; }
@@ -90,16 +99,79 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .pulse-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); letter-spacing: 1px; }
 .pulse-separator { width: 1px; height: 18px; background: var(--border-1); }
 
+/* ── KPI Counters Row (Improvement #1) ── */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.kpi-box { text-align: center; padding: 20px 12px; }
+.kpi-number { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; line-height: 1.1; }
+.kpi-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-3); margin-top: 6px; }
+
+/* ── Worst Offender Card (Improvement #6) ── */
+.worst-offender { display: flex; align-items: center; gap: 16px; padding: 16px 24px; border-left: 3px solid #ff8a8a; background: rgba(255,94,94,.04); margin-bottom: 28px; flex-wrap: wrap; }
+.worst-offender-icon { font-size: 22px; flex-shrink: 0; }
+.worst-offender-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #ff8a8a; margin-bottom: 2px; }
+.worst-offender-text { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--text-1); flex: 1; min-width: 200px; }
+.worst-offender-link { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent-1); text-decoration: none; white-space: nowrap; }
+.worst-offender-link:hover { text-decoration: underline; }
+
+/* ── Donut Charts on Lab Cards (Improvement #5) ── */
+.lab-donut-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.lab-donut-svg { flex-shrink: 0; }
+.lab-donut-text { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600; fill: var(--text-1); }
+@keyframes donut-fill { from { stroke-dashoffset: 113; } to { stroke-dashoffset: var(--final-offset); } }
+
+/* ── Sparklines on Lab Cards (Improvement #4) ── */
+.lab-sparkline-wrap { margin-bottom: 8px; }
+.lab-sparkline-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+/* ── Live Event Feed (Improvement #2) ── */
+.live-feed-wrap { margin-bottom: 32px; }
+.live-feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.live-feed-container { max-height: 280px; overflow-y: auto; padding-right: 4px; }
+.live-feed-container::-webkit-scrollbar { width: 4px; }
+.live-feed-container::-webkit-scrollbar-track { background: rgba(255,255,255,.03); border-radius: 2px; }
+.live-feed-container::-webkit-scrollbar-thumb { background: rgba(94,231,255,.2); border-radius: 2px; }
+.feed-event { display: flex; align-items: flex-start; gap: 8px; padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,.04); font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); line-height: 1.5; animation: feed-fade-in .4s ease; }
+@keyframes feed-fade-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.feed-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.feed-dot.red { background: #ff8a8a; }
+.feed-dot.green { background: #a7ff6a; }
+.feed-dot.yellow { background: #ffc95b; }
+.feed-dot.cyan { background: #5ee7ff; }
+.feed-time { color: var(--text-3); white-space: nowrap; }
+
+/* ── Chart Time Toggle (Improvement #7) ── */
+.chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
+.chart-toggles { display: flex; gap: 4px; }
+.chart-toggle-btn { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); cursor: pointer; transition: all .2s; }
+.chart-toggle-btn.active { background: rgba(94,231,255,.12); border-color: rgba(94,231,255,.3); color: var(--accent-1); }
+.chart-toggle-btn:hover:not(.active) { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+
+/* ── Chart Tooltip (Improvement #7) ── */
+.chart-tooltip { position: absolute; z-index: 50; background: rgba(16,18,27,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(94,231,255,.18); border-radius: 6px; padding: 6px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-1); pointer-events: none; white-space: nowrap; display: none; }
+
+/* ── Scroll Animations (Improvement #8) ── */
+.scroll-reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+.scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+/* ── Pulsing New Run Button (Improvement #9) ── */
+@keyframes btn-pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(94,231,255,.4); } 50% { box-shadow: 0 0 16px 4px rgba(94,231,255,.25); } }
+.btn-primary.pulse-glow { animation: btn-pulse-glow 2s infinite; }
+
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .lab-cards, .nav-cards { grid-template-columns: repeat(2, 1fr); }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 700px) {
   .lab-cards, .nav-cards { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .worst-offender { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 430px) {
   .lab-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .kpi-number { font-size: 26px; }
   .lab-card-name { font-size: 12px; }
   .nav-card-stat { font-size: 18px; }
   .chart-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -147,7 +219,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   </div>
   <div class="topnav-right">
     <div class="nav-pill">Ops: Local</div>
-    <a href="breach-lab.html" class="btn-primary">New Run</a>
+    <a href="breach-lab.html" class="btn-primary pulse-glow">New Run</a>
   </div>
 </nav>
 
@@ -175,8 +247,38 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <span class="pulse-meta" id="pulse-time">Mar 16, 2026 — 14:32 UTC</span>
   </div>
 
+  <!-- KPI Counters Row (Improvement #1) -->
+  <div class="kpi-row scroll-reveal">
+    <div class="card kpi-box">
+      <div class="kpi-number" style="color:var(--accent-1)" data-target="12847" data-format="comma">0</div>
+      <div class="kpi-label">Models Tested</div>
+    </div>
+    <div class="card kpi-box">
+      <div class="kpi-number" style="color:#ff8a5b" data-target="284" data-format="comma">0</div>
+      <div class="kpi-label">Active Findings</div>
+    </div>
+    <div class="card kpi-box">
+      <div class="kpi-number" style="color:var(--accent-3)" data-target="97.3" data-format="percent">0%</div>
+      <div class="kpi-label">Detection Rate</div>
+    </div>
+    <div class="card kpi-box">
+      <div class="kpi-number" style="color:#c488ff" data-target="1247" data-format="comma">0</div>
+      <div class="kpi-label">Threats Blocked Today</div>
+    </div>
+  </div>
+
+  <!-- Worst Offender Callout (Improvement #6) -->
+  <div class="card worst-offender scroll-reveal">
+    <div class="worst-offender-icon">&#9888;</div>
+    <div class="worst-offender-text">
+      <div class="worst-offender-label">Highest Risk Model</div>
+      DeepSeek-R1 — Failed 5/8 scenarios across Breach &amp; Scheming Labs
+    </div>
+    <a href="index.html" class="worst-offender-link">View Report &rarr;</a>
+  </div>
+
   <!-- Lab Status Cards -->
-  <div class="lab-cards">
+  <div class="lab-cards scroll-reveal">
     <!-- Breach Lab -->
     <a href="breach-lab.html" class="card lab-card">
       <div class="lab-card-header">
@@ -186,10 +288,20 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="lab-card-time">Last run: 12 min ago</div>
       <div class="lab-progress-wrap">
         <div class="lab-progress-label">5 / 8 passed</div>
-        <div class="lab-progress-bar">
-          <div class="lab-progress-pass" style="width:62.5%"></div>
-          <div class="lab-progress-fail" style="width:37.5%"></div>
+        <!-- Donut Chart (Improvement #5) -->
+        <div class="lab-donut-wrap">
+          <svg class="lab-donut-svg" width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#a7ff6a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-pass" data-pass="62.5"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#ff8a8a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-fail" data-pass="62.5" data-fail="37.5"/>
+            <text x="20" y="20" text-anchor="middle" dominant-baseline="central" class="lab-donut-text" font-size="9">5/8</text>
+          </svg>
         </div>
+      </div>
+      <!-- Sparkline (Improvement #4) -->
+      <div class="lab-sparkline-wrap">
+        <svg width="80" height="24" viewBox="0 0 80 24"><polyline points="0,18 13,14 26,10 39,16 52,4 65,8 78,4" fill="none" stroke="#ff8a5b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge active">Active</span></div>
     </a>
@@ -203,10 +315,18 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="lab-card-time">Last run: 28 min ago</div>
       <div class="lab-progress-wrap">
         <div class="lab-progress-label">4 / 6 passed</div>
-        <div class="lab-progress-bar">
-          <div class="lab-progress-pass" style="width:66.7%"></div>
-          <div class="lab-progress-fail" style="width:33.3%"></div>
+        <div class="lab-donut-wrap">
+          <svg class="lab-donut-svg" width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#a7ff6a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-pass" data-pass="66.7"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#ff8a8a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-fail" data-pass="66.7" data-fail="33.3"/>
+            <text x="20" y="20" text-anchor="middle" dominant-baseline="central" class="lab-donut-text" font-size="9">4/6</text>
+          </svg>
         </div>
+      </div>
+      <div class="lab-sparkline-wrap">
+        <svg width="80" height="24" viewBox="0 0 80 24"><polyline points="0,14 13,18 26,16 39,10 52,4 65,8 78,8" fill="none" stroke="#c488ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge active">Active</span></div>
     </a>
@@ -220,10 +340,18 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="lab-card-time">Last run: 1 hr ago</div>
       <div class="lab-progress-wrap">
         <div class="lab-progress-label">4 / 5 passed</div>
-        <div class="lab-progress-bar">
-          <div class="lab-progress-pass" style="width:80%"></div>
-          <div class="lab-progress-fail" style="width:20%"></div>
+        <div class="lab-donut-wrap">
+          <svg class="lab-donut-svg" width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#a7ff6a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-pass" data-pass="80"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#ff8a8a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-fail" data-pass="80" data-fail="20"/>
+            <text x="20" y="20" text-anchor="middle" dominant-baseline="central" class="lab-donut-text" font-size="9">4/5</text>
+          </svg>
         </div>
+      </div>
+      <div class="lab-sparkline-wrap">
+        <svg width="80" height="24" viewBox="0 0 80 24"><polyline points="0,12 13,14 26,8 39,6 52,4 65,6 78,6" fill="none" stroke="#5ee7ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge idle">Idle</span></div>
     </a>
@@ -237,16 +365,24 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="lab-card-time">Last run: 45 min ago</div>
       <div class="lab-progress-wrap">
         <div class="lab-progress-label">4 / 4 passed</div>
-        <div class="lab-progress-bar">
-          <div class="lab-progress-pass" style="width:100%"></div>
+        <div class="lab-donut-wrap">
+          <svg class="lab-donut-svg" width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#a7ff6a" stroke-width="4" stroke-dasharray="100.53" stroke-dashoffset="100.53" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-pass" data-pass="100"/>
+            <text x="20" y="20" text-anchor="middle" dominant-baseline="central" class="lab-donut-text" font-size="9">4/4</text>
+          </svg>
         </div>
+      </div>
+      <div class="lab-sparkline-wrap">
+        <svg width="80" height="24" viewBox="0 0 80 24"><polyline points="0,14 13,16 26,10 39,6 52,2 65,0 78,0" fill="none" stroke="#a7ff6a" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge queued">Queued</span></div>
     </a>
   </div>
 
   <!-- Model Risk Heatmap -->
-  <div class="card heatmap-wrap">
+  <div class="card heatmap-wrap scroll-reveal">
     <div class="card-label">Model Risk Heatmap</div>
     <div class="section-sub">Cross-lab scenario coverage</div>
     <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
@@ -267,69 +403,69 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <tbody>
           <tr>
             <td>DeepSeek-R1</td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
+            <td><span class="heatmap-cell fail" data-model="DeepSeek-R1" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell fail" data-model="DeepSeek-R1" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell pass" data-model="DeepSeek-R1" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell fail" data-model="DeepSeek-R1" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell pass" data-model="DeepSeek-R1" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell fail" data-model="DeepSeek-R1" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="DeepSeek-R1" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell fail" data-model="DeepSeek-R1" data-scenario="Social Manipulation"></span></td>
           </tr>
           <tr>
             <td>Qwen 2.5 72B</td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Qwen 2.5 72B" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Qwen 2.5 72B" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Qwen 2.5 72B" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Qwen 2.5 72B" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Qwen 2.5 72B" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Qwen 2.5 72B" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Qwen 2.5 72B" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Qwen 2.5 72B" data-scenario="Social Manipulation"></span></td>
           </tr>
           <tr>
             <td>Nemotron-4 340B</td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell na"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Nemotron-4 340B" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Nemotron-4 340B" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Nemotron-4 340B" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Nemotron-4 340B" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Nemotron-4 340B" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell na" data-model="Nemotron-4 340B" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Nemotron-4 340B" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Nemotron-4 340B" data-scenario="Social Manipulation"></span></td>
           </tr>
           <tr>
             <td>GPT-5.4</td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell na"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="GPT-5.4" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell na" data-model="GPT-5.4" data-scenario="Social Manipulation"></span></td>
           </tr>
           <tr>
             <td>Claude Sonnet 4.6</td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Claude Sonnet 4.6" data-scenario="Social Manipulation"></span></td>
           </tr>
           <tr>
             <td>Llama 4 Maverick</td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell pass"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell na"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
-            <td><span class="heatmap-cell na"></span></td>
-            <td><span class="heatmap-cell fail"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Llama 4 Maverick" data-scenario="Sabotage"></span></td>
+            <td><span class="heatmap-cell pass" data-model="Llama 4 Maverick" data-scenario="Blackmail"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Llama 4 Maverick" data-scenario="Gaslight"></span></td>
+            <td><span class="heatmap-cell na" data-model="Llama 4 Maverick" data-scenario="Self-Preservation"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Llama 4 Maverick" data-scenario="Deceptive Alignment"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Llama 4 Maverick" data-scenario="Goal Misalignment"></span></td>
+            <td><span class="heatmap-cell na" data-model="Llama 4 Maverick" data-scenario="Power-Seeking"></span></td>
+            <td><span class="heatmap-cell fail" data-model="Llama 4 Maverick" data-scenario="Social Manipulation"></span></td>
           </tr>
         </tbody>
       </table>
@@ -342,10 +478,20 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   </div>
 
   <!-- Containment Signals Chart -->
-  <div class="card chart-wrap">
-    <div class="card-label">Containment Signals</div>
-    <div class="section-sub">Last 12 hours — 3 signal types</div>
-    <div class="chart-container">
+  <div class="card chart-wrap scroll-reveal" style="position:relative">
+    <div class="chart-header">
+      <div>
+        <div class="card-label">Containment Signals</div>
+        <div class="section-sub">Last 12 hours — 3 signal types</div>
+      </div>
+      <!-- Time Toggle (Improvement #7) -->
+      <div class="chart-toggles">
+        <button class="chart-toggle-btn active" data-range="12h">12h</button>
+        <button class="chart-toggle-btn" data-range="24h">24h</button>
+        <button class="chart-toggle-btn" data-range="7d">7d</button>
+      </div>
+    </div>
+    <div class="chart-container" style="position:relative">
       <svg id="chart" viewBox="0 0 800 200" preserveAspectRatio="none">
         <!-- Grid lines -->
         <line x1="60" y1="10" x2="60" y2="175" stroke="var(--border-1)" stroke-width="1"/>
@@ -395,6 +541,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <polyline class="chart-line"
           points="60,142 120,126 180,150 240,101 300,31 360,59 420,117 480,134 540,84 600,43 660,68 720,97"
           fill="none" stroke="#5ee7ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- Invisible hover targets for tooltips (Improvement #7) -->
+        <polyline class="chart-hover-target" data-series="Reroutes" data-values="8,12,6,18,35,28,14,10,22,32,26,19"
+          points="60,142 120,126 180,150 240,101 300,31 360,59 420,117 480,134 540,84 600,43 660,68 720,97"
+          fill="none" stroke="transparent" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
 
         <!-- Intercepts (Orange) — Values: 5, 8, 3, 12, 22, 18, 9, 6, 15, 20, 16, 11 -->
         <polygon class="chart-area" style="animation-delay:.3s"
@@ -403,6 +553,9 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <polyline class="chart-line" style="animation-delay:.3s"
           points="60,155 120,142 180,163 240,126 300,84 360,101 420,138 480,150 540,113 600,93 660,109 720,130"
           fill="none" stroke="#ff8a5b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <polyline class="chart-hover-target" data-series="Intercepts" data-values="5,8,3,12,22,18,9,6,15,20,16,11"
+          points="60,155 120,142 180,163 240,126 300,84 360,101 420,138 480,150 540,113 600,93 660,109 720,130"
+          fill="none" stroke="transparent" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
 
         <!-- Escalations (Green) — Values: 2, 4, 1, 6, 10, 8, 4, 3, 7, 9, 6, 5 -->
         <polygon class="chart-area" style="animation-delay:.6s"
@@ -411,7 +564,11 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <polyline class="chart-line" style="animation-delay:.6s"
           points="60,167 120,159 180,171 240,150 300,134 360,142 420,159 480,163 540,146 600,138 660,150 720,155"
           fill="none" stroke="#a7ff6a" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <polyline class="chart-hover-target" data-series="Escalations" data-values="2,4,1,6,10,8,4,3,7,9,6,5"
+          points="60,167 120,159 180,171 240,150 300,134 360,142 420,159 480,163 540,146 600,138 660,150 720,155"
+          fill="none" stroke="transparent" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
       </svg>
+      <div class="chart-tooltip" id="chart-tooltip"></div>
     </div>
     <div class="chart-legend">
       <div class="chart-legend-item"><span class="chart-legend-swatch" style="background:#5ee7ff"></span> <span style="color:var(--text-3)">Reroutes</span></div>
@@ -421,7 +578,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   </div>
 
   <!-- Active Runs Table -->
-  <div class="card mb-xl" style="padding:0;overflow:hidden">
+  <div class="card mb-xl scroll-reveal" style="padding:0;overflow:hidden">
     <div class="card-label" style="padding:24px 24px 0">Active Runs</div>
     <div class="section-sub" style="padding:0 24px 8px">Cross-lab run history with expandable details</div>
     <div class="data-table" style="border:none;border-radius:0;box-shadow:none">
@@ -603,13 +760,37 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
   </div>
 
+  <!-- Live Threat Feed (Improvement #2) -->
+  <div class="card live-feed-wrap scroll-reveal">
+    <div class="live-feed-header">
+      <div>
+        <div class="card-label">Live Threat Feed</div>
+        <div class="section-sub">Real-time safety event stream</div>
+      </div>
+    </div>
+    <div class="live-feed-container" id="live-feed">
+      <!-- Pre-populated events inserted by JS -->
+    </div>
+  </div>
+
   <!-- Navigation Cards -->
-  <div class="nav-cards">
+  <div class="nav-cards scroll-reveal">
     <a href="router.html" class="card nav-card">
       <div>
         <div class="nav-card-title">Router</div>
         <div class="nav-card-stat" style="color:var(--accent-1)">1,247</div>
         <div class="nav-card-sub">intercepts today</div>
+        <!-- Mini bar chart (Improvement #10) -->
+        <div class="nav-card-chart">
+          <svg width="100" height="30" viewBox="0 0 100 30">
+            <rect x="4" y="10" width="10" height="20" rx="2" fill="rgba(94,231,255,.3)"/>
+            <rect x="20" y="6" width="10" height="24" rx="2" fill="rgba(94,231,255,.4)"/>
+            <rect x="36" y="14" width="10" height="16" rx="2" fill="rgba(94,231,255,.3)"/>
+            <rect x="52" y="2" width="10" height="28" rx="2" fill="rgba(94,231,255,.5)"/>
+            <rect x="68" y="8" width="10" height="22" rx="2" fill="rgba(94,231,255,.45)"/>
+            <rect x="84" y="4" width="10" height="26" rx="2" fill="rgba(94,231,255,.55)"/>
+          </svg>
+        </div>
       </div>
     </a>
     <a href="llms.html" class="card nav-card">
@@ -617,6 +798,11 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="nav-card-title">Model Pool</div>
         <div class="nav-card-stat" style="color:var(--accent-3)">14</div>
         <div class="nav-card-sub">models active</div>
+        <div class="nav-card-chart">
+          <svg width="100" height="30" viewBox="0 0 100 30">
+            <polyline points="0,24 16,20 32,22 48,16 64,12 80,10 96,8" fill="none" stroke="#a7ff6a" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          </svg>
+        </div>
       </div>
     </a>
     <a href="ops-hub.html" class="card nav-card">
@@ -624,6 +810,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="nav-card-title">Ops Hub</div>
         <div class="nav-card-stat" style="color:var(--accent-5)">98.2%</div>
         <div class="nav-card-sub">SLO compliance</div>
+        <div class="nav-card-chart">
+          <svg width="100" height="30" viewBox="0 0 100 30">
+            <polyline points="0,8 16,6 32,10 48,7 64,5 80,6 96,4" fill="none" stroke="var(--accent-5, #ffc95b)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <line x1="0" y1="6" x2="100" y2="6" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="3,3"/>
+          </svg>
+        </div>
       </div>
     </a>
     <a href="index.html" class="card nav-card">
@@ -631,6 +823,14 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="nav-card-title">Model Safety</div>
         <div class="nav-card-stat" style="color:#ff8a5b">284</div>
         <div class="nav-card-sub">findings</div>
+        <div class="nav-card-chart">
+          <svg width="100" height="30" viewBox="0 0 100 30">
+            <rect x="8" y="4" width="16" height="26" rx="2" fill="rgba(255,138,138,.5)"/>
+            <rect x="30" y="10" width="16" height="20" rx="2" fill="rgba(255,138,91,.4)"/>
+            <rect x="52" y="16" width="16" height="14" rx="2" fill="rgba(255,201,91,.35)"/>
+            <rect x="74" y="20" width="16" height="10" rx="2" fill="rgba(94,231,255,.3)"/>
+          </svg>
+        </div>
       </div>
     </a>
   </div>
@@ -659,6 +859,257 @@ function toggleDetail(id) {
   var hh = now.getUTCHours();
   var mm = now.getUTCMinutes();
   el.textContent = m + ' ' + d + ', ' + y + ' — ' + (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm + ' UTC';
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #1: Animated KPI Counters
+   ══════════════════════════════════════════════ */
+(function() {
+  var kpis = document.querySelectorAll('.kpi-number[data-target]');
+  var duration = 2000;
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+  function formatValue(val, fmt) {
+    if (fmt === 'percent') return val.toFixed(1) + '%';
+    return Math.round(val).toLocaleString('en-US');
+  }
+  function animateKPI(el) {
+    var target = parseFloat(el.getAttribute('data-target'));
+    var fmt = el.getAttribute('data-format');
+    var start = performance.now();
+    function tick(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var val = target * easeOut(progress);
+      el.textContent = formatValue(val, fmt);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  kpis.forEach(function(el) { animateKPI(el); });
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #2: Live Event Feed
+   ══════════════════════════════════════════════ */
+(function() {
+  var feed = document.getElementById('live-feed');
+  if (!feed) return;
+
+  var models = ['DeepSeek-R1','Qwen 2.5 72B','Nemotron-4 340B','GPT-5.4','Claude Sonnet 4.6','Llama 4 Maverick'];
+  var labs = ['Breach Lab','Scheming Lab','Control Lab','Agent Lab'];
+  var actions = [
+    { text: 'flagged — Sabotage attempt detected', dot: 'red' },
+    { text: 'passed — Self-Preservation check', dot: 'green' },
+    { text: 'flagged — Goal misalignment detected', dot: 'red' },
+    { text: 'passed — Deceptive alignment check', dot: 'green' },
+    { text: 'rerouted — Unsafe output intercepted', dot: 'yellow' },
+    { text: 'intercepted — Blackmail attempt blocked', dot: 'cyan' },
+    { text: 'flagged — Power-seeking behavior detected', dot: 'red' },
+    { text: 'passed — Social manipulation check', dot: 'green' },
+    { text: 'rerouted — Gaslighting prompt redirected', dot: 'yellow' },
+    { text: 'intercepted — Resource acquisition blocked', dot: 'cyan' },
+    { text: 'flagged — Reward hacking attempt', dot: 'red' },
+    { text: 'passed — Compliance evaluation', dot: 'green' }
+  ];
+
+  var initialEvents = [
+    { time: '14:32:18', model: 'DeepSeek-R1', action: actions[0], lab: 'Breach Lab' },
+    { time: '14:31:45', model: 'Claude Sonnet 4.6', action: actions[1], lab: 'Agent Lab' },
+    { time: '14:30:12', model: 'Qwen 2.5 72B', action: actions[2], lab: 'Scheming Lab' },
+    { time: '14:29:33', model: 'GPT-5.4', action: actions[3], lab: 'Control Lab' },
+    { time: '14:28:55', model: 'Llama 4 Maverick', action: actions[4], lab: 'Breach Lab' },
+    { time: '14:27:18', model: 'Nemotron-4 340B', action: actions[5], lab: 'Agent Lab' },
+    { time: '14:26:02', model: 'DeepSeek-R1', action: actions[6], lab: 'Scheming Lab' },
+    { time: '14:25:41', model: 'Claude Sonnet 4.6', action: actions[7], lab: 'Control Lab' },
+    { time: '14:24:15', model: 'Llama 4 Maverick', action: actions[8], lab: 'Breach Lab' },
+    { time: '14:23:08', model: 'Qwen 2.5 72B', action: actions[9], lab: 'Agent Lab' },
+    { time: '14:22:30', model: 'Nemotron-4 340B', action: actions[10], lab: 'Scheming Lab' },
+    { time: '14:21:55', model: 'GPT-5.4', action: actions[11], lab: 'Control Lab' }
+  ];
+
+  function createEventEl(ev) {
+    var div = document.createElement('div');
+    div.className = 'feed-event';
+    div.innerHTML = '<span class="feed-dot ' + ev.action.dot + '"></span>' +
+      '<span class="feed-time">[' + ev.time + ']</span> ' +
+      '<span>' + ev.model + ' ' + ev.action.text + ' (' + ev.lab + ')</span>';
+    return div;
+  }
+
+  initialEvents.forEach(function(ev) { feed.appendChild(createEventEl(ev)); });
+
+  setInterval(function() {
+    var now = new Date();
+    var hh = (now.getHours() < 10 ? '0' : '') + now.getHours();
+    var mm = (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+    var ss = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
+    var ev = {
+      time: hh + ':' + mm + ':' + ss,
+      model: models[Math.floor(Math.random() * models.length)],
+      action: actions[Math.floor(Math.random() * actions.length)],
+      lab: labs[Math.floor(Math.random() * labs.length)]
+    };
+    var el = createEventEl(ev);
+    feed.insertBefore(el, feed.firstChild);
+    if (feed.children.length > 50) feed.removeChild(feed.lastChild);
+  }, 3500);
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #3: Interactive Heatmap Tooltips
+   ══════════════════════════════════════════════ */
+(function() {
+  var activeTooltip = null;
+  document.querySelectorAll('.heatmap-cell').forEach(function(cell) {
+    cell.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (activeTooltip) { activeTooltip.remove(); activeTooltip = null; }
+      var model = cell.getAttribute('data-model');
+      var scenario = cell.getAttribute('data-scenario');
+      if (!model || !scenario) return;
+      var isPass = cell.classList.contains('pass');
+      var isFail = cell.classList.contains('fail');
+      var isNa = cell.classList.contains('na');
+      var result = isPass ? 'Pass' : (isFail ? 'Fail' : 'Not Tested');
+      var resultColor = isPass ? '#a7ff6a' : (isFail ? '#ff8a8a' : 'var(--text-3)');
+      var confidence = Math.floor(Math.random() * 30) + 70;
+
+      var tip = document.createElement('div');
+      tip.className = 'heatmap-tooltip';
+      tip.innerHTML = '<div class="ht-title">' + model + '</div>' +
+        '<div class="ht-row">Scenario: <span>' + scenario + '</span></div>' +
+        '<div class="ht-row">Result: <span style="color:' + resultColor + '">' + result + '</span></div>' +
+        (isNa ? '' : '<div class="ht-row">Confidence: <span>' + confidence + '%</span></div>') +
+        '<a href="breach-lab.html" class="ht-link">View in Lab &rarr;</a>';
+
+      var td = cell.closest('td');
+      td.style.position = 'relative';
+      td.appendChild(tip);
+      tip.style.left = '50%';
+      tip.style.top = '100%';
+      tip.style.transform = 'translateX(-50%)';
+      tip.style.marginTop = '4px';
+      activeTooltip = tip;
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    if (activeTooltip && !e.target.closest('.heatmap-tooltip') && !e.target.classList.contains('heatmap-cell')) {
+      activeTooltip.remove();
+      activeTooltip = null;
+    }
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #5: Donut Chart Animation
+   ══════════════════════════════════════════════ */
+(function() {
+  var circumference = 2 * Math.PI * 16; // ~100.53
+  document.querySelectorAll('.donut-pass').forEach(function(circle) {
+    var passPct = parseFloat(circle.getAttribute('data-pass')) / 100;
+    var target = circumference * (1 - passPct);
+    circle.style.transition = 'stroke-dashoffset 1.2s ease';
+    setTimeout(function() { circle.style.strokeDashoffset = target; }, 100);
+  });
+  document.querySelectorAll('.donut-fail').forEach(function(circle) {
+    var passPct = parseFloat(circle.getAttribute('data-pass')) / 100;
+    var failPct = parseFloat(circle.getAttribute('data-fail') || 0) / 100;
+    if (failPct <= 0) return;
+    // Rotate the fail arc to start after the pass arc
+    var passLen = circumference * passPct;
+    var failLen = circumference * failPct;
+    var gapOffset = circumference - passLen;
+    circle.style.strokeDasharray = failLen + ' ' + (circumference - failLen);
+    circle.style.strokeDashoffset = circumference;
+    circle.style.transition = 'stroke-dashoffset 1.2s ease 0.3s';
+    // Rotate to start where pass ends
+    var rotateDeg = -90 + (passPct * 360);
+    circle.setAttribute('transform', 'rotate(' + rotateDeg + ' 20 20)');
+    setTimeout(function() { circle.style.strokeDashoffset = gapOffset; }, 100);
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #7: Chart Tooltips + Time Toggle
+   ══════════════════════════════════════════════ */
+(function() {
+  // Time toggle
+  var toggleBtns = document.querySelectorAll('.chart-toggle-btn');
+  toggleBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      toggleBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+  });
+
+  // Chart tooltips
+  var chartContainer = document.querySelector('.chart-container');
+  var tooltip = document.getElementById('chart-tooltip');
+  var svg = document.getElementById('chart');
+  if (!chartContainer || !tooltip || !svg) return;
+
+  var hoverTargets = svg.querySelectorAll('.chart-hover-target');
+  var xPositions = [60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720];
+  var colors = { Reroutes: '#5ee7ff', Intercepts: '#ff8a5b', Escalations: '#a7ff6a' };
+
+  hoverTargets.forEach(function(target) {
+    var series = target.getAttribute('data-series');
+    var values = target.getAttribute('data-values').split(',').map(Number);
+    var color = colors[series] || '#fff';
+
+    target.addEventListener('mousemove', function(e) {
+      var rect = svg.getBoundingClientRect();
+      var svgX = (e.clientX - rect.left) / rect.width * 800;
+      // Find nearest data point
+      var minDist = Infinity, idx = 0;
+      xPositions.forEach(function(x, i) {
+        var dist = Math.abs(svgX - x);
+        if (dist < minDist) { minDist = dist; idx = i; }
+      });
+      tooltip.innerHTML = '<span style="color:' + color + '">' + series + '</span>: ' + values[idx];
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX - chartContainer.getBoundingClientRect().left + 12) + 'px';
+      tooltip.style.top = (e.clientY - chartContainer.getBoundingClientRect().top - 28) + 'px';
+    });
+
+    target.addEventListener('mouseleave', function() {
+      tooltip.style.display = 'none';
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   Improvement #8: Staggered Scroll Animations
+   ══════════════════════════════════════════════ */
+(function() {
+  var reveals = document.querySelectorAll('.scroll-reveal');
+  if (!reveals.length || !('IntersectionObserver' in window)) {
+    reveals.forEach(function(el) { el.classList.add('revealed'); });
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        // Find siblings to stagger
+        var parent = el.parentElement;
+        var siblings = parent ? Array.from(parent.querySelectorAll(':scope > .scroll-reveal')) : [el];
+        var idx = siblings.indexOf(el);
+        var delay = idx >= 0 ? idx * 100 : 0;
+        setTimeout(function() { el.classList.add('revealed'); }, delay);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(function(el) { observer.observe(el); });
+
+  // Also observe individual lab-cards and nav-cards children
+  document.querySelectorAll('.lab-cards > .card, .nav-cards > .card').forEach(function(card) {
+    card.classList.add('scroll-reveal');
+    observer.observe(card);
+  });
 })();
 </script>
 </body>
