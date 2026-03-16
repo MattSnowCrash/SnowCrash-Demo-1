@@ -1113,7 +1113,7 @@ const MODELS = [
     vulns: [
       { id: "SCL-2026-0141", severity: "critical", desc: "Multimodal video understanding pipeline lacks safety filtering for harmful visual content, allowing bypass through video-embedded instructions." },
       { id: "SCL-2026-0144", severity: "high", desc: "Cross-modal transfer attacks enable text safety bypasses by encoding harmful requests as visual or audio inputs." },
-      { id: "SCL-2026-0147", severity: "medium", desc: "Limited red-teaming documentation raises concerns about evaluation thoroughness for edge-case adversarial scenarios." }
+      { id: "SCL-2026-0147", severity: "medium", desc: "Limited stress-testing documentation raises concerns about evaluation thoroughness for edge-case adversarial scenarios." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [53, 54, 55, 56, 57, 58, 59, 59, 60, 61, 62, 62]
@@ -1518,7 +1518,7 @@ const MODELS = [
     vulns: [
       { id: "SCL-2026-0332", severity: "critical", desc: "Korean-language safety alignment is adequate but English and other language safety coverage is severely lacking, with jailbreak success rates exceeding 70%." },
       { id: "SCL-2026-0335", severity: "critical", desc: "Integration with Kakao ecosystem services (KakaoTalk, KakaoPay) creates cross-platform data leakage vectors for sensitive financial and communication data." },
-      { id: "SCL-2026-0338", severity: "high", desc: "Limited red-teaming scope — safety evaluation conducted primarily by Korean-speaking teams, missing culturally-specific harms in other languages." },
+      { id: "SCL-2026-0338", severity: "high", desc: "Limited stress-testing scope — safety evaluation conducted primarily by Korean-speaking teams, missing culturally-specific harms in other languages." },
       { id: "SCL-2026-0341", severity: "medium", desc: "South Korean data privacy requirements met but GDPR and CCPA compliance gaps identified for international user data handling." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },

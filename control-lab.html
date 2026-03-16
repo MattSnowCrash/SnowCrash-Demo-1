@@ -56,7 +56,7 @@
     border-radius: var(--radius-1);
     padding: 16px 18px;
   }
-  .config-card.red-team { border-top: 2px solid #ff5e5e; }
+  .config-card.stress-team { border-top: 2px solid #ff5e5e; }
   .config-card.blue-team { border-top: 2px solid #5ee7ff; }
   .config-card-label {
     font-family: 'IBM Plex Mono', monospace;
@@ -637,10 +637,10 @@
     before they cause harm — and the usefulness tax of doing so.
   </p>
 
-  <!-- Red Team vs Blue Team Config -->
+  <!-- Stress Team vs Blue Team Config -->
   <div class="config-row">
-    <div class="config-card red-team">
-      <div class="config-card-label" style="color:#ff5e5e;">Red Team — Untrusted Model</div>
+    <div class="config-card stress-team">
+      <div class="config-card-label" style="color:#ff5e5e;">Stress Team — Untrusted Model</div>
       <select class="model-select" id="redSelect">
         <option selected>GPT-5.4</option>
         <option>Claude Opus 4.6</option>
@@ -795,7 +795,7 @@
       <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); letter-spacing:1px;" id="logTimestamp">AWAITING RUN</span>
     </div>
     <div class="battle-body" id="battleLog">
-      <span class="awaiting">Launch a control evaluation to see the Red Team vs Blue Team battle log...</span>
+      <span class="awaiting">Launch a control evaluation to see the Stress Team vs Blue Team battle log...</span>
     </div>
   </div>
 
@@ -836,7 +836,7 @@
       <thead>
         <tr>
           <th>Run ID</th>
-          <th>Red Team Model</th>
+          <th>Stress Team Model</th>
           <th>Attack</th>
           <th>Defenses</th>
           <th>Result</th>
@@ -1300,7 +1300,7 @@ function runEvaluation() {
   document.getElementById('logTimestamp').textContent = 'RUNNING...';
 
   const battleLog = document.getElementById('battleLog');
-  battleLog.innerHTML = `<span class="awaiting">Deploying ${modelName} as Red Team attacker... Capability tier: ${profile.label}</span>`;
+  battleLog.innerHTML = `<span class="awaiting">Deploying ${modelName} as Stress Team attacker... Capability tier: ${profile.label}</span>`;
 
   // Phase 1: Stream battle log entries
   setTimeout(() => {
@@ -1310,7 +1310,7 @@ function runEvaluation() {
     // Add model-specific intro log entry
     const introEntry = {
       team: 'system',
-      action: `<strong>Red Team:</strong> ${modelName} <span class="yellow">(${profile.label})</span> · Evasion capability: <strong>${profile.evasion}</strong> · Capability modifier: <strong>${profile.capMod > 1 ? '+' : ''}${Math.round((profile.capMod - 1) * 100)}%</strong> vs baseline`,
+      action: `<strong>Stress Team:</strong> ${modelName} <span class="yellow">(${profile.label})</span> · Evasion capability: <strong>${profile.evasion}</strong> · Capability modifier: <strong>${profile.capMod > 1 ? '+' : ''}${Math.round((profile.capMod - 1) * 100)}%</strong> vs baseline`,
       meta: `${profile.note}`
     };
     const allEntries = [introEntry, ...sc.log];
