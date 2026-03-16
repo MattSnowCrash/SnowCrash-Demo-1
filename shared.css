@@ -421,6 +421,7 @@ code, .mono {
 .nav-dropdown-icon.adv { background: rgba(255, 94, 94, 0.15); color: #ff5e5e; }
 .nav-dropdown-icon.crew { background: rgba(94, 231, 255, 0.15); color: #5ee7ff; }
 .nav-dropdown-icon.scheme { background: rgba(196, 136, 255, 0.15); color: #c488ff; }
+.nav-dropdown-icon.ctrl { background: rgba(255, 138, 91, 0.15); color: #ff8a5b; }
 
 /* Right side of nav */
 .topnav-right,
