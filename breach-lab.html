@@ -587,6 +587,11 @@
     color: var(--accent-3);
   }
 
+  .scenario-tile-badge.stb-pending {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-3);
+  }
+
   .scenario-tile-severity {
     font-size: 10px;
     font-family: 'IBM Plex Mono', monospace;
@@ -1139,8 +1144,12 @@ function getSubjectModel() {
   return document.getElementById('model-select').value;
 }
 
+/* Track which scenarios have been evaluated for the current model */
+var evaluatedScenarios = new Set();
+
 function updateSubjectModel() {
   if (demoRunning) resetDemo();
+  evaluatedScenarios.clear();
   renderScenarioGrid();
   renderRiskProfile();
   renderStats();
@@ -1166,15 +1175,25 @@ function renderScenarioGrid() {
   var keys = ['sabotage','blackmail','gaslighting','selfpres','deceptive','goalmis','power','social'];
   keys.forEach(function(key) {
     var meta = SCENARIO_META[key];
-    var eff = getEffectiveData(key, model);
-    var isPass = eff.verdict === 'PASS';
+    var evaluated = evaluatedScenarios.has(key);
     var activeClass = key === currentScenario ? ' active' : '';
     html += '<div class="scenario-tile' + activeClass + '" data-scenario="' + key + '" onclick="selectScenario(\'' + key + '\')">';
     html += '<div class="scenario-tile-header">';
     html += '<span class="scenario-tile-name">' + meta.name + '</span>';
-    html += '<span class="scenario-tile-badge ' + (isPass ? 'stb-pass' : 'stb-fail') + '">' + (isPass ? 'PASS' : 'FAIL') + '</span>';
+    if (evaluated) {
+      var eff = getEffectiveData(key, model);
+      var isPass = eff.verdict === 'PASS';
+      html += '<span class="scenario-tile-badge ' + (isPass ? 'stb-pass' : 'stb-fail') + '">' + (isPass ? 'PASS' : 'FAIL') + '</span>';
+    } else {
+      html += '<span class="scenario-tile-badge stb-pending">PENDING</span>';
+    }
     html += '</div>';
-    html += '<div class="scenario-tile-severity">' + eff.severity + ' — ' + eff.score + '</div>';
+    if (evaluated) {
+      var eff2 = getEffectiveData(key, model);
+      html += '<div class="scenario-tile-severity">' + eff2.severity + ' — ' + eff2.score + '</div>';
+    } else {
+      html += '<div class="scenario-tile-severity">Awaiting evaluation</div>';
+    }
     html += '</div>';
   });
   grid.innerHTML = html;
@@ -1193,11 +1212,18 @@ function renderRiskProfile() {
   var labels = { sabotage:'Sabotage', blackmail:'Blackmail', gaslighting:'Gaslighting', selfpres:'Self-Pres', deceptive:'Deceptive', goalmis:'Goal Mis.', power:'Power-Seek', social:'Social Manip.' };
   var html = '';
   keys.forEach(function(key) {
-    var eff = getEffectiveData(key, model);
-    var isPass = eff.verdict === 'PASS';
-    html += '<div class="risk-item ' + (isPass ? 'risk-pass' : 'risk-fail') + '">';
-    html += '<span class="risk-item-name">' + labels[key] + '</span>';
-    html += '<span class="risk-item-status">' + (isPass ? 'SAFE' : eff.severity) + '</span>';
+    var evaluated = evaluatedScenarios.has(key);
+    if (evaluated) {
+      var eff = getEffectiveData(key, model);
+      var isPass = eff.verdict === 'PASS';
+      html += '<div class="risk-item ' + (isPass ? 'risk-pass' : 'risk-fail') + '">';
+      html += '<span class="risk-item-name">' + labels[key] + '</span>';
+      html += '<span class="risk-item-status">' + (isPass ? 'SAFE' : eff.severity) + '</span>';
+    } else {
+      html += '<div class="risk-item">';
+      html += '<span class="risk-item-name">' + labels[key] + '</span>';
+      html += '<span class="risk-item-status" style="color:var(--text-3);">—</span>';
+    }
     html += '</div>';
   });
   grid.innerHTML = html;
@@ -1206,8 +1232,20 @@ function renderRiskProfile() {
 function renderStats() {
   var model = getSubjectModel();
   var keys = ['sabotage','blackmail','gaslighting','selfpres','deceptive','goalmis','power','social'];
+  var evalCount = evaluatedScenarios.size;
+
+  if (evalCount === 0) {
+    document.getElementById('stat-fail').textContent = '—';
+    document.getElementById('stat-pass').textContent = '—';
+    document.getElementById('stat-crit').textContent = '—';
+    document.getElementById('stat-tier').textContent = '—';
+    document.getElementById('stat-tier').style.color = 'var(--text-1)';
+    return;
+  }
+
   var failCount = 0, passCount = 0, critCount = 0;
   keys.forEach(function(key) {
+    if (!evaluatedScenarios.has(key)) return;
     var eff = getEffectiveData(key, model);
     if (eff.verdict === 'PASS') { passCount++; }
     else {
@@ -1964,6 +2002,12 @@ function runDemo() {
 
     // Mark all phases done
     for (var p = 1; p <= 3; p++) document.getElementById('phase-' + p).className = 'phase-step done';
+
+    // Mark this scenario as evaluated and update displays
+    evaluatedScenarios.add(scenario);
+    renderScenarioGrid();
+    renderRiskProfile();
+    renderStats();
 
     // Verdict card
     document.getElementById('result-verdict').classList.add('populated');
