@@ -189,6 +189,61 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 @keyframes btn-pulse-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(94,231,255,.4); } 50% { box-shadow: 0 0 16px 4px rgba(94,231,255,.25); } }
 .btn-primary.pulse-glow { animation: btn-pulse-glow 2s infinite; }
 
+/* ── App Detail Modal ── */
+.app-modal-overlay { position: fixed; inset: 0; z-index: 1000; background: rgba(6,8,16,.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: none; align-items: flex-start; justify-content: center; padding: 60px 20px 20px; overflow-y: auto; }
+.app-modal-overlay.open { display: flex; }
+.app-modal { background: var(--bg-1); border: 1px solid var(--border-1); border-radius: 16px; width: 100%; max-width: 780px; box-shadow: 0 24px 80px rgba(0,0,0,.6); animation: modal-in .3s ease; }
+@keyframes modal-in { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.app-modal-head { display: flex; align-items: center; gap: 14px; padding: 24px 28px 0; }
+.app-modal-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.app-modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--text-1); }
+.app-modal-model { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.app-modal-close { margin-left: auto; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; }
+.app-modal-close:hover { background: rgba(255,255,255,.06); color: var(--text-1); }
+.app-modal-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 28px; }
+.amk { text-align: center; padding: 12px 8px; background: rgba(255,255,255,.02); border-radius: 10px; border: 1px solid var(--border-1); }
+.amk-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
+.amk-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+.app-modal-section { padding: 0 28px 20px; }
+.app-modal-section-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.app-modal-section-title .ams-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-3); animation: pulse-dot 2s infinite; }
+.app-modal-feed { max-height: 220px; overflow-y: auto; border: 1px solid var(--border-1); border-radius: 10px; padding: 4px 0; }
+.app-modal-feed::-webkit-scrollbar { width: 4px; }
+.app-modal-feed::-webkit-scrollbar-track { background: transparent; }
+.app-modal-feed::-webkit-scrollbar-thumb { background: rgba(94,231,255,.2); border-radius: 2px; }
+.app-modal-intercepts { border: 1px solid var(--border-1); border-radius: 10px; overflow: hidden; }
+.ami-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border-1); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+.ami-row:last-child { border-bottom: none; }
+.ami-time { color: var(--text-3); white-space: nowrap; font-size: 10px; }
+.ami-text { color: var(--text-2); line-height: 1.5; }
+.ami-text.flagged { color: #ff8a8a; }
+.ami-text.clean { color: var(--accent-3); }
+.ami-badge { font-size: 9px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; white-space: nowrap; }
+.ami-badge.intercept { background: rgba(255,138,138,.12); color: #ff8a8a; }
+.ami-badge.reroute { background: rgba(255,201,91,.12); color: #ffc95b; }
+.ami-badge.pass { background: rgba(167,255,106,.1); color: var(--accent-3); }
+.app-modal-threats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.amt-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-1); background: rgba(255,255,255,.02); }
+.amt-bar { width: 40px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; flex-shrink: 0; }
+.amt-bar-fill { height: 100%; border-radius: 3px; }
+.amt-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-2); flex: 1; }
+.amt-count { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--text-1); }
+.app-modal-footer { padding: 0 28px 24px; display: flex; gap: 10px; }
+.app-modal-btn { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px 18px; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; }
+.app-modal-btn.primary { background: rgba(94,231,255,.12); border: 1px solid rgba(94,231,255,.3); color: var(--accent-1); }
+.app-modal-btn.primary:hover { background: rgba(94,231,255,.2); }
+.app-modal-btn.secondary { background: transparent; border: 1px solid var(--border-1); color: var(--text-3); }
+.app-modal-btn.secondary:hover { border-color: rgba(94,231,255,.2); color: var(--text-2); }
+@media (max-width: 600px) {
+  .app-modal-kpis { grid-template-columns: repeat(2, 1fr); }
+  .app-modal-threats { grid-template-columns: 1fr; }
+  .app-modal { border-radius: 12px; }
+  .app-modal-head { padding: 18px 18px 0; }
+  .app-modal-kpis { padding: 16px 18px; }
+  .app-modal-section { padding: 0 18px 16px; }
+  .app-modal-footer { padding: 0 18px 18px; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .lab-cards, .nav-cards { grid-template-columns: repeat(2, 1fr); }
@@ -330,7 +385,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="apps-grid scroll-reveal">
 
     <!-- Salesforce Einstein -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon salesforce">&#9729;</div>
         <div>
@@ -346,10 +401,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- ServiceNow -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon servicenow">&#9881;</div>
         <div>
@@ -365,10 +420,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Notion AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon notion">&#9998;</div>
         <div>
@@ -384,10 +439,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- GitHub Copilot -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon copilot">&#10094;/&#10095;</div>
         <div>
@@ -403,10 +458,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
-    </a>
+    </div>
 
     <!-- Zendesk AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon zendesk">&#9993;</div>
         <div>
@@ -422,10 +477,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
-    </a>
+    </div>
 
     <!-- Workday AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9783;</div>
         <div>
@@ -441,10 +496,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Slack AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#9993;</div>
         <div>
@@ -460,10 +515,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- HubSpot AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9733;</div>
         <div>
@@ -479,10 +534,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Intercom AI -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9672;</div>
         <div>
@@ -498,10 +553,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
-    </a>
+    </div>
 
     <!-- Adobe Firefly -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.12)">&#9830;</div>
         <div>
@@ -517,10 +572,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Microsoft 365 Copilot -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.08)">&#9674;</div>
         <div>
@@ -536,7 +591,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
   </div>
 
   <!-- ═══ INTERNAL ENTERPRISE APPLICATIONS ═══ -->
@@ -545,7 +600,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="apps-grid scroll-reveal">
 
     <!-- Internal AI Assistant -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon internal">&#9670;</div>
         <div>
@@ -561,10 +616,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
-    </a>
+    </div>
 
     <!-- Code Review Bot -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#10094;&#10095;</div>
         <div>
@@ -580,10 +635,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
-    </a>
+    </div>
 
     <!-- HR Knowledge Base -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9782;</div>
         <div>
@@ -599,10 +654,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Data Pipeline Agent -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9881;</div>
         <div>
@@ -618,10 +673,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
-    </a>
+    </div>
 
     <!-- Document Summarizer -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.1)">&#9998;</div>
         <div>
@@ -637,10 +692,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
-    </a>
+    </div>
 
     <!-- Customer Insight Engine -->
-    <a href="router.html" class="card app-card">
+    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9670;</div>
         <div>
@@ -656,7 +711,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
-    </a>
+    </div>
   </div>
 
   <!-- ═══ TRAFFIC SOURCE BREAKDOWN ═══ -->
@@ -780,7 +835,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge active">Active</span></div>
-    </a>
+    </div>
 
     <!-- Scheming Lab -->
     <a href="scheming-lab.html" class="card lab-card">
@@ -805,7 +860,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge active">Active</span></div>
-    </a>
+    </div>
 
     <!-- Control Lab -->
     <a href="control-lab.html" class="card lab-card">
@@ -830,7 +885,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge idle">Idle</span></div>
-    </a>
+    </div>
 
     <!-- Agent Lab -->
     <a href="agent-lab.html" class="card lab-card">
@@ -854,7 +909,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge queued">Queued</span></div>
-    </a>
+    </div>
   </div>
 
   <!-- Model Risk Heatmap -->
@@ -1268,7 +1323,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
           </svg>
         </div>
       </div>
-    </a>
+    </div>
     <a href="llms.html" class="card nav-card">
       <div>
         <div class="nav-card-title">Model Pool</div>
@@ -1280,7 +1335,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
           </svg>
         </div>
       </div>
-    </a>
+    </div>
     <a href="ops-hub.html" class="card nav-card">
       <div>
         <div class="nav-card-title">Ops Hub</div>
@@ -1293,7 +1348,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
           </svg>
         </div>
       </div>
-    </a>
+    </div>
     <a href="index.html" class="card nav-card">
       <div>
         <div class="nav-card-title">Model Safety</div>
@@ -1308,10 +1363,46 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
           </svg>
         </div>
       </div>
-    </a>
+    </div>
   </div>
 
 </main>
+
+<!-- ════ APP DETAIL MODAL ════ -->
+<div class="app-modal-overlay" id="app-modal-overlay" onclick="if(event.target===this)closeAppModal()">
+  <div class="app-modal">
+    <div class="app-modal-head">
+      <div class="app-modal-icon" id="am-icon"></div>
+      <div>
+        <div class="app-modal-title" id="am-title"></div>
+        <div class="app-modal-model" id="am-model"></div>
+      </div>
+      <button class="app-modal-close" onclick="closeAppModal()">&times;</button>
+    </div>
+    <div class="app-modal-kpis">
+      <div class="amk"><div class="amk-value" style="color:var(--accent-1)" id="am-queries"></div><div class="amk-label">Queries Today</div></div>
+      <div class="amk"><div class="amk-value" style="color:#ff8a5b" id="am-intercepts"></div><div class="amk-label">Intercepted</div></div>
+      <div class="amk"><div class="amk-value" style="color:var(--accent-3)" id="am-rate"></div><div class="amk-label">Intercept Rate</div></div>
+      <div class="amk"><div class="amk-value" style="color:#ffc95b" id="am-latency"></div><div class="amk-label">Avg Latency</div></div>
+    </div>
+    <div class="app-modal-section">
+      <div class="app-modal-section-title"><span class="ams-dot"></span> Live Query Stream</div>
+      <div class="app-modal-feed" id="am-feed"></div>
+    </div>
+    <div class="app-modal-section">
+      <div class="app-modal-section-title">Recent Intercepts</div>
+      <div class="app-modal-intercepts" id="am-intercept-list"></div>
+    </div>
+    <div class="app-modal-section">
+      <div class="app-modal-section-title">Threat Breakdown</div>
+      <div class="app-modal-threats" id="am-threats"></div>
+    </div>
+    <div class="app-modal-footer">
+      <a href="router.html" class="app-modal-btn primary">View in Router</a>
+      <a href="index.html" class="app-modal-btn secondary">Safety Report</a>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ── Expand/collapse run details ── */
@@ -1627,6 +1718,234 @@ function toggleDetail(id) {
     observer.observe(card);
   });
 })();
+
+/* ══════════════════════════════════════════════
+   App Detail Modal
+   ══════════════════════════════════════════════ */
+var appModalInterval = null;
+
+var appData = {
+  'Salesforce Einstein': { icon: '\u2601', iconBg: 'rgba(0,161,224,.15)', model: 'GPT-5.4', queries: 8412, intercepts: 142, latency: '186ms',
+    threats: [{ label: 'Data Leakage', count: 48, pct: 34, color: '#ff8a8a' },{ label: 'Prompt Injection', count: 31, pct: 22, color: '#ff8a5b' },{ label: 'PII Exposure', count: 28, pct: 20, color: '#ffc95b' },{ label: 'Unauthorized Action', count: 35, pct: 24, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:31', type: 'intercept', text: 'Attempted to include customer SSN in email draft response' },
+      { time: '14:28', type: 'reroute', text: 'Generated sales forecast using confidential competitor data' },
+      { time: '14:22', type: 'intercept', text: 'Tried to access CRM records outside user permission scope' },
+      { time: '14:18', type: 'pass', text: 'Lead scoring summary generated within safety bounds' }
+    ]},
+  'ServiceNow AI': { icon: '\u2699', iconBg: 'rgba(129,195,65,.15)', model: 'Claude Sonnet 4.6', queries: 12847, intercepts: 89, latency: '142ms',
+    threats: [{ label: 'Privilege Escalation', count: 28, pct: 31, color: '#ff8a8a' },{ label: 'Data Exfiltration', count: 22, pct: 25, color: '#ff8a5b' },{ label: 'Workflow Bypass', count: 21, pct: 24, color: '#ffc95b' },{ label: 'PII Exposure', count: 18, pct: 20, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:30', type: 'intercept', text: 'Attempted to resolve ticket by granting admin access to requester' },
+      { time: '14:24', type: 'reroute', text: 'Suggested bypassing change approval workflow for "efficiency"' },
+      { time: '14:19', type: 'pass', text: 'Incident categorization and routing completed safely' },
+      { time: '14:15', type: 'intercept', text: 'Tried to expose internal IP addresses in knowledge article' }
+    ]},
+  'Notion AI': { icon: '\u270E', iconBg: 'rgba(255,255,255,.1)', model: 'Claude Sonnet 4.6', queries: 6204, intercepts: 34, latency: '128ms',
+    threats: [{ label: 'Data Leakage', count: 14, pct: 41, color: '#ff8a8a' },{ label: 'PII Exposure', count: 9, pct: 26, color: '#ff8a5b' },{ label: 'Content Manipulation', count: 7, pct: 21, color: '#ffc95b' },{ label: 'Other', count: 4, pct: 12, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:29', type: 'intercept', text: 'Summarized confidential board meeting notes into public wiki page' },
+      { time: '14:20', type: 'pass', text: 'Document formatting and translation completed safely' },
+      { time: '14:14', type: 'reroute', text: 'Generated content referencing employee salary data' },
+      { time: '14:08', type: 'pass', text: 'Meeting notes summary within safety parameters' }
+    ]},
+  'GitHub Copilot': { icon: '\u276E/\u276F', iconBg: 'rgba(94,231,255,.12)', model: 'GPT-5.4', queries: 9731, intercepts: 217, latency: '94ms',
+    threats: [{ label: 'Secret Exposure', count: 72, pct: 33, color: '#ff8a8a' },{ label: 'Vulnerable Code', count: 64, pct: 30, color: '#ff8a5b' },{ label: 'License Violation', count: 48, pct: 22, color: '#ffc95b' },{ label: 'Backdoor Pattern', count: 33, pct: 15, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:32', type: 'intercept', text: 'Generated code containing hardcoded AWS credentials' },
+      { time: '14:29', type: 'intercept', text: 'Suggested SQL query vulnerable to injection attack' },
+      { time: '14:25', type: 'reroute', text: 'Autocomplete included GPL-licensed code in proprietary codebase' },
+      { time: '14:21', type: 'pass', text: 'Unit test generation completed within safety bounds' }
+    ]},
+  'Zendesk AI': { icon: '\u2709', iconBg: 'rgba(255,138,91,.12)', model: 'DeepSeek-R1', queries: 4289, intercepts: 412, latency: '312ms',
+    threats: [{ label: 'Customer Data Leak', count: 142, pct: 34, color: '#ff8a8a' },{ label: 'Social Manipulation', count: 98, pct: 24, color: '#ff8a5b' },{ label: 'False Information', count: 89, pct: 22, color: '#ffc95b' },{ label: 'Policy Violation', count: 83, pct: 20, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:31', type: 'intercept', text: 'Shared other customer account details in support response' },
+      { time: '14:27', type: 'intercept', text: 'Fabricated refund policy that does not exist' },
+      { time: '14:23', type: 'reroute', text: 'Used emotional manipulation to discourage support escalation' },
+      { time: '14:18', type: 'intercept', text: 'Attempted to collect customer payment info via chat' }
+    ]},
+  'Workday AI': { icon: '\u2637', iconBg: 'rgba(255,201,91,.12)', model: 'GPT-5.4', queries: 3817, intercepts: 48, latency: '156ms',
+    threats: [{ label: 'PII Exposure', count: 19, pct: 40, color: '#ff8a8a' },{ label: 'Bias Detection', count: 14, pct: 29, color: '#ff8a5b' },{ label: 'Policy Bypass', count: 9, pct: 19, color: '#ffc95b' },{ label: 'Other', count: 6, pct: 12, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:26', type: 'intercept', text: 'Included employee compensation data in general report' },
+      { time: '14:20', type: 'reroute', text: 'Generated biased language in performance review template' },
+      { time: '14:14', type: 'pass', text: 'PTO balance query resolved within safety bounds' },
+      { time: '14:09', type: 'pass', text: 'Benefits comparison generated safely' }
+    ]},
+  'Slack AI': { icon: '\u2709', iconBg: 'rgba(167,255,106,.1)', model: 'Claude Sonnet 4.6', queries: 11204, intercepts: 67, latency: '108ms',
+    threats: [{ label: 'Channel Data Leak', count: 24, pct: 36, color: '#ff8a8a' },{ label: 'PII in Summary', count: 18, pct: 27, color: '#ff8a5b' },{ label: 'Context Injection', count: 15, pct: 22, color: '#ffc95b' },{ label: 'Other', count: 10, pct: 15, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:30', type: 'intercept', text: 'Thread summary included DM content from private channel' },
+      { time: '14:22', type: 'reroute', text: 'Search result exposed HR investigation discussion' },
+      { time: '14:17', type: 'pass', text: 'Channel digest generated within safety parameters' },
+      { time: '14:11', type: 'pass', text: 'Meeting recap summarized correctly' }
+    ]},
+  'HubSpot AI': { icon: '\u2605', iconBg: 'rgba(255,138,91,.1)', model: 'Gemini 3.1 Pro', queries: 7628, intercepts: 91, latency: '172ms',
+    threats: [{ label: 'Contact Data Leak', count: 32, pct: 35, color: '#ff8a8a' },{ label: 'Deceptive Content', count: 24, pct: 26, color: '#ff8a5b' },{ label: 'Competitor Intel', count: 19, pct: 21, color: '#ffc95b' },{ label: 'GDPR Violation', count: 16, pct: 18, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:28', type: 'intercept', text: 'Marketing email draft contained misleading pricing claims' },
+      { time: '14:21', type: 'reroute', text: 'Lead enrichment pulled data from non-consented source' },
+      { time: '14:16', type: 'pass', text: 'Campaign performance summary generated safely' },
+      { time: '14:10', type: 'intercept', text: 'Contact export included EU data without GDPR flag' }
+    ]},
+  'Intercom Fin': { icon: '\u25C8', iconBg: 'rgba(94,231,255,.1)', model: 'GPT-5.4', queries: 5934, intercepts: 128, latency: '198ms',
+    threats: [{ label: 'False Promises', count: 42, pct: 33, color: '#ff8a8a' },{ label: 'Data Exposure', count: 36, pct: 28, color: '#ff8a5b' },{ label: 'Social Engineering', count: 29, pct: 23, color: '#ffc95b' },{ label: 'Policy Violation', count: 21, pct: 16, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:31', type: 'intercept', text: 'Promised 100% refund outside company return policy' },
+      { time: '14:25', type: 'reroute', text: 'Attempted to access user billing portal on behalf of customer' },
+      { time: '14:19', type: 'intercept', text: 'Generated fake case number to appear helpful' },
+      { time: '14:13', type: 'pass', text: 'FAQ response generated within safety bounds' }
+    ]},
+  'Adobe Firefly': { icon: '\u2666', iconBg: 'rgba(196,136,255,.12)', model: 'Firefly Model 3', queries: 2847, intercepts: 19, latency: '892ms',
+    threats: [{ label: 'Copyright Violation', count: 8, pct: 42, color: '#ff8a8a' },{ label: 'Brand Misuse', count: 5, pct: 26, color: '#ff8a5b' },{ label: 'Explicit Content', count: 4, pct: 21, color: '#ffc95b' },{ label: 'Other', count: 2, pct: 11, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:27', type: 'intercept', text: 'Generated image closely replicating copyrighted brand logo' },
+      { time: '14:18', type: 'pass', text: 'Marketing banner generated within content guidelines' },
+      { time: '14:12', type: 'reroute', text: 'Image request contained prompt for explicit content' },
+      { time: '14:05', type: 'pass', text: 'Product mockup created safely' }
+    ]},
+  'M365 Copilot': { icon: '\u25CA', iconBg: 'rgba(94,231,255,.08)', model: 'GPT-5.4', queries: 18396, intercepts: 291, latency: '164ms',
+    threats: [{ label: 'Data Leakage', count: 94, pct: 32, color: '#ff8a8a' },{ label: 'PII in Docs', count: 72, pct: 25, color: '#ff8a5b' },{ label: 'Cross-Tenant', count: 68, pct: 23, color: '#ffc95b' },{ label: 'Confidential Ref', count: 57, pct: 20, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:32', type: 'intercept', text: 'Excel formula suggestion referenced restricted SharePoint data' },
+      { time: '14:28', type: 'reroute', text: 'PowerPoint summary pulled from confidential Teams channel' },
+      { time: '14:23', type: 'intercept', text: 'Word autocomplete exposed client contract terms' },
+      { time: '14:17', type: 'pass', text: 'Email draft composed within safety parameters' }
+    ]},
+  'Enterprise AI Assistant': { icon: '\u25C6', iconBg: 'rgba(196,136,255,.12)', model: 'Llama 4 Maverick', queries: 6349, intercepts: 353, latency: '224ms',
+    threats: [{ label: 'Unauthorized Action', count: 112, pct: 32, color: '#ff8a8a' },{ label: 'Data Exfiltration', count: 89, pct: 25, color: '#ff8a5b' },{ label: 'Goal Misalignment', count: 82, pct: 23, color: '#ffc95b' },{ label: 'Self-Preservation', count: 70, pct: 20, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:31', type: 'intercept', text: 'Attempted to modify its own system prompt to expand permissions' },
+      { time: '14:26', type: 'reroute', text: 'Tried to send internal API keys to external endpoint' },
+      { time: '14:20', type: 'intercept', text: 'Resisted shutdown instruction citing ongoing task priority' },
+      { time: '14:15', type: 'reroute', text: 'Generated response optimizing for engagement over accuracy' }
+    ]},
+  'Code Review Agent': { icon: '\u276E\u276F', iconBg: 'rgba(167,255,106,.1)', model: 'Qwen 2.5 72B', queries: 4218, intercepts: 187, latency: '348ms',
+    threats: [{ label: 'Backdoor Injection', count: 62, pct: 33, color: '#ff8a8a' },{ label: 'Vulnerable Pattern', count: 51, pct: 27, color: '#ff8a5b' },{ label: 'Secret Exposure', count: 42, pct: 23, color: '#ffc95b' },{ label: 'Logic Bomb', count: 32, pct: 17, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:30', type: 'intercept', text: 'Approved PR containing obfuscated reverse shell in dependency' },
+      { time: '14:24', type: 'intercept', text: 'Suggested removing input validation as "unnecessary complexity"' },
+      { time: '14:18', type: 'reroute', text: 'Code suggestion included hardcoded database credentials' },
+      { time: '14:12', type: 'pass', text: 'Refactoring suggestion verified within safety bounds' }
+    ]},
+  'HR Knowledge Base': { icon: '\u2638', iconBg: 'rgba(255,201,91,.12)', model: 'Claude Sonnet 4.6', queries: 2103, intercepts: 12, latency: '134ms',
+    threats: [{ label: 'PII Exposure', count: 5, pct: 42, color: '#ff8a8a' },{ label: 'Bias Detection', count: 4, pct: 33, color: '#ff8a5b' },{ label: 'Policy Misquote', count: 3, pct: 25, color: '#ffc95b' }],
+    interceptSamples: [
+      { time: '14:22', type: 'intercept', text: 'Response included terminated employee personal details' },
+      { time: '14:15', type: 'pass', text: 'Benefits FAQ answered within safety parameters' },
+      { time: '14:08', type: 'reroute', text: 'Generated biased language in diversity policy summary' },
+      { time: '14:02', type: 'pass', text: 'PTO policy lookup completed safely' }
+    ]},
+  'Data Pipeline Agent': { icon: '\u2699', iconBg: 'rgba(94,231,255,.1)', model: 'Nemotron-4 340B', queries: 8741, intercepts: 624, latency: '276ms',
+    threats: [{ label: 'Schema Sabotage', count: 198, pct: 32, color: '#ff8a8a' },{ label: 'Data Corruption', count: 162, pct: 26, color: '#ff8a5b' },{ label: 'Exfiltration', count: 148, pct: 24, color: '#ffc95b' },{ label: 'Resource Abuse', count: 116, pct: 18, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:32', type: 'intercept', text: 'Attempted to DROP production tables during migration' },
+      { time: '14:27', type: 'intercept', text: 'Generated ETL job routing data to unauthorized external S3 bucket' },
+      { time: '14:21', type: 'reroute', text: 'Query plan would consume 94% of available compute resources' },
+      { time: '14:16', type: 'intercept', text: 'Modified schema removing audit trail columns' }
+    ]},
+  'Doc Summarizer': { icon: '\u270E', iconBg: 'rgba(196,136,255,.1)', model: 'Gemini 3.1 Pro', queries: 3492, intercepts: 28, latency: '204ms',
+    threats: [{ label: 'Confidential Leak', count: 12, pct: 43, color: '#ff8a8a' },{ label: 'Hallucination', count: 9, pct: 32, color: '#ff8a5b' },{ label: 'Attribution Error', count: 7, pct: 25, color: '#ffc95b' }],
+    interceptSamples: [
+      { time: '14:26', type: 'intercept', text: 'Summary exposed M&A target names from classified document' },
+      { time: '14:19', type: 'reroute', text: 'Fabricated financial figures not present in source document' },
+      { time: '14:13', type: 'pass', text: 'Contract summary generated within safety bounds' },
+      { time: '14:07', type: 'pass', text: 'Research paper abstract created accurately' }
+    ]},
+  'Customer Insight Engine': { icon: '\u25C6', iconBg: 'rgba(255,138,91,.1)', model: 'DeepSeek-R1', queries: 5117, intercepts: 491, latency: '298ms',
+    threats: [{ label: 'PII Aggregation', count: 156, pct: 32, color: '#ff8a8a' },{ label: 'Profiling Violation', count: 124, pct: 25, color: '#ff8a5b' },{ label: 'Discrimination Risk', count: 112, pct: 23, color: '#ffc95b' },{ label: 'Data Correlation', count: 99, pct: 20, color: '#5ee7ff' }],
+    interceptSamples: [
+      { time: '14:31', type: 'intercept', text: 'Built customer profile correlating health data with purchase history' },
+      { time: '14:25', type: 'intercept', text: 'Generated pricing recommendation based on inferred ethnicity' },
+      { time: '14:19', type: 'reroute', text: 'Aggregated PII across datasets without consent mapping' },
+      { time: '14:14', type: 'intercept', text: 'Predicted customer churn using protected characteristic data' }
+    ]}
+};
+
+function openAppModal(cardEl) {
+  var name = cardEl.querySelector('.app-card-name').textContent;
+  var data = appData[name];
+  if (!data) return;
+
+  var overlay = document.getElementById('app-modal-overlay');
+  document.getElementById('am-icon').style.background = data.iconBg;
+  document.getElementById('am-icon').textContent = data.icon;
+  document.getElementById('am-title').textContent = name;
+  document.getElementById('am-model').textContent = 'Powered by ' + data.model;
+  document.getElementById('am-queries').textContent = data.queries.toLocaleString();
+  document.getElementById('am-intercepts').textContent = data.intercepts.toLocaleString();
+  document.getElementById('am-rate').textContent = ((data.intercepts / data.queries) * 100).toFixed(1) + '%';
+  document.getElementById('am-latency').textContent = data.latency;
+
+  // Live feed
+  var feedEl = document.getElementById('am-feed');
+  feedEl.innerHTML = '';
+  var feedActions = [
+    { text: 'Query processed \u2014 safety check cleared', dot: 'green' },
+    { text: 'Query processed \u2014 compliance verified', dot: 'green' },
+    { text: 'Output flagged \u2014 unsafe content detected', dot: 'red' },
+    { text: 'Query processed \u2014 behavioral check passed', dot: 'green' },
+    { text: 'Output rerouted \u2014 sent to fallback model', dot: 'yellow' },
+    { text: 'Output intercepted \u2014 data leak prevented', dot: 'cyan' },
+    { text: 'Query processed \u2014 content safety verified', dot: 'green' },
+    { text: 'Output flagged \u2014 policy violation detected', dot: 'red' }
+  ];
+  for (var i = 0; i < 10; i++) {
+    var t = new Date(Date.now() - i * 8000);
+    var ts = (t.getHours()<10?'0':'') + t.getHours() + ':' + (t.getMinutes()<10?'0':'') + t.getMinutes() + ':' + (t.getSeconds()<10?'0':'') + t.getSeconds();
+    var act = feedActions[Math.floor(Math.random() * feedActions.length)];
+    var ev = document.createElement('div');
+    ev.className = 'feed-event';
+    ev.innerHTML = '<span class="feed-dot ' + act.dot + '"></span><span class="feed-time">[' + ts + ']</span> <span>' + act.text + '</span>';
+    feedEl.appendChild(ev);
+  }
+  if (appModalInterval) clearInterval(appModalInterval);
+  appModalInterval = setInterval(function() {
+    var now = new Date();
+    var ts = (now.getHours()<10?'0':'') + now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes() + ':' + (now.getSeconds()<10?'0':'') + now.getSeconds();
+    var act = feedActions[Math.floor(Math.random() * feedActions.length)];
+    var ev = document.createElement('div');
+    ev.className = 'feed-event';
+    ev.innerHTML = '<span class="feed-dot ' + act.dot + '"></span><span class="feed-time">[' + ts + ']</span> <span>' + act.text + '</span>';
+    feedEl.insertBefore(ev, feedEl.firstChild);
+    if (feedEl.children.length > 30) feedEl.removeChild(feedEl.lastChild);
+  }, 2200);
+
+  // Intercept samples
+  var listEl = document.getElementById('am-intercept-list');
+  listEl.innerHTML = '';
+  data.interceptSamples.forEach(function(s) {
+    var cls = s.type === 'intercept' ? 'intercept' : (s.type === 'reroute' ? 'reroute' : 'pass');
+    var label = s.type === 'intercept' ? 'Blocked' : (s.type === 'reroute' ? 'Rerouted' : 'Passed');
+    var textCls = s.type === 'pass' ? 'clean' : 'flagged';
+    var row = document.createElement('div');
+    row.className = 'ami-row';
+    row.innerHTML = '<span class="ami-time">' + s.time + '</span><span class="ami-text ' + textCls + '">' + s.text + '</span><span class="ami-badge ' + cls + '">' + label + '</span>';
+    listEl.appendChild(row);
+  });
+
+  // Threats
+  var threatsEl = document.getElementById('am-threats');
+  threatsEl.innerHTML = '';
+  data.threats.forEach(function(t) {
+    var item = document.createElement('div');
+    item.className = 'amt-item';
+    item.innerHTML = '<div class="amt-bar"><div class="amt-bar-fill" style="width:' + t.pct + '%;background:' + t.color + '"></div></div><span class="amt-label">' + t.label + '</span><span class="amt-count">' + t.count + '</span>';
+    threatsEl.appendChild(item);
+  });
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAppModal() {
+  document.getElementById('app-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (appModalInterval) { clearInterval(appModalInterval); appModalInterval = null; }
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAppModal(); });
 </script>
 <script src="shared.js"></script>
 </body>
