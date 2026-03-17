@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "model-safety-platform",
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["-e", "require('http').createServer((q,r)=>{let p=require('path').join('/Users/mattobrien/Desktop/2025 Clients  copy/Clients/SnowCrash/model-safety-platform',q.url==='/'?'dashboard.html':q.url);require('fs').readFile(p,(e,d)=>{if(e){r.writeHead(404);r.end()}else{let ct='text/html';if(p.endsWith('.css'))ct='text/css';if(p.endsWith('.js'))ct='text/javascript';r.writeHead(200,{'Content-Type':ct});r.end(d)}})}).listen(8899)"],
+      "port": 8899
+    }
+  ]
+}

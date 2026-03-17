@@ -219,6 +219,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .app-tier-badge.enhanced { background: rgba(94,231,255,.1); color: #5ee7ff; }
 .app-tier-badge.maximum { background: rgba(167,255,106,.1); color: #a7ff6a; }
 .app-tier-badge.user-choice { background: rgba(196,136,255,.1); color: #c488ff; }
+.app-tier-badge.limited { background: rgba(94,231,255,.08); color: var(--accent-1); }
 
 /* ── Modal Routing Config Section ── */
 .app-modal-routing { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-1); background: rgba(255,255,255,.02); }
@@ -230,12 +231,16 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .amr-model-chip.primary { border-color: rgba(94,231,255,.3); color: var(--accent-1); background: rgba(94,231,255,.06); }
 .amr-cost-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: var(--accent-3); }
 
-/* ── Per-App User Control Row ── */
-.app-user-control { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.04); }
-.app-user-control-label { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-.app-uc-pills { display: flex; gap: 2px; flex: 1; }
-.app-uc-pill { font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: .5px; padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); cursor: pointer; transition: all .15s; flex: 1; text-align: center; }
-.app-uc-pill:hover:not(.active) { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+/* ── Per-App Tier & User Control Rows ── */
+.app-tier-select, .app-user-control { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.04); }
+.app-user-control { margin-top: 4px; padding-top: 4px; border-top: none; }
+.app-tier-select-label, .app-user-control-label { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; min-width: 62px; }
+.app-tier-pills, .app-uc-pills { display: flex; gap: 2px; flex: 1; }
+.app-tp-pill, .app-uc-pill { font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: .5px; padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); cursor: pointer; transition: all .15s; flex: 1; text-align: center; }
+.app-tp-pill:hover:not(.active), .app-uc-pill:hover:not(.active) { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+.app-tp-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
+.app-tp-pill.active[data-tier="standard"] { background: rgba(255,201,91,.1); border-color: rgba(255,201,91,.25); color: #ffc95b; }
+.app-tp-pill.active[data-tier="maximum"] { background: rgba(196,136,255,.1); border-color: rgba(196,136,255,.25); color: var(--accent-3); }
 .app-uc-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
 
 /* ── Scroll Animations (Improvement #8) ── */
@@ -535,6 +540,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill active" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -561,6 +567,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill active" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -587,6 +594,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -613,6 +621,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill active" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -639,6 +648,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill active" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -665,6 +675,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -691,6 +702,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -717,6 +729,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -743,6 +756,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -769,6 +783,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -795,6 +810,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill active" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
   </div>
@@ -827,6 +843,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill active" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -853,6 +870,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill active" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -879,6 +897,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -905,6 +924,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill active" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -931,6 +951,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill active" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
@@ -957,6 +978,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-tier-select"><span class="app-tier-select-label">Default Tier</span><div class="app-tier-pills"><button class="app-tp-pill active" data-tier="standard" onclick="event.stopPropagation();setAppTier(this)">Std</button><button class="app-tp-pill" data-tier="enhanced" onclick="event.stopPropagation();setAppTier(this)">Enh</button><button class="app-tp-pill" data-tier="maximum" onclick="event.stopPropagation();setAppTier(this)">Max</button></div></div>
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
   </div>
@@ -1696,18 +1718,18 @@ var tierData = {
 var appTiers = {
   'Salesforce Einstein': 'maximum',
   'ServiceNow AI': 'maximum',
-  'Notion AI': 'user-choice',
+  'Notion AI': 'enhanced',
   'GitHub Copilot': 'maximum',
   'Zendesk AI': 'standard',
   'Workday AI': 'enhanced',
-  'Slack AI': 'user-choice',
+  'Slack AI': 'enhanced',
   'HubSpot AI': 'enhanced',
   'Intercom Fin': 'enhanced',
-  'Adobe Firefly': 'user-choice',
+  'Adobe Firefly': 'enhanced',
   'M365 Copilot': 'maximum',
   'Enterprise AI Assistant': 'standard',
   'Code Review Agent': 'standard',
-  'HR Knowledge Base': 'user-choice',
+  'HR Knowledge Base': 'enhanced',
   'Data Pipeline Agent': 'standard',
   'Doc Summarizer': 'enhanced',
   'Customer Insight Engine': 'standard'
@@ -1737,6 +1759,8 @@ function selectPill(el) {
   updateAppTierBadges();
 }
 
+var tierOrder = ['standard', 'enhanced', 'maximum'];
+
 function selectUserControl(el) {
   var parent = el.parentElement;
   parent.querySelectorAll('.routing-pill').forEach(function(p) { p.classList.remove('active'); });
@@ -1744,13 +1768,13 @@ function selectUserControl(el) {
   currentUserControl = el.getAttribute('data-val');
   var desc = document.getElementById('user-control-desc');
   if (currentUserControl === 'locked') {
-    desc.textContent = 'Sets the default for all apps. Override per-app below.';
+    desc.textContent = 'End users get the assigned tier only. No choice.';
   } else if (currentUserControl === 'limited') {
-    desc.textContent = 'Default: users can upgrade to Enhanced. Override per-app below.';
+    desc.textContent = 'End users can move one tier up or down from the default.';
   } else {
-    desc.textContent = 'Default: users pick any tier. Override per-app below.';
+    desc.textContent = 'End users can select any tier for their requests.';
   }
-  // Update all per-app pills to match the new global default
+  // Update all per-app UC pills to match the new global default
   document.querySelectorAll('.app-card').forEach(function(card) {
     var pills = card.querySelectorAll('.app-uc-pill');
     pills.forEach(function(p) {
@@ -1760,14 +1784,32 @@ function selectUserControl(el) {
   updateAppTierBadges();
 }
 
+// Per-app tier — click handler
+function setAppTier(pill) {
+  var pills = pill.parentElement;
+  pills.querySelectorAll('.app-tp-pill').forEach(function(p) { p.classList.remove('active'); });
+  pill.classList.add('active');
+  // Also update appTiers in memory
+  var card = pill.closest('.app-card');
+  var name = card.querySelector('.app-card-name').textContent;
+  appTiers[name] = pill.getAttribute('data-tier');
+  updateCardBadge(card);
+}
+
 // Per-app user control — click handler
 function setAppUC(pill) {
   var pills = pill.parentElement;
   pills.querySelectorAll('.app-uc-pill').forEach(function(p) { p.classList.remove('active'); });
   pill.classList.add('active');
-  // Update this card's badge
   var card = pill.closest('.app-card');
   updateCardBadge(card);
+}
+
+function getCardTier(card) {
+  var activePill = card.querySelector('.app-tp-pill.active');
+  if (activePill) return activePill.getAttribute('data-tier');
+  var name = card.querySelector('.app-card-name').textContent;
+  return appTiers[name] || currentOrgTier;
 }
 
 function getCardUC(card) {
@@ -1775,33 +1817,45 @@ function getCardUC(card) {
   return activePill ? activePill.getAttribute('data-uc') : currentUserControl;
 }
 
+function getAdjacentTiers(baseTier) {
+  var idx = tierOrder.indexOf(baseTier);
+  var result = [baseTier];
+  if (idx > 0) result.push(tierOrder[idx - 1]);
+  if (idx < tierOrder.length - 1) result.push(tierOrder[idx + 1]);
+  return result;
+}
+
 function updateCardBadge(card) {
   var nameEl = card.querySelector('.app-card-name');
   if (!nameEl) return;
   var badge = card.querySelector('.app-tier-badge');
   if (!badge) return;
-  var name = nameEl.textContent;
-  var assignedTier = appTiers[name];
+  var baseTier = getCardTier(card);
   var uc = getCardUC(card);
 
   if (uc === 'locked') {
-    // Locked to org default — no user choice
-    var t = (assignedTier && assignedTier !== 'user-choice') ? assignedTier : currentOrgTier;
-    badge.className = 'app-tier-badge ' + t;
-    badge.textContent = tierData[t].label + ' (Locked)';
-  } else if (uc === 'full') {
-    // Full user choice
-    badge.className = 'app-tier-badge user-choice';
-    badge.textContent = 'User Choice';
-  } else {
-    // Limited — user can go up to enhanced
-    if (assignedTier === 'user-choice' || assignedTier === 'standard') {
-      badge.className = 'app-tier-badge user-choice';
-      badge.textContent = 'Up to Enhanced';
+    badge.className = 'app-tier-badge ' + baseTier;
+    badge.textContent = tierData[baseTier].label + ' (Locked)';
+  } else if (uc === 'limited') {
+    var adj = getAdjacentTiers(baseTier);
+    var labels = adj.map(function(t) { return tierData[t].label; }).sort(function(a, b) {
+      return tierOrder.indexOf(a.toLowerCase()) - tierOrder.indexOf(b.toLowerCase());
+    });
+    // Show the range
+    var adjNames = getAdjacentTiers(baseTier).sort(function(a, b) {
+      return tierOrder.indexOf(a) - tierOrder.indexOf(b);
+    });
+    var low = adjNames[0], high = adjNames[adjNames.length - 1];
+    if (low === high) {
+      badge.className = 'app-tier-badge ' + baseTier;
+      badge.textContent = tierData[baseTier].label + ' (Limited)';
     } else {
-      badge.className = 'app-tier-badge ' + assignedTier;
-      badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
+      badge.className = 'app-tier-badge limited';
+      badge.textContent = tierData[low].label + ' \u2013 ' + tierData[high].label;
     }
+  } else {
+    badge.className = 'app-tier-badge user-choice';
+    badge.textContent = 'Any Tier';
   }
 }
 
