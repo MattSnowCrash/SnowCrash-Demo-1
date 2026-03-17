@@ -349,7 +349,8 @@ code, .mono {
   opacity: 0.6;
 }
 
-.nav-dropdown:hover .nav-dropdown-chevron {
+.nav-dropdown:hover .nav-dropdown-chevron,
+.nav-dropdown.open .nav-dropdown-chevron {
   transform: rotate(180deg);
   opacity: 1;
 }
@@ -374,7 +375,8 @@ code, .mono {
   z-index: 200;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu {
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
@@ -1649,6 +1651,26 @@ textarea.form-input {
 
   .nav-brand {
     flex-shrink: 0;
+  }
+
+  /* Fix dropdown clipping inside scrollable nav */
+  .nav-links,
+  .topnav-links {
+    overflow-x: visible;
+    overflow-y: visible;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile dropdown: position relative to viewport, not the link row */
+  .nav-dropdown-menu {
+    left: 0;
+    transform: translateX(0) translateY(4px);
+    min-width: 180px;
+  }
+
+  .nav-dropdown:hover .nav-dropdown-menu,
+  .nav-dropdown.open .nav-dropdown-menu {
+    transform: translateX(0) translateY(0);
   }
 }
 

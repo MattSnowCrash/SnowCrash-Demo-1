@@ -183,6 +183,13 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   .hero-actions a { text-align: center; margin-right: 0 !important; }
   .platform-pulse { gap: 8px; padding: 10px 14px; }
   .pulse-separator { display: none; }
+  /* Heatmap tooltip: ensure it stays on-screen */
+  .heatmap-tooltip { min-width: 160px; max-width: 240px; }
+  /* Detail rows: stack vertically */
+  .detail-inner { grid-template-columns: 1fr; gap: 10px; }
+  /* Feed events: smaller text */
+  .feed-event { font-size: 10px; }
+  .feed-time { font-size: 9px; }
 }
 </style>
 </head>
@@ -991,6 +998,20 @@ function toggleDetail(id) {
       tip.style.transform = 'translateX(-50%)';
       tip.style.marginTop = '4px';
       activeTooltip = tip;
+
+      // Clamp tooltip to viewport on mobile
+      requestAnimationFrame(function() {
+        var r = tip.getBoundingClientRect();
+        if (r.right > window.innerWidth) {
+          tip.style.left = 'auto';
+          tip.style.right = '0';
+          tip.style.transform = 'none';
+        }
+        if (r.left < 0) {
+          tip.style.left = '0';
+          tip.style.transform = 'none';
+        }
+      });
     });
   });
 
@@ -1059,10 +1080,9 @@ function toggleDetail(id) {
     var values = target.getAttribute('data-values').split(',').map(Number);
     var color = colors[series] || '#fff';
 
-    target.addEventListener('mousemove', function(e) {
+    function showTooltip(clientX, clientY) {
       var rect = svg.getBoundingClientRect();
-      var svgX = (e.clientX - rect.left) / rect.width * 800;
-      // Find nearest data point
+      var svgX = (clientX - rect.left) / rect.width * 800;
       var minDist = Infinity, idx = 0;
       xPositions.forEach(function(x, i) {
         var dist = Math.abs(svgX - x);
@@ -1070,12 +1090,21 @@ function toggleDetail(id) {
       });
       tooltip.innerHTML = '<span style="color:' + color + '">' + series + '</span>: ' + values[idx];
       tooltip.style.display = 'block';
-      tooltip.style.left = (e.clientX - chartContainer.getBoundingClientRect().left + 12) + 'px';
-      tooltip.style.top = (e.clientY - chartContainer.getBoundingClientRect().top - 28) + 'px';
-    });
+      var left = clientX - chartContainer.getBoundingClientRect().left + 12;
+      var maxLeft = chartContainer.offsetWidth - 100;
+      tooltip.style.left = Math.min(left, maxLeft) + 'px';
+      tooltip.style.top = (clientY - chartContainer.getBoundingClientRect().top - 28) + 'px';
+    }
 
-    target.addEventListener('mouseleave', function() {
-      tooltip.style.display = 'none';
+    target.addEventListener('mousemove', function(e) { showTooltip(e.clientX, e.clientY); });
+    target.addEventListener('touchstart', function(e) {
+      var t = e.touches[0];
+      showTooltip(t.clientX, t.clientY);
+    }, { passive: true });
+
+    target.addEventListener('mouseleave', function() { tooltip.style.display = 'none'; });
+    target.addEventListener('touchend', function() {
+      setTimeout(function() { tooltip.style.display = 'none'; }, 1500);
     });
   });
 })();
@@ -1112,5 +1141,6 @@ function toggleDetail(id) {
   });
 })();
 </script>
+<script src="shared.js"></script>
 </body>
 </html>
