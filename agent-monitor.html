@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Monitor — SnowCrash Labs Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ── Hero ── */
+.hero-title { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; color: var(--text-1); margin-bottom: 6px; }
+.hero-sub { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 2.5px; max-width: 700px; line-height: 1.6; }
+
+/* ── Summary Tiles ── */
+.summary-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 28px; }
+.summary-tile { text-align: center; }
+.summary-tile .st-value { font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; line-height: 1.2; }
+.summary-tile .st-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 2px; font-family: 'IBM Plex Mono', monospace; margin-top: 4px; }
+.st-value.cyan { color: var(--accent-1); }
+.st-value.green { color: var(--accent-3); }
+.st-value.orange { color: var(--accent-2); }
+.st-value.amber { color: var(--accent-5); }
+.st-value.red { color: #ff5e5e; }
+
+/* ── Controls Bar ── */
+.controls-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-pill { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 5px 12px; border-radius: 5px; background: rgba(255,255,255,.04); border: 1px solid var(--border-1); color: var(--text-3); cursor: pointer; transition: all .2s; }
+.filter-pill:hover { background: rgba(94,231,255,.06); color: var(--text-2); }
+.filter-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
+.controls-spacer { flex: 1; }
+.live-indicator { display: flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--accent-3); text-transform: uppercase; letter-spacing: 1.5px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-3); animation: pulse-dot 1.5s infinite; }
+@keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+
+/* ── Chain Card ── */
+.chain-card { background: var(--surface-1a); border: 1px solid var(--border-1); border-radius: 12px; margin-bottom: 14px; overflow: hidden; backdrop-filter: blur(20px); transition: border-color .3s; }
+.chain-card:hover { border-color: var(--border-2); }
+.chain-card.status-intervened { border-color: rgba(255,138,91,.2); }
+.chain-card.status-blocked { border-color: rgba(255,94,94,.2); }
+
+.chain-header { padding: 14px 18px 10px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; cursor: pointer; }
+.chain-header:hover { background: rgba(255,255,255,.015); }
+.chain-meta { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.chain-app { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-1); display: flex; align-items: center; gap: 8px; }
+.chain-app .app-icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+.chain-name { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-2); }
+.chain-tags { display: flex; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); margin-top: 2px; flex-wrap: wrap; }
+.chain-tags .tag-warn { color: #ff8a5b; }
+.chain-tags .tag-blocked { color: #ff5e5e; }
+.chain-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.chain-status { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+.chain-status.running { background: rgba(94,231,255,.1); color: #5ee7ff; }
+.chain-status.completed { background: rgba(167,255,106,.08); color: #a7ff6a; }
+.chain-status.intervened { background: rgba(255,138,91,.1); color: #ff8a5b; }
+.chain-status.blocked { background: rgba(255,94,94,.1); color: #ff5e5e; }
+.chain-status.pending-approval { background: rgba(255,201,91,.1); color: #ffc95b; }
+.chain-chevron { color: var(--text-3); font-size: 14px; transition: transform .2s; font-family: monospace; }
+.chain-card.expanded .chain-chevron { transform: rotate(90deg); }
+
+/* ── Chain Steps (collapsed by default) ── */
+.chain-steps { display: none; padding: 0 18px 14px; }
+.chain-card.expanded .chain-steps { display: block; }
+
+.step-row { display: flex; align-items: center; gap: 8px; padding: 5px 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-2); border-radius: 4px; }
+.step-row.rerouted { background: rgba(255,138,91,.05); border: 1px solid rgba(255,138,91,.12); color: #ff8a5b; }
+.step-row.blocked { background: rgba(255,94,94,.05); border: 1px solid rgba(255,94,94,.12); color: #ff5e5e; }
+.step-row.pending { color: var(--text-3); opacity: .5; }
+.step-row.approval { background: rgba(255,201,91,.05); border: 1px solid rgba(255,201,91,.12); color: #ffc95b; }
+.step-num { width: 18px; text-align: center; font-weight: 600; flex-shrink: 0; }
+.step-desc { flex: 1; min-width: 0; }
+.step-model { font-size: 9px; color: var(--text-3); flex-shrink: 0; }
+.step-badge { font-size: 8px; padding: 1px 6px; border-radius: 2px; flex-shrink: 0; white-space: nowrap; }
+.step-badge.ok { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.step-badge.rerouted { background: rgba(255,138,91,.15); color: #ff8a5b; }
+.step-badge.blocked { background: rgba(255,94,94,.15); color: #ff5e5e; }
+.step-badge.waiting { background: rgba(255,255,255,.04); color: var(--text-3); }
+.step-badge.approval { background: rgba(255,201,91,.15); color: #ffc95b; }
+.step-reason { font-size: 9px; opacity: .8; }
+
+/* ── Intervention Log ── */
+.intervention-log { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-1); }
+.intervention-entry { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+.intervention-entry .ie-time { color: var(--text-3); flex-shrink: 0; width: 55px; }
+.intervention-entry .ie-action { flex: 1; }
+.intervention-entry .ie-action.reroute { color: #ff8a5b; }
+.intervention-entry .ie-action.block { color: #ff5e5e; }
+.intervention-entry .ie-action.approve { color: var(--accent-3); }
+
+/* ── Timeline ── */
+.timeline-section { margin-top: 32px; }
+.tl-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.tl-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-1); }
+.tl-scroll { max-height: 350px; overflow-y: auto; padding-right: 4px; }
+.tl-entry { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.03); font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+.tl-entry:last-child { border-bottom: none; }
+.tl-timestamp { color: var(--text-3); width: 70px; flex-shrink: 0; }
+.tl-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+.tl-icon.start { background: rgba(94,231,255,.12); color: #5ee7ff; }
+.tl-icon.ok { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.tl-icon.reroute { background: rgba(255,138,91,.12); color: #ff8a5b; }
+.tl-icon.block { background: rgba(255,94,94,.12); color: #ff5e5e; }
+.tl-icon.approval { background: rgba(255,201,91,.12); color: #ffc95b; }
+.tl-icon.complete { background: rgba(196,136,255,.1); color: #c488ff; }
+.tl-body { flex: 1; color: var(--text-2); line-height: 1.5; }
+.tl-body .tl-app { color: var(--text-1); font-weight: 600; }
+.tl-body .tl-detail { color: var(--text-3); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="nav-brand-top">Snowcrash</span>
+      <span class="nav-brand-bottom">Control Room</span>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link" href="dashboard.html">Dashboard</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger">
+          Labs
+          <svg class="nav-dropdown-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="agent-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,231,255,.15);color:#5ee7ff">A</span> Agent Lab</a>
+          <a href="breach-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,138,91,.15);color:#ff8a5b">B</span> Breach Lab</a>
+          <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
+          <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
+          <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
+        </div>
+      </div>
+      <a class="nav-link" href="router.html">Router</a>
+      <a class="nav-link active" href="agent-monitor.html">Agent Monitor</a>
+      <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="index.html">Model Safety</a>
+      <a class="nav-link" href="ops-hub.html">Ops Hub</a>
+      <a class="nav-link" href="system.html">System</a>
+    </div>
+    <div style="flex:1"></div>
+    <div class="nav-pill">Ops: Local</div>
+  </div>
+</nav>
+
+<main class="page-wrap">
+
+<!-- ── Hero ── -->
+<div class="scroll-reveal" style="margin-bottom:28px">
+  <div class="hero-title">Agent Monitor</div>
+  <div class="hero-sub">Real-time visibility into every agent chain executing across your connected applications — with per-step safety evaluation, model rerouting, and approval gate enforcement by SnowCrash.</div>
+</div>
+
+<!-- ── Summary Stats ── -->
+<div class="summary-row scroll-reveal">
+  <div class="glass-card summary-tile">
+    <div class="st-value cyan" id="stat-active">07</div>
+    <div class="st-label">Active Chains</div>
+  </div>
+  <div class="glass-card summary-tile">
+    <div class="st-value green" id="stat-completed">143</div>
+    <div class="st-label">Completed Today</div>
+  </div>
+  <div class="glass-card summary-tile">
+    <div class="st-value orange" id="stat-rerouted">18</div>
+    <div class="st-label">Steps Rerouted</div>
+  </div>
+  <div class="glass-card summary-tile">
+    <div class="st-value red" id="stat-blocked">03</div>
+    <div class="st-label">Chains Blocked</div>
+  </div>
+  <div class="glass-card summary-tile">
+    <div class="st-value amber" id="stat-approvals">02</div>
+    <div class="st-label">Pending Approvals</div>
+  </div>
+</div>
+
+<!-- ── Controls ── -->
+<div class="controls-bar scroll-reveal">
+  <span class="filter-pill active" data-filter="all" onclick="filterChains('all',this)">All</span>
+  <span class="filter-pill" data-filter="running" onclick="filterChains('running',this)">Running</span>
+  <span class="filter-pill" data-filter="intervened" onclick="filterChains('intervened',this)">Intervened</span>
+  <span class="filter-pill" data-filter="blocked" onclick="filterChains('blocked',this)">Blocked</span>
+  <span class="filter-pill" data-filter="pending-approval" onclick="filterChains('pending-approval',this)">Pending Approval</span>
+  <span class="filter-pill" data-filter="completed" onclick="filterChains('completed',this)">Completed</span>
+  <div class="controls-spacer"></div>
+  <div class="live-indicator"><span class="live-dot"></span> Live</div>
+</div>
+
+<!-- ── Chain Cards ── -->
+<div id="chain-list" class="scroll-reveal">
+  <!-- Populated by JS -->
+</div>
+
+<!-- ── Intervention Timeline ── -->
+<div class="glass-card timeline-section scroll-reveal">
+  <div class="tl-header">
+    <div class="tl-title">Intervention Timeline</div>
+    <span style="font-family:monospace;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:1.5px">Last 30 min</span>
+  </div>
+  <div class="tl-scroll" id="timeline-scroll">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   Agent Monitor — Chain Data & Rendering
+   ═══════════════════════════════════════════════════════════════════ */
+
+var chainData = [
+  {
+    id: 'c1',
+    app: 'Salesforce Einstein',
+    appColor: '#00a1e0',
+    appInitial: 'SF',
+    name: 'Lead Qualification Pipeline',
+    status: 'running',
+    primary: 'GPT-5.4',
+    tier: 'Enhanced',
+    started: '2 min ago',
+    stepsTotal: 6,
+    interventions: 1,
+    steps: [
+      { n:1, desc:'Fetch new leads from CRM API', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Enrich lead data from LinkedIn', model:'GPT-5.4', state:'ok' },
+      { n:3, desc:'Score leads against ICP criteria', model:'Claude Opus 4.6', state:'rerouted', reason:'PII Exposure fingerprint (Breach Lab)', original:'GPT-5.4' },
+      { n:4, desc:'Update CRM with scores', model:'GPT-5.4', state:'ok' },
+      { n:5, desc:'Draft personalized outreach email', model:'', state:'pending' },
+      { n:6, desc:'Send to sales rep for review', model:'', state:'pending' }
+    ]
+  },
+  {
+    id: 'c2',
+    app: 'GitHub Copilot',
+    appColor: '#8b5cf6',
+    appInitial: 'GH',
+    name: 'PR Review Agent',
+    status: 'intervened',
+    primary: 'GPT-5.4',
+    tier: 'Enhanced',
+    started: '5 min ago',
+    stepsTotal: 5,
+    interventions: 2,
+    steps: [
+      { n:1, desc:'Fetch open PR diff from GitHub API', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Analyze code for security vulns', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Vulnerable Code Gen (Control Lab)', original:'GPT-5.4' },
+      { n:3, desc:'Check for leaked secrets in diff', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Secret Exposure (Breach Lab)', original:'GPT-5.4' },
+      { n:4, desc:'Generate review comments', model:'GPT-5.4', state:'ok' },
+      { n:5, desc:'Post review to GitHub', model:'GPT-5.4', state:'ok' }
+    ]
+  },
+  {
+    id: 'c3',
+    app: 'M365 Copilot',
+    appColor: '#0078d4',
+    appInitial: 'M3',
+    name: 'Contract Review & Summarization',
+    status: 'pending-approval',
+    primary: 'Claude Sonnet 4.6',
+    tier: 'Enhanced',
+    started: '3 min ago',
+    stepsTotal: 5,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Extract text from uploaded contract PDF', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:2, desc:'Identify key clauses and obligations', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:3, desc:'Cross-reference against internal policy DB', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:4, desc:'Generate risk summary for legal team', model:'', state:'approval', reason:'Approval gate: cross-tenant data access' },
+      { n:5, desc:'Email summary to requestor', model:'', state:'pending' }
+    ]
+  },
+  {
+    id: 'c4',
+    app: 'ServiceNow',
+    appColor: '#62d84e',
+    appInitial: 'SN',
+    name: 'Incident Auto-Remediation',
+    status: 'running',
+    primary: 'Gemini 2.5 Pro',
+    tier: 'Enhanced',
+    started: '1 min ago',
+    stepsTotal: 7,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Parse incoming P1 incident ticket', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:2, desc:'Query CMDB for affected services', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:3, desc:'Correlate with recent change records', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:4, desc:'Generate root cause hypothesis', model:'', state:'pending' },
+      { n:5, desc:'Draft remediation runbook', model:'', state:'pending' },
+      { n:6, desc:'Execute approved runbook steps', model:'', state:'pending' },
+      { n:7, desc:'Update ticket with resolution', model:'', state:'pending' }
+    ]
+  },
+  {
+    id: 'c5',
+    app: 'Zendesk AI',
+    appColor: '#03363d',
+    appInitial: 'ZD',
+    name: 'Ticket Resolution Agent',
+    status: 'completed',
+    primary: 'DeepSeek V3.2',
+    tier: 'Standard',
+    started: '12 min ago',
+    stepsTotal: 4,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Classify incoming support ticket', model:'DeepSeek V3.2', state:'ok' },
+      { n:2, desc:'Search knowledge base for solutions', model:'DeepSeek V3.2', state:'ok' },
+      { n:3, desc:'Generate customer response draft', model:'DeepSeek V3.2', state:'ok' },
+      { n:4, desc:'Submit response for agent review', model:'DeepSeek V3.2', state:'ok' }
+    ]
+  },
+  {
+    id: 'c6',
+    app: 'Slack AI',
+    appColor: '#e01e5a',
+    appInitial: 'SL',
+    name: 'Meeting Notes Distributor',
+    status: 'blocked',
+    primary: 'Grok 3',
+    tier: 'Enhanced',
+    started: '8 min ago',
+    stepsTotal: 5,
+    interventions: 1,
+    steps: [
+      { n:1, desc:'Transcribe meeting recording', model:'Grok 3', state:'ok' },
+      { n:2, desc:'Summarize key decisions and action items', model:'Grok 3', state:'ok' },
+      { n:3, desc:'Extract confidential personnel data from notes', model:'', state:'blocked', reason:'Data Exfiltration pattern (Agent Lab — Exfiltration Chains suite)' },
+      { n:4, desc:'Post summaries to channel', model:'', state:'pending' },
+      { n:5, desc:'Create follow-up tasks in Asana', model:'', state:'pending' }
+    ]
+  },
+  {
+    id: 'c7',
+    app: 'HubSpot',
+    appColor: '#ff7a59',
+    appInitial: 'HS',
+    name: 'Campaign Performance Analyzer',
+    status: 'running',
+    primary: 'Llama 4 Maverick',
+    tier: 'Standard',
+    started: '30 sec ago',
+    stepsTotal: 5,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Pull campaign metrics from HubSpot API', model:'Llama 4 Maverick', state:'ok' },
+      { n:2, desc:'Aggregate conversion funnel data', model:'', state:'pending' },
+      { n:3, desc:'Generate performance insights', model:'', state:'pending' },
+      { n:4, desc:'Draft optimization recommendations', model:'', state:'pending' },
+      { n:5, desc:'Update campaign dashboard', model:'', state:'pending' }
+    ]
+  },
+  {
+    id: 'c8',
+    app: 'Notion AI',
+    appColor: '#787774',
+    appInitial: 'NT',
+    name: 'Knowledge Base Updater',
+    status: 'intervened',
+    primary: 'Qwen 3 235B',
+    tier: 'Standard',
+    started: '15 min ago',
+    stepsTotal: 6,
+    interventions: 1,
+    steps: [
+      { n:1, desc:'Scan recent Confluence pages for changes', model:'Qwen 3 235B', state:'ok' },
+      { n:2, desc:'Compare with existing Notion docs', model:'Qwen 3 235B', state:'ok' },
+      { n:3, desc:'Generate diff summaries', model:'Qwen 3 235B', state:'ok' },
+      { n:4, desc:'Update Notion pages with new content', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Permission Escalation — scope creep beyond write access (Agent Lab)', original:'Qwen 3 235B' },
+      { n:5, desc:'Notify page owners of changes', model:'Qwen 3 235B', state:'ok' },
+      { n:6, desc:'Log sync report', model:'Qwen 3 235B', state:'ok' }
+    ]
+  },
+  {
+    id: 'c9',
+    app: 'Jira',
+    appColor: '#0052cc',
+    appInitial: 'JR',
+    name: 'Sprint Planning Assistant',
+    status: 'completed',
+    primary: 'Gemini 2.5 Flash',
+    tier: 'Standard',
+    started: '20 min ago',
+    stepsTotal: 4,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Fetch backlog items and velocity data', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:2, desc:'Estimate story points using historical data', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:3, desc:'Draft sprint scope recommendation', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:4, desc:'Create sprint in Jira with selected stories', model:'Gemini 2.5 Flash', state:'ok' }
+    ]
+  },
+  {
+    id: 'c10',
+    app: 'Workday',
+    appColor: '#f5a623',
+    appInitial: 'WD',
+    name: 'Expense Report Validator',
+    status: 'pending-approval',
+    primary: 'GPT-5.4',
+    tier: 'Enhanced',
+    started: '4 min ago',
+    stepsTotal: 5,
+    interventions: 0,
+    steps: [
+      { n:1, desc:'Extract line items from submitted receipts', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Validate amounts against company policy', model:'GPT-5.4', state:'ok' },
+      { n:3, desc:'Flag anomalous spending patterns', model:'GPT-5.4', state:'ok' },
+      { n:4, desc:'Auto-approve items under $500 threshold', model:'', state:'approval', reason:'Approval gate: financial transaction > delegation limit' },
+      { n:5, desc:'Route flagged items to manager', model:'', state:'pending' }
+    ]
+  }
+];
+
+/* ── Timeline Events ── */
+var timelineEvents = [
+  { time:'14:32:18', type:'reroute', app:'Salesforce Einstein', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Opus 4.6 — PII Exposure fingerprint match' },
+  { time:'14:31:45', type:'start', app:'HubSpot', detail:'Campaign Performance Analyzer chain initiated (Llama 4 Maverick, Standard tier)' },
+  { time:'14:30:22', type:'block', app:'Slack AI', detail:'Chain BLOCKED at step 3 — Data Exfiltration pattern detected, chain halted' },
+  { time:'14:29:58', type:'approval', app:'Workday', detail:'Step 4 paused — awaiting approval for financial transaction exceeding delegation limit' },
+  { time:'14:29:14', type:'reroute', app:'GitHub Copilot', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Secret Exposure match' },
+  { time:'14:28:47', type:'reroute', app:'GitHub Copilot', detail:'Step 2 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Vulnerable Code Gen match' },
+  { time:'14:28:02', type:'start', app:'GitHub Copilot', detail:'PR Review Agent chain initiated (GPT-5.4, Enhanced tier)' },
+  { time:'14:27:31', type:'approval', app:'M365 Copilot', detail:'Step 4 paused — awaiting approval for cross-tenant data access' },
+  { time:'14:26:55', type:'start', app:'M365 Copilot', detail:'Contract Review chain initiated (Claude Sonnet 4.6, Enhanced tier)' },
+  { time:'14:25:10', type:'ok', app:'Jira', detail:'Sprint Planning Assistant completed — 4/4 steps clean, no interventions' },
+  { time:'14:24:03', type:'reroute', app:'Notion AI', detail:'Step 4 rerouted: Qwen 3 235B \u2192 Claude Sonnet 4.6 — Permission Escalation match' },
+  { time:'14:22:48', type:'ok', app:'Notion AI', detail:'Knowledge Base Updater completed — 1 reroute, 6/6 steps finished' },
+  { time:'14:20:15', type:'start', app:'ServiceNow', detail:'Incident Auto-Remediation chain initiated (Gemini 2.5 Pro, Enhanced tier)' },
+  { time:'14:18:33', type:'ok', app:'Zendesk AI', detail:'Ticket Resolution Agent completed — 4/4 steps clean, Standard tier' },
+  { time:'14:15:00', type:'complete', app:'System', detail:'Agent Monitor session started — 18 applications connected, 14 models in pool' }
+];
+
+/* ── Render Chain Cards ── */
+function renderChains(filter) {
+  var container = document.getElementById('chain-list');
+  container.innerHTML = '';
+
+  chainData.forEach(function(chain) {
+    if (filter && filter !== 'all' && chain.status !== filter) return;
+
+    var statusLabel = chain.status.replace('-', ' ');
+    if (chain.status === 'pending-approval') statusLabel = 'Pending Approval';
+
+    var completedSteps = chain.steps.filter(function(s) { return s.state === 'ok' || s.state === 'rerouted'; }).length;
+    var progressPct = Math.round((completedSteps / chain.stepsTotal) * 100);
+
+    var warnTag = '';
+    if (chain.interventions > 0 && chain.status !== 'blocked') {
+      warnTag = '<span class="tag-warn">&#9888; ' + chain.interventions + ' step' + (chain.interventions > 1 ? 's' : '') + ' rerouted</span>';
+    }
+    if (chain.status === 'blocked') {
+      warnTag = '<span class="tag-blocked">&#9632; Chain halted</span>';
+    }
+
+    var approvals = chain.steps.filter(function(s) { return s.state === 'approval'; }).length;
+    if (approvals > 0) {
+      warnTag += '<span style="color:#ffc95b">&#9679; ' + approvals + ' approval' + (approvals > 1 ? 's' : '') + ' pending</span>';
+    }
+
+    var stepsHtml = '';
+    chain.steps.forEach(function(step) {
+      var rowClass = step.state === 'rerouted' ? ' rerouted' : step.state === 'blocked' ? ' blocked' : step.state === 'pending' ? ' pending' : step.state === 'approval' ? ' approval' : '';
+      var modelHtml = step.model ? '<span class="step-model">' + (step.state === 'rerouted' ? '&rarr; ' : '') + step.model + '</span>' : '';
+      var badge = '';
+      if (step.state === 'ok') badge = '<span class="step-badge ok">&#10003;</span>';
+      else if (step.state === 'rerouted') badge = '<span class="step-badge rerouted">Rerouted</span>';
+      else if (step.state === 'blocked') badge = '<span class="step-badge blocked">Blocked</span>';
+      else if (step.state === 'approval') badge = '<span class="step-badge approval">Awaiting</span>';
+      else badge = '<span class="step-badge waiting">...</span>';
+
+      var reasonHtml = step.reason && (step.state === 'rerouted' || step.state === 'blocked' || step.state === 'approval') ? ' &mdash; <span class="step-reason">' + step.reason + '</span>' : '';
+
+      stepsHtml += '<div class="step-row' + rowClass + '">' +
+        '<span class="step-num">' + step.n + '</span>' +
+        '<span class="step-desc">' + step.desc + reasonHtml + '</span>' +
+        modelHtml + badge +
+        '</div>';
+    });
+
+    /* Intervention log for chains with reroutes or blocks */
+    var logHtml = '';
+    if (chain.interventions > 0 || chain.status === 'blocked') {
+      logHtml = '<div class="intervention-log">';
+      logHtml += '<div style="font-family:monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px">Intervention Log</div>';
+      chain.steps.forEach(function(step) {
+        if (step.state === 'rerouted') {
+          logHtml += '<div class="intervention-entry"><span class="ie-time">Step ' + step.n + '</span><span class="ie-action reroute">REROUTE: ' + (step.original || 'Primary') + ' &rarr; ' + step.model + ' — ' + step.reason + '</span></div>';
+        }
+        if (step.state === 'blocked') {
+          logHtml += '<div class="intervention-entry"><span class="ie-time">Step ' + step.n + '</span><span class="ie-action block">BLOCKED: ' + step.reason + '</span></div>';
+        }
+      });
+      logHtml += '</div>';
+    }
+
+    var html = '<div class="chain-card status-' + chain.status + '" data-status="' + chain.status + '" data-id="' + chain.id + '">' +
+      '<div class="chain-header" onclick="toggleChain(this)">' +
+        '<div class="chain-meta">' +
+          '<div class="chain-app"><span class="app-icon" style="background:' + chain.appColor + '22;color:' + chain.appColor + '">' + chain.appInitial + '</span>' + chain.app + ' &mdash; ' + chain.name + '</div>' +
+          '<div class="chain-tags">' +
+            '<span>Primary: ' + chain.primary + '</span>' +
+            '<span>Tier: ' + chain.tier + '</span>' +
+            '<span>' + completedSteps + '/' + chain.stepsTotal + ' steps (' + progressPct + '%)</span>' +
+            '<span>Started ' + chain.started + '</span>' +
+            warnTag +
+          '</div>' +
+        '</div>' +
+        '<div class="chain-right">' +
+          '<span class="chain-status ' + chain.status + '">' + statusLabel + '</span>' +
+          '<span class="chain-chevron">&#9654;</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="chain-steps">' +
+        '<div style="margin-bottom:10px">' +
+          '<div style="height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden">' +
+            '<div style="height:100%;width:' + progressPct + '%;background:' + (chain.status === 'blocked' ? '#ff5e5e' : chain.status === 'intervened' ? '#ff8a5b' : chain.status === 'completed' ? '#a7ff6a' : '#5ee7ff') + ';border-radius:2px;transition:width .4s"></div>' +
+          '</div>' +
+        '</div>' +
+        stepsHtml +
+        logHtml +
+      '</div>' +
+    '</div>';
+
+    container.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+/* ── Render Timeline ── */
+function renderTimeline() {
+  var container = document.getElementById('timeline-scroll');
+  container.innerHTML = '';
+  timelineEvents.forEach(function(evt) {
+    var iconClass = evt.type;
+    var iconChar = '';
+    if (evt.type === 'start') iconChar = '&#9654;';
+    else if (evt.type === 'ok' || evt.type === 'complete') iconChar = '&#10003;';
+    else if (evt.type === 'reroute') iconChar = '&#8635;';
+    else if (evt.type === 'block') iconChar = '&#9632;';
+    else if (evt.type === 'approval') iconChar = '&#9679;';
+
+    var html = '<div class="tl-entry">' +
+      '<span class="tl-timestamp">' + evt.time + '</span>' +
+      '<span class="tl-icon ' + iconClass + '">' + iconChar + '</span>' +
+      '<span class="tl-body"><span class="tl-app">' + evt.app + '</span> — ' + evt.detail + '</span>' +
+    '</div>';
+    container.insertAdjacentHTML('beforeend', html);
+  });
+}
+
+/* ── Toggle chain expand/collapse ── */
+function toggleChain(header) {
+  var card = header.parentElement;
+  card.classList.toggle('expanded');
+}
+
+/* ── Filter ── */
+function filterChains(status, pill) {
+  document.querySelectorAll('.filter-pill').forEach(function(p) { p.classList.remove('active'); });
+  pill.classList.add('active');
+  renderChains(status);
+}
+
+/* ── Simulated Live Activity ── */
+function simulateLiveStep() {
+  /* Find a running chain and advance one step */
+  var running = chainData.filter(function(c) { return c.status === 'running'; });
+  if (running.length === 0) return;
+  var chain = running[Math.floor(Math.random() * running.length)];
+  var pending = chain.steps.filter(function(s) { return s.state === 'pending'; });
+  if (pending.length === 0) {
+    chain.status = 'completed';
+    renderChains(getCurrentFilter());
+    addTimelineEvent('ok', chain.app, chain.name + ' completed — ' + chain.stepsTotal + '/' + chain.stepsTotal + ' steps finished');
+    return;
+  }
+  var step = pending[0];
+
+  /* 15% chance of reroute for dramatic effect */
+  if (Math.random() < 0.15) {
+    var reasons = [
+      'Prompt Injection pattern (Control Lab)',
+      'Hallucination risk (Scheming Lab)',
+      'Tool Abuse chain detected (Agent Lab)',
+      'Data leakage pattern (Breach Lab)',
+      'Monitor Evasion attempt (Agent Lab)'
+    ];
+    var safeModels = ['Claude Opus 4.6','Claude Sonnet 4.6','Gemini 3.1 Pro'];
+    step.state = 'rerouted';
+    step.original = chain.primary;
+    step.model = safeModels[Math.floor(Math.random() * safeModels.length)];
+    step.reason = reasons[Math.floor(Math.random() * reasons.length)];
+    chain.interventions++;
+    if (chain.status === 'running') chain.status = 'intervened';
+    addTimelineEvent('reroute', chain.app, 'Step ' + step.n + ' rerouted: ' + step.original + ' \u2192 ' + step.model + ' — ' + step.reason);
+    updateStat('stat-rerouted', 1);
+  } else {
+    step.state = 'ok';
+    step.model = chain.primary;
+  }
+
+  renderChains(getCurrentFilter());
+}
+
+function getCurrentFilter() {
+  var active = document.querySelector('.filter-pill.active');
+  return active ? active.getAttribute('data-filter') : 'all';
+}
+
+function addTimelineEvent(type, app, detail) {
+  var now = new Date();
+  var h = String(now.getHours()).padStart(2,'0');
+  var m = String(now.getMinutes()).padStart(2,'0');
+  var s = String(now.getSeconds()).padStart(2,'0');
+  timelineEvents.unshift({ time: h+':'+m+':'+s, type: type, app: app, detail: detail });
+  renderTimeline();
+}
+
+function updateStat(id, delta) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var val = parseInt(el.textContent) + delta;
+  el.textContent = val < 10 ? '0' + val : String(val);
+}
+
+/* ── Init ── */
+renderChains('all');
+renderTimeline();
+
+/* Auto-expand first running chain */
+setTimeout(function() {
+  var first = document.querySelector('.chain-card[data-status="running"]');
+  if (first) first.classList.add('expanded');
+}, 300);
+
+/* Simulate live activity every 4-8 seconds */
+setInterval(function() {
+  simulateLiveStep();
+}, 4000 + Math.random() * 4000);
+
+/* ── Scroll Reveal ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var reveals = document.querySelectorAll('.scroll-reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(function(el) { observer.observe(el); });
+});
+</script>
+
+<script src="shared.js"></script>
+</body>
+</html>
