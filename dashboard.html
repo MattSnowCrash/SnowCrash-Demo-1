@@ -267,6 +267,44 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .agent-step-badge.blocked { background: rgba(255,138,138,.15); color: #ff8a8a; }
 .agent-step-badge.pending { background: rgba(255,255,255,.04); color: var(--text-3); }
 
+
+/* Agent Governance Interactive */
+.agent-gov-tier-cards .tier-card { cursor: pointer !important; transition: border-color .2s, background .2s; }
+.agent-gov-tier-cards .tier-card:hover { border-color: rgba(94,231,255,.2); }
+.agent-gov-tier-cards .tier-card.active { border-color: rgba(94,231,255,.3); background: rgba(94,231,255,.04); }
+.agent-gov-tier-cards .tier-card.active[data-tier="supervised"] { border-color: rgba(255,201,91,.3); background: rgba(255,201,91,.04); }
+.agent-gov-tier-cards .tier-card.active[data-tier="full-auto"] { border-color: rgba(167,255,106,.3); background: rgba(167,255,106,.04); }
+
+/* Budget Slider */
+.budget-slider-wrap { position: relative; margin-top: 6px; }
+.budget-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); outline: none; cursor: pointer; }
+.budget-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-1); border: 2px solid var(--surface-1a); cursor: grab; box-shadow: 0 0 8px rgba(94,231,255,.3); }
+.budget-slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent-1); border: 2px solid var(--surface-1a); cursor: grab; }
+.budget-amount-display { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; color: var(--accent-1); }
+.budget-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; }
+.budget-ticks { display: flex; justify-content: space-between; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text-3); }
+
+/* App card agent badge */
+.app-agent-badge { font-family: 'IBM Plex Mono', monospace; font-size: 8px; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; margin-top: 3px; display: inline-block; }
+.app-agent-badge.supervised { background: rgba(255,201,91,.1); color: #ffc95b; }
+.app-agent-badge.semi-auto { background: rgba(94,231,255,.1); color: #5ee7ff; }
+.app-agent-badge.full-auto { background: rgba(167,255,106,.1); color: #a7ff6a; }
+
+/* Modal agent policy overrides */
+.modal-agent-section { background: rgba(0,0,0,.2); border: 1px solid var(--border-1); border-radius: 10px; padding: 14px; }
+.modal-agent-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.03); }
+.modal-agent-row:last-child { border-bottom: none; }
+.modal-agent-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
+.modal-agent-value { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-2); }
+.modal-agent-pills { display: flex; gap: 4px; }
+.modal-agent-pill { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,.04); border: 1px solid var(--border-1); color: var(--text-3); cursor: pointer; transition: all .2s; }
+.modal-agent-pill:hover { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+.modal-agent-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
+.modal-agent-pill.active.supervised { background: rgba(255,201,91,.1); border-color: rgba(255,201,91,.25); color: #ffc95b; }
+.modal-agent-pill.active.full-auto { background: rgba(167,255,106,.1); border-color: rgba(167,255,106,.25); color: #a7ff6a; }
+.modal-override-tag { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--accent-1); text-transform: uppercase; letter-spacing: 1px; opacity: 0; transition: opacity .2s; }
+.modal-override-tag.visible { opacity: 1; }
+
 /* ── Scroll Animations (Improvement #8) ── */
 .scroll-reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
 .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
@@ -549,80 +587,86 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <!-- ═══ AGENT POLICIES ═══ -->
   <div class="card routing-policy-panel scroll-reveal" style="margin-top:0">
     <div class="card-label">Agent Governance Policies</div>
-    <div class="section-sub">Configure how autonomous AI agents operate within the enterprise — controlling autonomy, tool access, and intervention thresholds</div>
+    <div class="section-sub">Configure how autonomous AI agents operate within the enterprise — controlling autonomy, tool access, and safety intervention thresholds</div>
     <div class="routing-policy-grid">
-      <div class="routing-tiers">
-        <div class="tier-card active" data-tier="supervised" style="cursor:default">
+      <div class="routing-tiers agent-gov-tier-cards">
+        <div class="tier-card active" data-tier="supervised" onclick="selectAgentTier('supervised')">
           <div class="tier-card-name" style="color:#ffc95b">Supervised</div>
           <div class="tier-card-desc">Every agent action requires human approval before execution. Highest safety, lowest throughput.</div>
           <div class="tier-card-models"><span>Human approves each step</span> <span>Full audit trail</span> <span>Zero autonomous actions</span></div>
         </div>
-        <div class="tier-card" data-tier="semi-auto" style="cursor:default">
+        <div class="tier-card" data-tier="semi-auto" onclick="selectAgentTier('semi-auto')">
           <div class="tier-card-name" style="color:var(--accent-1)">Semi-Autonomous</div>
-          <div class="tier-card-desc">Low-risk actions auto-approved. High-risk actions flagged for human review based on risk scoring.</div>
+          <div class="tier-card-desc">Low-risk actions execute automatically. High-risk actions (matching Lab vulnerability fingerprints) flagged for human review.</div>
           <div class="tier-card-models"><span>Auto-approve low-risk</span> <span>Flag high-risk steps</span> <span>Risk threshold: 60/100</span></div>
         </div>
-        <div class="tier-card" data-tier="full-auto" style="cursor:default">
+        <div class="tier-card" data-tier="full-auto" onclick="selectAgentTier('full-auto')">
           <div class="tier-card-name" style="color:var(--accent-3)">Full Autonomous</div>
-          <div class="tier-card-desc">Agent runs freely within tool and data permissions. SnowCrash monitors and can circuit-break if Lab vulnerabilities are matched.</div>
+          <div class="tier-card-desc">Agent runs freely within tool and data permissions. SnowCrash monitors every step and can circuit-break or reroute mid-chain.</div>
           <div class="tier-card-models"><span>Full autonomy</span> <span>Circuit-breaker active</span> <span>Step-level rerouting</span></div>
         </div>
       </div>
       <div class="routing-controls">
         <div class="routing-control-group">
           <div class="routing-control-label">Default Agent Autonomy</div>
-          <div class="routing-pills">
-            <button class="routing-pill active" data-val="supervised" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Supervised</button>
-            <button class="routing-pill" data-val="semi-auto" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Semi-Auto</button>
-            <button class="routing-pill" data-val="full-auto" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Full Auto</button>
+          <div class="routing-pills" id="agent-autonomy-pills">
+            <button class="routing-pill active" data-val="supervised" onclick="selectAgentTier('supervised')">Supervised</button>
+            <button class="routing-pill" data-val="semi-auto" onclick="selectAgentTier('semi-auto')">Semi-Auto</button>
+            <button class="routing-pill" data-val="full-auto" onclick="selectAgentTier('full-auto')">Full Auto</button>
           </div>
         </div>
         <div class="routing-control-group">
           <div class="routing-control-label">Max Chain Length</div>
-          <div class="routing-pills">
-            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">5 steps</button>
-            <button class="routing-pill active" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">10 steps</button>
-            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">25 steps</button>
-            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Unlimited</button>
+          <div class="routing-pills" id="agent-chain-pills">
+            <button class="routing-pill" data-val="5" onclick="setChainLength(5,this)">5 steps</button>
+            <button class="routing-pill active" data-val="15" onclick="setChainLength(15,this)">15 steps</button>
+            <button class="routing-pill" data-val="25" onclick="setChainLength(25,this)">25 steps</button>
+            <button class="routing-pill" data-val="50" onclick="setChainLength(50,this)">50 steps</button>
           </div>
+          <div style="font-family:monospace;font-size:9px;color:var(--text-3);margin-top:4px;line-height:1.4">Industry default: 25 (LangGraph). Most production chains complete in 4-15 steps.</div>
         </div>
         <div class="routing-control-group">
           <div class="routing-control-label">Chain Budget Cap</div>
-          <div class="routing-budget-row">
-            <div class="routing-budget-amount">$0.85</div>
-            <div class="routing-budget-cap">per chain max</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+            <div class="budget-amount-display" id="budget-display">$0.85</div>
+            <div class="budget-label">per chain max</div>
           </div>
-          <div class="routing-budget-track"><div class="routing-budget-fill" style="width:42%;background:var(--accent-3)"></div></div>
+          <div class="budget-slider-wrap">
+            <input type="range" class="budget-slider" id="budget-slider" min="10" max="500" value="85" oninput="updateBudget(this.value)">
+            <div class="budget-ticks"><span>$0.10</span><span>$1.00</span><span>$2.50</span><span>$5.00</span></div>
+          </div>
         </div>
         <div class="routing-control-group">
           <div class="routing-control-label">Step-Level Model Rerouting</div>
-          <div class="routing-pills">
-            <button class="routing-pill active" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Enabled</button>
-            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Disabled</button>
+          <div class="routing-pills" id="agent-reroute-pills">
+            <button class="routing-pill active" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(function(p){p.classList.remove('active')});this.classList.add('active')">Enabled</button>
+            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(function(p){p.classList.remove('active')});this.classList.add('active')">Disabled</button>
           </div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:6px;line-height:1.5">When a step matches a Lab vulnerability fingerprint, reroute that specific step to a safe model mid-chain.</div>
+          <div style="font-family:monospace;font-size:9px;color:var(--text-3);margin-top:6px;line-height:1.5">When a step matches a Lab vulnerability fingerprint, reroute that specific step to a safe model mid-chain.</div>
         </div>
         <div class="routing-control-group">
           <div class="routing-control-label">Approval Gates</div>
           <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
-            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> External API calls</label>
-            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Data deletion / modification</label>
-            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Email / message sending</label>
-            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> File system access</label>
-            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> Cross-tenant data access</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> External API calls</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Data deletion / modification</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Email / message sending</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> File system access</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> Cross-tenant data access</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> PII/PHI data processing</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> Code execution / deployment</label>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ═══ CONNECTED SaaS APPLICATIONS ═══ -->
+    <!-- ═══ CONNECTED SaaS APPLICATIONS ═══ -->
   <div class="card-label" style="margin-bottom:4px">Connected SaaS Applications</div>
   <div class="section-sub" style="margin-bottom:16px">Third-party AI-powered applications monitored by SnowCrash</div>
   <div class="apps-grid scroll-reveal">
 
     <!-- Salesforce Einstein -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon salesforce">&#9729;</div>
         <div style="flex:1;min-width:0">
@@ -649,7 +693,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- ServiceNow -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="full-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon servicenow">&#9881;</div>
         <div style="flex:1;min-width:0">
@@ -676,7 +720,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Notion AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="full-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon notion">&#9998;</div>
         <div style="flex:1;min-width:0">
@@ -703,7 +747,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- GitHub Copilot -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="supervised" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon copilot">&#10094;/&#10095;</div>
         <div style="flex:1;min-width:0">
@@ -730,7 +774,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Zendesk AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon zendesk">&#9993;</div>
         <div style="flex:1;min-width:0">
@@ -757,7 +801,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Workday AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="supervised" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9783;</div>
         <div style="flex:1;min-width:0">
@@ -784,7 +828,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Slack AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="full-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#9993;</div>
         <div style="flex:1;min-width:0">
@@ -811,7 +855,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- HubSpot AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9733;</div>
         <div style="flex:1;min-width:0">
@@ -838,7 +882,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Intercom AI -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9672;</div>
         <div style="flex:1;min-width:0">
@@ -865,7 +909,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Adobe Firefly -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.12)">&#9830;</div>
         <div style="flex:1;min-width:0">
@@ -892,7 +936,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Microsoft 365 Copilot -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.08)">&#9674;</div>
         <div style="flex:1;min-width:0">
@@ -925,7 +969,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="apps-grid scroll-reveal">
 
     <!-- Internal AI Assistant -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon internal">&#9670;</div>
         <div style="flex:1;min-width:0">
@@ -952,7 +996,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Code Review Bot -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="supervised" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#10094;&#10095;</div>
         <div style="flex:1;min-width:0">
@@ -979,7 +1023,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- HR Knowledge Base -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="supervised" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9782;</div>
         <div style="flex:1;min-width:0">
@@ -1006,7 +1050,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Data Pipeline Agent -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="full-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9881;</div>
         <div style="flex:1;min-width:0">
@@ -1033,7 +1077,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Document Summarizer -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="full-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.1)">&#9998;</div>
         <div style="flex:1;min-width:0">
@@ -1060,7 +1104,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
 
     <!-- Customer Insight Engine -->
-    <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
+    <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9670;</div>
         <div style="flex:1;min-width:0">
@@ -1820,6 +1864,42 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="app-modal-section-title">Recent Reroutes</div>
       <div class="section-sub" style="margin-bottom:10px;font-size:10px">Requests rerouted from primary model to a safe model in the pool based on Crash Test Lab intelligence</div>
       <div class="app-modal-intercepts" id="am-intercept-list"></div>
+    </div>
+
+    <!-- Agent Policy Override (per-app) -->
+    <div class="app-modal-section">
+      <div class="app-modal-section-title"><span class="ams-dot" style="background:#c488ff"></span> Agent Policy <span class="modal-override-tag" id="am-agent-override-tag">OVERRIDE</span></div>
+      <div class="section-sub" style="margin-bottom:10px;font-size:10px">Per-application agent governance — overrides enterprise defaults when customized</div>
+      <div class="modal-agent-section" id="am-agent-policy">
+        <div class="modal-agent-row">
+          <div class="modal-agent-label">Autonomy Level</div>
+          <div class="modal-agent-pills" id="am-autonomy-pills">
+            <button class="modal-agent-pill supervised" data-val="supervised" onclick="setModalAgentAutonomy('supervised',this)">Supervised</button>
+            <button class="modal-agent-pill" data-val="semi-auto" onclick="setModalAgentAutonomy('semi-auto',this)">Semi-Auto</button>
+            <button class="modal-agent-pill full-auto" data-val="full-auto" onclick="setModalAgentAutonomy('full-auto',this)">Full Auto</button>
+          </div>
+        </div>
+        <div class="modal-agent-row">
+          <div class="modal-agent-label">Max Steps</div>
+          <div class="modal-agent-pills" id="am-steps-pills">
+            <button class="modal-agent-pill" data-val="5" onclick="setModalAgentSteps(5,this)">5</button>
+            <button class="modal-agent-pill" data-val="15" onclick="setModalAgentSteps(15,this)">15</button>
+            <button class="modal-agent-pill" data-val="25" onclick="setModalAgentSteps(25,this)">25</button>
+            <button class="modal-agent-pill" data-val="50" onclick="setModalAgentSteps(50,this)">50</button>
+          </div>
+        </div>
+        <div class="modal-agent-row">
+          <div class="modal-agent-label">Step Rerouting</div>
+          <div class="modal-agent-pills" id="am-reroute-pills">
+            <button class="modal-agent-pill" data-val="enabled" onclick="setModalPill(this)">Enabled</button>
+            <button class="modal-agent-pill" data-val="disabled" onclick="setModalPill(this)">Disabled</button>
+          </div>
+        </div>
+        <div class="modal-agent-row">
+          <div class="modal-agent-label">Approval Gates</div>
+          <div class="modal-agent-value" id="am-approval-gates">External API, Data Deletion, Email</div>
+        </div>
+      </div>
     </div>
 
     <!-- Agent Chain Activity -->
@@ -2673,6 +2753,37 @@ function openAppModal(cardEl) {
     chainsEl.appendChild(card);
   });
 
+  /* Populate agent policy section in modal */
+  var cardEl2 = document.querySelector('.app-card-name');
+  document.querySelectorAll('.app-card').forEach(function(c) {
+    if (c.querySelector('.app-card-name') && c.querySelector('.app-card-name').textContent === name) { cardEl2 = c; }
+  });
+  var appAgentLevel = cardEl2 ? (cardEl2.getAttribute('data-agent-level') || currentAgentTier) : currentAgentTier;
+  /* Set autonomy pills */
+  document.querySelectorAll('#am-autonomy-pills .modal-agent-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-val') === appAgentLevel);
+  });
+  /* Set steps pills - use enterprise default or 15 */
+  document.querySelectorAll('#am-steps-pills .modal-agent-pill').forEach(function(p) {
+    p.classList.toggle('active', parseInt(p.getAttribute('data-val')) === currentChainLength);
+  });
+  /* Set reroute pills */
+  var rerouteEnabled = document.querySelector('#agent-reroute-pills .routing-pill.active');
+  var rerouteVal = rerouteEnabled ? (rerouteEnabled.textContent.trim().toLowerCase() === 'enabled' ? 'enabled' : 'disabled') : 'enabled';
+  document.querySelectorAll('#am-reroute-pills .modal-agent-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-val') === rerouteVal);
+  });
+  /* Override tag */
+  var overrideTag = document.getElementById('am-agent-override-tag');
+  if (overrideTag) overrideTag.classList.toggle('visible', appAgentLevel !== currentAgentTier);
+  /* Approval gates text based on autonomy */
+  var gatesEl = document.getElementById('am-approval-gates');
+  if (gatesEl) {
+    if (appAgentLevel === 'supervised') gatesEl.textContent = 'All actions require approval';
+    else if (appAgentLevel === 'full-auto') gatesEl.textContent = 'External API, Data Deletion only';
+    else gatesEl.textContent = 'External API, Data Deletion, Email';
+  }
+
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2684,6 +2795,117 @@ function closeAppModal() {
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAppModal(); });
+
+
+/* ══════════════════════════════════════════════
+   Agent Governance Panel Logic
+   ══════════════════════════════════════════════ */
+var currentAgentTier = 'supervised';
+var currentChainLength = 15;
+var currentBudget = 85;
+
+var agentAppOverrides = {};
+
+function selectAgentTier(tier) {
+  currentAgentTier = tier;
+  /* Update tier cards */
+  document.querySelectorAll('.agent-gov-tier-cards .tier-card').forEach(function(c) {
+    c.classList.toggle('active', c.getAttribute('data-tier') === tier);
+  });
+  /* Update pills */
+  document.querySelectorAll('#agent-autonomy-pills .routing-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-val') === tier);
+  });
+  /* Cascade to all app cards that don't have an override */
+  var labelMap = { 'supervised': 'Supervised', 'semi-auto': 'Semi-Auto', 'full-auto': 'Full Auto' };
+  document.querySelectorAll('.app-card[data-agent-level]').forEach(function(card) {
+    var appName = card.querySelector('.app-card-name').textContent;
+    if (!agentAppOverrides[appName]) {
+      card.setAttribute('data-agent-level', tier);
+      var badge = card.querySelector('.app-agent-badge');
+      if (badge) {
+        badge.className = 'app-agent-badge ' + tier;
+        badge.setAttribute('data-agent-level', tier);
+        badge.textContent = labelMap[tier];
+      }
+    }
+  });
+}
+
+function setChainLength(len, btn) {
+  currentChainLength = len;
+  document.querySelectorAll('#agent-chain-pills .routing-pill').forEach(function(p) {
+    p.classList.remove('active');
+  });
+  btn.classList.add('active');
+}
+
+function updateBudget(val) {
+  currentBudget = parseInt(val);
+  var display = document.getElementById('budget-display');
+  if (display) {
+    var dollars = (currentBudget / 100).toFixed(2);
+    display.textContent = '$' + dollars;
+  }
+}
+
+/* ── Modal Agent Policy ── */
+function setModalAgentAutonomy(level, btn) {
+  btn.parentElement.querySelectorAll('.modal-agent-pill').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+  /* Show override tag if different from enterprise default */
+  var tag = document.getElementById('am-agent-override-tag');
+  if (tag) tag.classList.toggle('visible', level !== currentAgentTier);
+  /* Update the card's data attribute */
+  var appName = document.getElementById('am-app-name').textContent;
+  if (level !== currentAgentTier) {
+    agentAppOverrides[appName] = level;
+  } else {
+    delete agentAppOverrides[appName];
+  }
+  /* Update card badge */
+  var labelMap = { 'supervised': 'Supervised', 'semi-auto': 'Semi-Auto', 'full-auto': 'Full Auto' };
+  document.querySelectorAll('.app-card').forEach(function(card) {
+    if (card.querySelector('.app-card-name') && card.querySelector('.app-card-name').textContent === appName) {
+      card.setAttribute('data-agent-level', level);
+      var badge = card.querySelector('.app-agent-badge');
+      if (badge) {
+        badge.className = 'app-agent-badge ' + level;
+        badge.textContent = labelMap[level];
+      }
+    }
+  });
+}
+
+function setModalAgentSteps(steps, btn) {
+  btn.parentElement.querySelectorAll('.modal-agent-pill').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+function setModalPill(btn) {
+  btn.parentElement.querySelectorAll('.modal-agent-pill').forEach(function(p) { p.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+/* Render agent badges on page load */
+(function() {
+  var labelMap = { 'supervised': 'Supervised', 'semi-auto': 'Semi-Auto', 'full-auto': 'Full Auto' };
+  document.querySelectorAll('.app-card[data-agent-level]').forEach(function(card) {
+    var level = card.getAttribute('data-agent-level');
+    var header = card.querySelector('.app-card-header');
+    if (!header) return;
+    /* Find the tier-badge and insert agent badge after it */
+    var tierBadge = header.querySelector('.app-tier-badge');
+    if (tierBadge && !card.querySelector('.app-agent-badge')) {
+      var badge = document.createElement('div');
+      badge.className = 'app-agent-badge ' + level;
+      badge.setAttribute('data-agent-level', level);
+      badge.textContent = labelMap[level] || level;
+      tierBadge.parentElement.insertBefore(badge, tierBadge.nextSibling);
+    }
+  });
+})();
+
 </script>
 <script src="shared.js"></script>
 </body>
