@@ -230,6 +230,14 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .amr-model-chip.primary { border-color: rgba(94,231,255,.3); color: var(--accent-1); background: rgba(94,231,255,.06); }
 .amr-cost-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: var(--accent-3); }
 
+/* ── Per-App User Control Row ── */
+.app-user-control { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.04); }
+.app-user-control-label { font-family: 'IBM Plex Mono', monospace; font-size: 8px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+.app-uc-pills { display: flex; gap: 2px; flex: 1; }
+.app-uc-pill { font-family: 'IBM Plex Mono', monospace; font-size: 8px; letter-spacing: .5px; padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); cursor: pointer; transition: all .15s; flex: 1; text-align: center; }
+.app-uc-pill:hover:not(.active) { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+.app-uc-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
+
 /* ── Scroll Animations (Improvement #8) ── */
 .scroll-reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
 .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
@@ -527,6 +535,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- ServiceNow -->
@@ -552,6 +561,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Notion AI -->
@@ -577,6 +587,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- GitHub Copilot -->
@@ -602,6 +613,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Zendesk AI -->
@@ -627,6 +639,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Workday AI -->
@@ -652,6 +665,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Slack AI -->
@@ -677,6 +691,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- HubSpot AI -->
@@ -702,6 +717,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Intercom AI -->
@@ -727,6 +743,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Adobe Firefly -->
@@ -752,6 +769,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Microsoft 365 Copilot -->
@@ -777,6 +795,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
   </div>
 
@@ -808,6 +827,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Code Review Bot -->
@@ -833,6 +853,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot amber"></div>
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- HR Knowledge Base -->
@@ -858,6 +879,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Data Pipeline Agent -->
@@ -883,6 +905,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Document Summarizer -->
@@ -908,6 +931,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot green"></div>
         <div class="app-status-text">Monitoring Active</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill active" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
     <!-- Customer Insight Engine -->
@@ -933,6 +957,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-dot red"></div>
         <div class="app-status-text">High Risk — Review Required</div>
       </div>
+      <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill active" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
   </div>
 
@@ -1719,47 +1744,70 @@ function selectUserControl(el) {
   currentUserControl = el.getAttribute('data-val');
   var desc = document.getElementById('user-control-desc');
   if (currentUserControl === 'locked') {
-    desc.textContent = 'All apps locked to the organization default tier. End users cannot change routing.';
+    desc.textContent = 'Sets the default for all apps. Override per-app below.';
   } else if (currentUserControl === 'limited') {
-    desc.textContent = 'Users can upgrade up to Enhanced tier. Maximum requires admin approval.';
+    desc.textContent = 'Default: users can upgrade to Enhanced. Override per-app below.';
   } else {
-    desc.textContent = 'Users can select any routing tier for their requests. Budget caps still apply.';
+    desc.textContent = 'Default: users pick any tier. Override per-app below.';
   }
+  // Update all per-app pills to match the new global default
+  document.querySelectorAll('.app-card').forEach(function(card) {
+    var pills = card.querySelectorAll('.app-uc-pill');
+    pills.forEach(function(p) {
+      p.classList.toggle('active', p.getAttribute('data-uc') === currentUserControl);
+    });
+  });
   updateAppTierBadges();
+}
+
+// Per-app user control — click handler
+function setAppUC(pill) {
+  var pills = pill.parentElement;
+  pills.querySelectorAll('.app-uc-pill').forEach(function(p) { p.classList.remove('active'); });
+  pill.classList.add('active');
+  // Update this card's badge
+  var card = pill.closest('.app-card');
+  updateCardBadge(card);
+}
+
+function getCardUC(card) {
+  var activePill = card.querySelector('.app-uc-pill.active');
+  return activePill ? activePill.getAttribute('data-uc') : currentUserControl;
+}
+
+function updateCardBadge(card) {
+  var nameEl = card.querySelector('.app-card-name');
+  if (!nameEl) return;
+  var badge = card.querySelector('.app-tier-badge');
+  if (!badge) return;
+  var name = nameEl.textContent;
+  var assignedTier = appTiers[name];
+  var uc = getCardUC(card);
+
+  if (uc === 'locked') {
+    // Locked to org default — no user choice
+    var t = (assignedTier && assignedTier !== 'user-choice') ? assignedTier : currentOrgTier;
+    badge.className = 'app-tier-badge ' + t;
+    badge.textContent = tierData[t].label + ' (Locked)';
+  } else if (uc === 'full') {
+    // Full user choice
+    badge.className = 'app-tier-badge user-choice';
+    badge.textContent = 'User Choice';
+  } else {
+    // Limited — user can go up to enhanced
+    if (assignedTier === 'user-choice' || assignedTier === 'standard') {
+      badge.className = 'app-tier-badge user-choice';
+      badge.textContent = 'Up to Enhanced';
+    } else {
+      badge.className = 'app-tier-badge ' + assignedTier;
+      badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
+    }
+  }
 }
 
 function updateAppTierBadges() {
   document.querySelectorAll('.app-card').forEach(function(card) {
-    var nameEl = card.querySelector('.app-card-name');
-    if (!nameEl) return;
-    var badge = card.querySelector('.app-tier-badge');
-    if (!badge) return;
-    var name = nameEl.textContent;
-    var assignedTier = appTiers[name];
-
-    if (currentUserControl === 'locked') {
-      // All apps show org default tier
-      badge.className = 'app-tier-badge ' + currentOrgTier;
-      badge.textContent = tierData[currentOrgTier].label;
-    } else if (currentUserControl === 'full') {
-      // Apps marked user-choice show "User Choice", others keep assignment
-      if (assignedTier === 'user-choice') {
-        badge.className = 'app-tier-badge user-choice';
-        badge.textContent = 'User Choice';
-      } else {
-        badge.className = 'app-tier-badge ' + assignedTier;
-        badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
-      }
-    } else {
-      // Limited: user-choice shows as user-choice, others show their assignment
-      if (assignedTier === 'user-choice') {
-        badge.className = 'app-tier-badge user-choice';
-        badge.textContent = 'User Choice';
-      } else {
-        badge.className = 'app-tier-badge ' + assignedTier;
-        badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
-      }
-    }
+    updateCardBadge(card);
   });
 }
 
