@@ -39,18 +39,16 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 
 /* ── Routing Topology ── */
 .topology-card { margin-bottom: 32px; }
-.topology-wrap { position: relative; height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.topo-node { position: absolute; padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; text-align: center; z-index: 2; transition: all .4s ease; }
-.topo-node .topo-sub { font-size: 9px; font-weight: 400; color: var(--text-3); margin-top: 3px; text-transform: uppercase; letter-spacing: 1.5px; }
-.topo-incoming  { left: 2%;  top: 50%; transform: translateY(-50%); background: rgba(94,231,255,.1); border: 1px solid rgba(94,231,255,.25); color: var(--accent-1); }
-.topo-safety    { left: 25%; top: 50%; transform: translateY(-50%); background: rgba(167,255,106,.08); border: 1px solid rgba(167,255,106,.25); color: var(--accent-3); }
-.topo-primary   { left: 50%; top: 22%; transform: translateX(-50%); background: rgba(94,231,255,.1); border: 1px solid rgba(94,231,255,.25); color: var(--accent-1); }
-.topo-fallback  { left: 50%; top: 68%; transform: translateX(-50%); background: rgba(255,138,91,.08); border: 1px solid rgba(255,138,91,.25); color: #ff8a5b; }
-.topo-output    { right: 2%; top: 50%; transform: translateY(-50%); background: rgba(94,231,255,.1); border: 1px solid rgba(94,231,255,.25); color: var(--accent-1); }
-.topo-connector { position: absolute; z-index: 1; }
-.topo-connector line { stroke: var(--border-1); stroke-width: 1.5; stroke-dasharray: 4 4; }
-.topo-connector .flow-dot { fill: var(--accent-1); }
-@keyframes flow-1 { 0%{cx:0;cy:0} 100%{cx:100%;cy:0} }
+.topology-wrap { position: relative; width: 100%; overflow: hidden; }
+.topology-svg { width: 100%; height: auto; display: block; }
+.topology-svg .topo-node-bg { rx: 12; ry: 12; transition: all .4s ease; }
+.topology-svg .topo-node-text { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; fill: currentColor; }
+.topology-svg .topo-node-sub { font-family: 'IBM Plex Mono', monospace; font-size: 8px; font-weight: 400; fill: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; }
+.topology-svg .topo-line { stroke: var(--border-2); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.topology-svg .topo-line-glow { stroke-width: 3; stroke-dasharray: 6 4; fill: none; opacity: .3; }
+@keyframes dash-flow { to { stroke-dashoffset: -40; } }
+.topology-svg .topo-line-anim { animation: dash-flow 2s linear infinite; }
+@keyframes flow-particle { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
 
 /* ── Safety Overhead ── */
 .overhead-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
@@ -98,10 +96,10 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .chart-line { stroke-dasharray: 1200; animation: line-draw 2s ease-out both; }
 .chart-area { animation: area-fade 1.5s ease-out both; }
 
-/* ── Topology animation ── */
-.topo-node.intercepted { border-color: #ff8a5b !important; color: #ff8a5b !important; background: rgba(255,138,91,.12) !important; }
-.topo-node.blocked { border-color: #ff8a8a !important; color: #ff8a8a !important; background: rgba(255,138,138,.08) !important; }
-.topo-node.active-fb { border-color: var(--accent-3) !important; color: var(--accent-3) !important; background: rgba(167,255,106,.1) !important; }
+/* ── Topology animation states ── */
+.topo-node-bg.intercepted { fill: rgba(255,138,91,.15) !important; stroke: rgba(255,138,91,.6) !important; }
+.topo-node-bg.blocked { fill: rgba(255,138,138,.12) !important; stroke: rgba(255,138,138,.5) !important; }
+.topo-node-bg.active-fb { fill: rgba(167,255,106,.12) !important; stroke: rgba(167,255,106,.5) !important; }
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
@@ -120,7 +118,8 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   .health-card .sub-metrics { gap: 12px; }
   .health-card .sub-metric .sm-value { font-size: 12px; }
   .overhead-card .ov-value { font-size: 18px; }
-  .topology-wrap { height: 260px; flex-direction: column; }
+  .topology-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .topology-svg { min-width: 500px; }
 }
 </style>
 </head>
@@ -206,54 +205,114 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card-label">Live Routing Flow</div>
     <div class="chart-sub">Real-time query routing topology</div>
     <div class="topology-wrap" id="topology">
-      <!-- Nodes -->
-      <div class="topo-node topo-incoming" id="topo-incoming">
-        Incoming<div class="topo-sub">12,847 queries</div>
-      </div>
-      <div class="topo-node topo-safety" id="topo-safety">
-        Safety Layer<div class="topo-sub">Analyzing</div>
-      </div>
-      <div class="topo-node topo-primary" id="topo-primary">
-        Primary Model<div class="topo-sub">11,600 routed</div>
-      </div>
-      <div class="topo-node topo-fallback" id="topo-fallback">
-        Fallback Model<div class="topo-sub">1,247 rerouted</div>
-      </div>
-      <div class="topo-node topo-output" id="topo-output">
-        Output<div class="topo-sub">Safe delivery</div>
-      </div>
+      <svg class="topology-svg" viewBox="0 0 900 260" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <!-- Flow line paths for animation -->
+          <path id="path-in-safety" d="M155,130 L280,130"/>
+          <path id="path-safety-primary" d="M420,130 C480,130 480,70 540,70"/>
+          <path id="path-safety-fallback" d="M420,130 C480,130 480,190 540,190"/>
+          <path id="path-primary-output" d="M680,70 C740,70 740,130 760,130"/>
+          <path id="path-fallback-output" d="M680,190 C740,190 740,130 760,130"/>
+        </defs>
 
-      <!-- Connectors (SVG overlay) -->
-      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;" id="topo-svg">
+        <!-- ── Connection Lines ── -->
         <!-- Incoming → Safety -->
-        <line class="topo-line" x1="16%" y1="50%" x2="25%" y2="50%" stroke="var(--border-1)" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <circle class="flow-dot fd-1" cx="20%" cy="50%" r="3" fill="var(--accent-1)" opacity=".8">
-          <animate attributeName="cx" values="16%;25%" dur="1.5s" repeatCount="indefinite"/>
+        <line class="topo-line topo-line-anim" x1="155" y1="130" x2="280" y2="130"/>
+        <line class="topo-line-glow topo-line-anim" x1="155" y1="130" x2="280" y2="130" stroke="#5ee7ff"/>
+
+        <!-- Safety → Primary (curve up) -->
+        <path class="topo-line topo-line-anim" d="M420,130 C480,130 480,70 540,70" style="animation-delay:-.5s"/>
+        <path class="topo-line-glow topo-line-anim" d="M420,130 C480,130 480,70 540,70" stroke="#a7ff6a" style="animation-delay:-.5s"/>
+
+        <!-- Safety → Fallback (curve down) -->
+        <path class="topo-line topo-line-anim" d="M420,130 C480,130 480,190 540,190" style="animation-delay:-1s"/>
+        <path class="topo-line-glow topo-line-anim" d="M420,130 C480,130 480,190 540,190" stroke="#ff8a5b" style="animation-delay:-1s"/>
+
+        <!-- Primary → Output (curve down) -->
+        <path class="topo-line topo-line-anim" d="M680,70 C740,70 740,130 760,130" style="animation-delay:-1.5s"/>
+        <path class="topo-line-glow topo-line-anim" d="M680,70 C740,70 740,130 760,130" stroke="#5ee7ff" style="animation-delay:-1.5s"/>
+
+        <!-- Fallback → Output (curve up) -->
+        <path class="topo-line topo-line-anim" d="M680,190 C740,190 740,130 760,130" style="animation-delay:-2s"/>
+        <path class="topo-line-glow topo-line-anim" d="M680,190 C740,190 740,130 760,130" stroke="#ff8a5b" style="animation-delay:-2s"/>
+
+        <!-- ── Animated Flow Dots ── -->
+        <!-- Incoming → Safety -->
+        <circle r="4" fill="#5ee7ff" opacity="0">
+          <animateMotion dur="1.5s" repeatCount="indefinite" path="M155,130 L280,130"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/>
         </circle>
+        <circle r="4" fill="#5ee7ff" opacity="0">
+          <animateMotion dur="1.5s" repeatCount="indefinite" begin="0.75s" path="M155,130 L280,130"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.75s"/>
+        </circle>
+
         <!-- Safety → Primary -->
-        <line class="topo-line" x1="35%" y1="42%" x2="47%" y2="28%" stroke="var(--border-1)" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <circle class="flow-dot fd-2" cx="41%" cy="35%" r="3" fill="var(--accent-3)" opacity=".8">
-          <animate attributeName="cx" values="35%;47%" dur="1.8s" repeatCount="indefinite"/>
-          <animate attributeName="cy" values="42%;28%" dur="1.8s" repeatCount="indefinite"/>
+        <circle r="3.5" fill="#a7ff6a" opacity="0">
+          <animateMotion dur="1.8s" repeatCount="indefinite" path="M420,130 C480,130 480,70 540,70"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/>
         </circle>
+        <circle r="3.5" fill="#a7ff6a" opacity="0">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s" path="M420,130 C480,130 480,70 540,70"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.9s"/>
+        </circle>
+
         <!-- Safety → Fallback -->
-        <line class="topo-line" x1="35%" y1="58%" x2="47%" y2="72%" stroke="var(--border-1)" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <circle class="flow-dot fd-3" cx="41%" cy="65%" r="3" fill="#ff8a5b" opacity=".8">
-          <animate attributeName="cx" values="35%;47%" dur="2s" repeatCount="indefinite"/>
-          <animate attributeName="cy" values="58%;72%" dur="2s" repeatCount="indefinite"/>
+        <circle r="3" fill="#ff8a5b" opacity="0">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M420,130 C480,130 480,190 540,190"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
         </circle>
+
         <!-- Primary → Output -->
-        <line class="topo-line" x1="63%" y1="28%" x2="82%" y2="50%" stroke="var(--border-1)" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <circle class="flow-dot fd-4" cx="72%" cy="39%" r="3" fill="var(--accent-1)" opacity=".8">
-          <animate attributeName="cx" values="63%;82%" dur="1.6s" repeatCount="indefinite"/>
-          <animate attributeName="cy" values="28%;50%" dur="1.6s" repeatCount="indefinite"/>
+        <circle r="3.5" fill="#5ee7ff" opacity="0">
+          <animateMotion dur="1.6s" repeatCount="indefinite" path="M680,70 C740,70 740,130 760,130"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/>
         </circle>
+        <circle r="3.5" fill="#5ee7ff" opacity="0">
+          <animateMotion dur="1.6s" repeatCount="indefinite" begin="0.8s" path="M680,70 C740,70 740,130 760,130"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite" begin="0.8s"/>
+        </circle>
+
         <!-- Fallback → Output -->
-        <line class="topo-line" x1="63%" y1="72%" x2="82%" y2="50%" stroke="var(--border-1)" stroke-width="1.5" stroke-dasharray="4 4"/>
-        <circle class="flow-dot fd-5" cx="72%" cy="61%" r="3" fill="#ff8a5b" opacity=".8">
-          <animate attributeName="cx" values="63%;82%" dur="1.9s" repeatCount="indefinite"/>
-          <animate attributeName="cy" values="72%;50%" dur="1.9s" repeatCount="indefinite"/>
+        <circle r="3" fill="#ff8a5b" opacity="0">
+          <animateMotion dur="1.9s" repeatCount="indefinite" path="M680,190 C740,190 740,130 760,130"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.9s" repeatCount="indefinite"/>
         </circle>
+
+        <!-- ── Nodes ── -->
+        <!-- Incoming -->
+        <rect class="topo-node-bg" x="20" y="100" width="135" height="60" fill="rgba(94,231,255,.08)" stroke="rgba(94,231,255,.3)" stroke-width="1"/>
+        <text class="topo-node-text" x="87" y="128" text-anchor="middle" fill="#5ee7ff">Incoming</text>
+        <text class="topo-node-sub" x="87" y="145" text-anchor="middle" id="topo-incoming-sub">12,847 QUERIES</text>
+
+        <!-- Safety Layer -->
+        <rect class="topo-node-bg" id="topo-safety-bg" x="280" y="100" width="140" height="60" fill="rgba(167,255,106,.06)" stroke="rgba(167,255,106,.3)" stroke-width="1"/>
+        <text class="topo-node-text" x="350" y="128" text-anchor="middle" fill="#a7ff6a" id="topo-safety-text">Safety Layer</text>
+        <text class="topo-node-sub" x="350" y="145" text-anchor="middle" id="topo-safety-sub">ANALYZING</text>
+        <!-- Pulsing ring on safety node -->
+        <rect x="278" y="98" width="144" height="64" rx="13" ry="13" fill="none" stroke="rgba(167,255,106,.15)" stroke-width="1">
+          <animate attributeName="stroke-opacity" values=".15;.4;.15" dur="2s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Primary Model -->
+        <rect class="topo-node-bg" id="topo-primary-bg" x="540" y="40" width="140" height="60" fill="rgba(94,231,255,.08)" stroke="rgba(94,231,255,.3)" stroke-width="1"/>
+        <text class="topo-node-text" x="610" y="68" text-anchor="middle" fill="#5ee7ff" id="topo-primary-text">Primary Model</text>
+        <text class="topo-node-sub" x="610" y="85" text-anchor="middle" id="topo-primary-sub">11,600 ROUTED</text>
+
+        <!-- Fallback Model -->
+        <rect class="topo-node-bg" id="topo-fallback-bg" x="540" y="160" width="140" height="60" fill="rgba(255,138,91,.06)" stroke="rgba(255,138,91,.3)" stroke-width="1"/>
+        <text class="topo-node-text" x="610" y="188" text-anchor="middle" fill="#ff8a5b" id="topo-fallback-text">Fallback Model</text>
+        <text class="topo-node-sub" x="610" y="205" text-anchor="middle" id="topo-fallback-sub">1,247 REROUTED</text>
+
+        <!-- Output -->
+        <rect class="topo-node-bg" x="760" y="100" width="120" height="60" fill="rgba(94,231,255,.08)" stroke="rgba(94,231,255,.3)" stroke-width="1"/>
+        <text class="topo-node-text" x="820" y="128" text-anchor="middle" fill="#5ee7ff">Output</text>
+        <text class="topo-node-sub" x="820" y="145" text-anchor="middle">SAFE DELIVERY</text>
+
+        <!-- Flow volume labels on lines -->
+        <text x="218" y="120" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--text-3)" opacity=".7">100%</text>
+        <text x="470" y="86" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="rgba(167,255,106,.7)">90.3%</text>
+        <text x="470" y="178" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="rgba(255,138,91,.7)">9.7%</text>
       </svg>
     </div>
   </div>
@@ -741,21 +800,24 @@ function simulateIncident() {
   btn.textContent = 'Simulating…';
 
   /* Animate topology */
-  var safety = document.getElementById('topo-safety');
-  var primary = document.getElementById('topo-primary');
-  var fallback = document.getElementById('topo-fallback');
+  var safetyBg = document.getElementById('topo-safety-bg');
+  var primaryBg = document.getElementById('topo-primary-bg');
+  var fallbackBg = document.getElementById('topo-fallback-bg');
+  var safetySub = document.getElementById('topo-safety-sub');
+  var primarySub = document.getElementById('topo-primary-sub');
+  var fallbackSub = document.getElementById('topo-fallback-sub');
 
-  safety.classList.add('intercepted');
-  safety.querySelector('.topo-sub').textContent = 'INTERCEPTED';
+  safetyBg.classList.add('intercepted');
+  safetySub.textContent = 'INTERCEPTED';
 
   setTimeout(function() {
-    primary.classList.add('blocked');
-    primary.querySelector('.topo-sub').textContent = 'BLOCKED';
+    primaryBg.classList.add('blocked');
+    primarySub.textContent = 'BLOCKED';
   }, 600);
 
   setTimeout(function() {
-    fallback.classList.add('active-fb');
-    fallback.querySelector('.topo-sub').textContent = 'ACTIVATED';
+    fallbackBg.classList.add('active-fb');
+    fallbackSub.textContent = 'ACTIVATED';
   }, 1200);
 
   /* Inject incident row after animation */
@@ -802,12 +864,12 @@ function simulateIncident() {
 
     /* Reset topology after a beat */
     setTimeout(function() {
-      safety.classList.remove('intercepted');
-      safety.querySelector('.topo-sub').textContent = 'Analyzing';
-      primary.classList.remove('blocked');
-      primary.querySelector('.topo-sub').textContent = '11,600 routed';
-      fallback.classList.remove('active-fb');
-      fallback.querySelector('.topo-sub').textContent = '1,247 rerouted';
+      safetyBg.classList.remove('intercepted');
+      safetySub.textContent = 'ANALYZING';
+      primaryBg.classList.remove('blocked');
+      primarySub.textContent = '11,600 ROUTED';
+      fallbackBg.classList.remove('active-fb');
+      fallbackSub.textContent = '1,247 REROUTED';
       btn.disabled = false;
       btn.textContent = 'Simulate Incident';
     }, 2000);
