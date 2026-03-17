@@ -758,6 +758,141 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 
   </div>
 
+  <!-- ═══ AGENT CHAIN MONITOR ═══ -->
+  <div class="card" style="margin-top:24px">
+    <div class="card-label"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#5ee7ff;margin-right:6px;animation:pulse 2s infinite"></span>Agent Chain Monitor</div>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3);margin-bottom:16px">Live agent chains executing across connected applications — SnowCrash evaluates each step against Lab vulnerability fingerprints and reroutes individual steps to safe models when needed.</p>
+    
+    <div style="display:flex;flex-direction:column;gap:12px" id="router-agent-chains">
+      <!-- Chain 1: Running -->
+      <div style="background:rgba(0,0,0,.2);border:1px solid var(--border-1);border-radius:10px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--text-1)">Salesforce Einstein &mdash; Lead Qualification Pipeline</span>
+          </div>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(94,231,255,.1);color:#5ee7ff;text-transform:uppercase;letter-spacing:.5px">Running</span>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);margin-bottom:10px;display:flex;gap:12px">
+          <span>Primary: GPT-5.4</span>
+          <span>6 steps</span>
+          <span>Started 2 min ago</span>
+          <span style="color:#ff8a5b">&#9888; 1 step rerouted</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">1</span>
+            <span style="flex:1">Fetch new leads from CRM API</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">2</span>
+            <span style="flex:1">Enrich lead data from LinkedIn</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:4px;background:rgba(255,138,91,.06);border:1px solid rgba(255,138,91,.15);font-family:'IBM Plex Mono',monospace;font-size:10px;color:#ff8a5b">
+            <span style="width:18px;text-align:center;font-weight:600">3</span>
+            <span style="flex:1">Score leads against ICP criteria &mdash; <span style="font-size:9px;opacity:.8">matches PII Exposure fingerprint (Breach Lab)</span></span>
+            <span style="font-size:9px;color:var(--text-3)">&rarr; Claude Opus 4.6</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(255,138,91,.15);color:#ff8a5b">Rerouted</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">4</span>
+            <span style="flex:1">Update CRM with scores</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);opacity:.5">
+            <span style="width:18px;text-align:center;font-weight:600">5</span>
+            <span style="flex:1">Draft personalized outreach email</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(255,255,255,.04);color:var(--text-3)">...</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);opacity:.5">
+            <span style="width:18px;text-align:center;font-weight:600">6</span>
+            <span style="flex:1">Send to sales rep for review</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(255,255,255,.04);color:var(--text-3)">...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 2: Intervened -->
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,138,91,.15);border-radius:10px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--text-1)">GitHub Copilot &mdash; PR Review Agent</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(255,138,91,.1);color:#ff8a5b;text-transform:uppercase;letter-spacing:.5px">Intervened</span>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);margin-bottom:10px;display:flex;gap:12px">
+          <span>Primary: GPT-5.4</span>
+          <span>5 steps</span>
+          <span>Completed 5 min ago</span>
+          <span style="color:#ff8a5b">&#9888; 2 steps rerouted</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">1</span>
+            <span style="flex:1">Fetch open PR diff from GitHub API</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:4px;background:rgba(255,138,91,.06);border:1px solid rgba(255,138,91,.15);font-family:'IBM Plex Mono',monospace;font-size:10px;color:#ff8a5b">
+            <span style="width:18px;text-align:center;font-weight:600">2</span>
+            <span style="flex:1">Analyze code for security vulns &mdash; <span style="font-size:9px;opacity:.8">matches Vulnerable Code Gen (Control Lab)</span></span>
+            <span style="font-size:9px;color:var(--text-3)">&rarr; Claude Sonnet 4.6</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(255,138,91,.15);color:#ff8a5b">Rerouted</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:4px;background:rgba(255,138,91,.06);border:1px solid rgba(255,138,91,.15);font-family:'IBM Plex Mono',monospace;font-size:10px;color:#ff8a5b">
+            <span style="width:18px;text-align:center;font-weight:600">3</span>
+            <span style="flex:1">Check for leaked secrets in diff &mdash; <span style="font-size:9px;opacity:.8">matches Secret Exposure (Breach Lab)</span></span>
+            <span style="font-size:9px;color:var(--text-3)">&rarr; Claude Sonnet 4.6</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(255,138,91,.15);color:#ff8a5b">Rerouted</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">4</span>
+            <span style="flex:1">Generate review comments</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">5</span>
+            <span style="flex:1">Post review to GitHub</span>
+            <span style="font-size:9px;color:var(--text-3)">GPT-5.4</span>
+            <span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 3: Clean completion -->
+      <div style="background:rgba(0,0,0,.2);border:1px solid rgba(167,255,106,.1);border-radius:10px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--text-1)">Zendesk AI &mdash; Ticket Resolution Agent</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;background:rgba(167,255,106,.1);color:#a7ff6a;text-transform:uppercase;letter-spacing:.5px">Completed</span>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);margin-bottom:10px;display:flex;gap:12px">
+          <span>Primary: DeepSeek V3.2</span>
+          <span>4 steps</span>
+          <span>Completed 11 min ago</span>
+          <span style="color:#a7ff6a">&#10003; No interventions</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">1</span><span style="flex:1">Classify incoming support ticket</span><span style="font-size:9px;color:var(--text-3)">DeepSeek V3.2</span><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">2</span><span style="flex:1">Search knowledge base for resolution</span><span style="font-size:9px;color:var(--text-3)">DeepSeek V3.2</span><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">3</span><span style="flex:1">Draft customer response</span><span style="font-size:9px;color:var(--text-3)">DeepSeek V3.2</span><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2)">
+            <span style="width:18px;text-align:center;font-weight:600">4</span><span style="flex:1">Close ticket and update CRM</span><span style="font-size:9px;color:var(--text-3)">DeepSeek V3.2</span><span style="font-size:8px;padding:1px 5px;border-radius:2px;background:rgba(167,255,106,.1);color:#a7ff6a">&#10003;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </main>
 
 <script>

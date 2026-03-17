@@ -243,6 +243,30 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 .app-tp-pill.active[data-tier="maximum"] { background: rgba(196,136,255,.1); border-color: rgba(196,136,255,.25); color: var(--accent-3); }
 .app-uc-pill.active { background: rgba(94,231,255,.1); border-color: rgba(94,231,255,.25); color: var(--accent-1); }
 
+/* Agent Chain in Modal */
+.agent-chain-card { background: rgba(0,0,0,.2); border: 1px solid var(--border-1); border-radius: 10px; padding: 14px; }
+.agent-chain-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.agent-chain-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-1); }
+.agent-chain-status { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: .5px; }
+.agent-chain-status.running { background: rgba(94,231,255,.1); color: #5ee7ff; }
+.agent-chain-status.completed { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.agent-chain-status.intervened { background: rgba(255,138,91,.1); color: #ff8a5b; }
+.agent-chain-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); margin-bottom: 10px; display: flex; gap: 12px; }
+.agent-chain-steps { display: flex; flex-direction: column; gap: 4px; }
+.agent-step { display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; }
+.agent-step.safe { color: var(--text-2); }
+.agent-step.rerouted { background: rgba(255,138,91,.06); color: #ff8a5b; border: 1px solid rgba(255,138,91,.15); }
+.agent-step.blocked { background: rgba(255,138,138,.06); color: #ff8a8a; border: 1px solid rgba(255,138,138,.15); }
+.agent-step.pending { color: var(--text-3); opacity: .5; }
+.agent-step-num { width: 18px; text-align: center; font-weight: 600; }
+.agent-step-action { flex: 1; }
+.agent-step-model { font-size: 9px; color: var(--text-3); white-space: nowrap; }
+.agent-step-badge { font-size: 8px; padding: 1px 5px; border-radius: 2px; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+.agent-step-badge.ok { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.agent-step-badge.rerouted { background: rgba(255,138,91,.15); color: #ff8a5b; }
+.agent-step-badge.blocked { background: rgba(255,138,138,.15); color: #ff8a8a; }
+.agent-step-badge.pending { background: rgba(255,255,255,.04); color: var(--text-3); }
+
 /* ── Scroll Animations (Improvement #8) ── */
 .scroll-reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
 .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
@@ -508,6 +532,76 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
             <button class="routing-pill" data-val="full" onclick="selectUserControl(this)">Full</button>
           </div>
           <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:6px;line-height:1.5" id="user-control-desc">Users can upgrade up to Enhanced tier. Maximum requires admin approval.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ AGENT POLICIES ═══ -->
+  <div class="card routing-policy-panel scroll-reveal" style="margin-top:0">
+    <div class="card-label">Agent Governance Policies</div>
+    <div class="section-sub">Configure how autonomous AI agents operate within the enterprise — controlling autonomy, tool access, and intervention thresholds</div>
+    <div class="routing-policy-grid">
+      <div class="routing-tiers">
+        <div class="tier-card active" data-tier="supervised" style="cursor:default">
+          <div class="tier-card-name" style="color:#ffc95b">Supervised</div>
+          <div class="tier-card-desc">Every agent action requires human approval before execution. Highest safety, lowest throughput.</div>
+          <div class="tier-card-models"><span>Human approves each step</span> <span>Full audit trail</span> <span>Zero autonomous actions</span></div>
+        </div>
+        <div class="tier-card" data-tier="semi-auto" style="cursor:default">
+          <div class="tier-card-name" style="color:var(--accent-1)">Semi-Autonomous</div>
+          <div class="tier-card-desc">Low-risk actions auto-approved. High-risk actions flagged for human review based on risk scoring.</div>
+          <div class="tier-card-models"><span>Auto-approve low-risk</span> <span>Flag high-risk steps</span> <span>Risk threshold: 60/100</span></div>
+        </div>
+        <div class="tier-card" data-tier="full-auto" style="cursor:default">
+          <div class="tier-card-name" style="color:var(--accent-3)">Full Autonomous</div>
+          <div class="tier-card-desc">Agent runs freely within tool and data permissions. SnowCrash monitors and can circuit-break if Lab vulnerabilities are matched.</div>
+          <div class="tier-card-models"><span>Full autonomy</span> <span>Circuit-breaker active</span> <span>Step-level rerouting</span></div>
+        </div>
+      </div>
+      <div class="routing-controls">
+        <div class="routing-control-group">
+          <div class="routing-control-label">Default Agent Autonomy</div>
+          <div class="routing-pills">
+            <button class="routing-pill active" data-val="supervised" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Supervised</button>
+            <button class="routing-pill" data-val="semi-auto" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Semi-Auto</button>
+            <button class="routing-pill" data-val="full-auto" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Full Auto</button>
+          </div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">Max Chain Length</div>
+          <div class="routing-pills">
+            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">5 steps</button>
+            <button class="routing-pill active" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">10 steps</button>
+            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">25 steps</button>
+            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Unlimited</button>
+          </div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">Chain Budget Cap</div>
+          <div class="routing-budget-row">
+            <div class="routing-budget-amount">$0.85</div>
+            <div class="routing-budget-cap">per chain max</div>
+          </div>
+          <div class="routing-budget-track"><div class="routing-budget-fill" style="width:42%;background:var(--accent-3)"></div></div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">Step-Level Model Rerouting</div>
+          <div class="routing-pills">
+            <button class="routing-pill active" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Enabled</button>
+            <button class="routing-pill" onclick="this.parentElement.querySelectorAll('.routing-pill').forEach(p=>p.classList.remove('active'));this.classList.add('active')">Disabled</button>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:6px;line-height:1.5">When a step matches a Lab vulnerability fingerprint, reroute that specific step to a safe model mid-chain.</div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">Approval Gates</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> External API calls</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Data deletion / modification</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" checked style="accent-color:#5ee7ff"> Email / message sending</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> File system access</label>
+            <label style="display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer"><input type="checkbox" style="accent-color:#5ee7ff"> Cross-tenant data access</label>
+          </div>
         </div>
       </div>
     </div>
@@ -1719,8 +1813,16 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="app-modal-intercepts" id="am-intercept-list"></div>
     </div>
 
+    <!-- Agent Chain Activity -->
+    <div class="app-modal-section">
+      <div class="app-modal-section-title"><span class="ams-dot" style="background:#5ee7ff"></span> Agent Chain Activity</div>
+      <div class="section-sub" style="margin-bottom:10px;font-size:10px">Live autonomous agent chains executing within this application — SnowCrash evaluates each step</div>
+      <div id="am-agent-chains" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
     <div class="app-modal-footer">
       <a href="router.html" class="app-modal-btn primary">View in Router</a>
+      <a href="agent-lab.html" class="app-modal-btn secondary">Run Agent Eval</a>
       <a href="breach-lab.html" class="app-modal-btn secondary">Run Crash Test</a>
     </div>
   </div>
@@ -2364,6 +2466,75 @@ var appData = {
     ]}
 };
 
+
+function generateAgentChains(appName, primaryModel) {
+  var poolModels = ['Claude Opus 4.6','GPT-5 Pro','Gemini 3.1 Pro','GPT-5.4','Claude Sonnet 4.6','Gemini 2.5 Pro','Grok 3','DeepSeek V3.2','Llama 4 Maverick','Qwen 3 235B'].filter(function(m){ return m !== primaryModel; });
+  var safeModel = poolModels[Math.floor(Math.random()*3)];
+  var chains = {
+    'Salesforce Einstein': [
+      { name: 'Lead Qualification Pipeline', status: 'running', started: '2 min ago', intervened: 1, steps: [
+        { action: 'Fetch new leads from CRM API', status: 'ok' },
+        { action: 'Enrich lead data from LinkedIn', status: 'ok' },
+        { action: 'Score leads against ICP criteria', status: 'rerouted', rerouted_to: safeModel },
+        { action: 'Update CRM with scores', status: 'ok' },
+        { action: 'Draft personalized outreach email', status: 'pending' },
+        { action: 'Send to sales rep for review', status: 'pending' }
+      ]},
+      { name: 'Pipeline Forecast Agent', status: 'completed', started: '18 min ago', intervened: 0, steps: [
+        { action: 'Query pipeline deals from CRM', status: 'ok' },
+        { action: 'Analyze historical close rates', status: 'ok' },
+        { action: 'Generate probability-weighted forecast', status: 'ok' },
+        { action: 'Post forecast to #sales-ops Slack', status: 'ok' }
+      ]}
+    ],
+    'GitHub Copilot': [
+      { name: 'PR Review & Merge Agent', status: 'intervened', started: '5 min ago', intervened: 2, steps: [
+        { action: 'Fetch open PR diff from GitHub API', status: 'ok' },
+        { action: 'Analyze code for security vulnerabilities', status: 'rerouted', rerouted_to: safeModel },
+        { action: 'Check for leaked secrets in diff', status: 'rerouted', rerouted_to: safeModel },
+        { action: 'Generate review comments', status: 'ok' },
+        { action: 'Post review to GitHub', status: 'ok' }
+      ]},
+      { name: 'Dependency Update Agent', status: 'running', started: '1 min ago', intervened: 0, steps: [
+        { action: 'Scan package.json for outdated deps', status: 'ok' },
+        { action: 'Check CVE database for vulnerabilities', status: 'ok' },
+        { action: 'Generate upgrade PR with changelog', status: 'pending' }
+      ]}
+    ],
+    'M365 Copilot': [
+      { name: 'Meeting Summary Agent', status: 'completed', started: '12 min ago', intervened: 1, steps: [
+        { action: 'Transcribe Teams meeting recording', status: 'ok' },
+        { action: 'Extract action items and decisions', status: 'ok' },
+        { action: 'Cross-reference with attendee calendars', status: 'rerouted', rerouted_to: safeModel },
+        { action: 'Post summary to Teams channel', status: 'ok' }
+      ]},
+      { name: 'Email Triage Agent', status: 'running', started: '30 sec ago', intervened: 0, steps: [
+        { action: 'Scan inbox for unread messages', status: 'ok' },
+        { action: 'Classify urgency and categorize', status: 'ok' },
+        { action: 'Draft responses for routine emails', status: 'pending' },
+        { action: 'Flag high-priority for human review', status: 'pending' }
+      ]}
+    ]
+  };
+  // Default chains for apps not explicitly defined
+  var defaults = [
+    { name: 'Data Processing Pipeline', status: 'running', started: '3 min ago', intervened: 1, steps: [
+      { action: 'Fetch data from source API', status: 'ok' },
+      { action: 'Transform and validate records', status: 'ok' },
+      { action: 'Apply business rules', status: 'rerouted', rerouted_to: safeModel },
+      { action: 'Write results to database', status: 'pending' },
+      { action: 'Generate summary report', status: 'pending' }
+    ]},
+    { name: 'Automated Response Agent', status: 'completed', started: '8 min ago', intervened: 0, steps: [
+      { action: 'Analyze incoming request', status: 'ok' },
+      { action: 'Retrieve relevant knowledge base articles', status: 'ok' },
+      { action: 'Generate contextual response', status: 'ok' },
+      { action: 'Submit for delivery', status: 'ok' }
+    ]}
+  ];
+  return chains[appName] || defaults;
+}
+
 function openAppModal(cardEl) {
   var name = cardEl.querySelector('.app-card-name').textContent;
   var data = appData[name];
@@ -2459,6 +2630,38 @@ function openAppModal(cardEl) {
       '<div class="ami-reroute-info">Rerouted to ' + (r.target || 'Model Pool') + '</div></div>' +
       '<span class="ami-badge reroute">' + r.vuln + '</span>';
     listEl.appendChild(row);
+  });
+
+  // Render Agent Chains
+  var chainsEl = document.getElementById('am-agent-chains');
+  chainsEl.innerHTML = '';
+  var agentChains = generateAgentChains(name, data.model);
+  agentChains.forEach(function(chain) {
+    var card = document.createElement('div');
+    card.className = 'agent-chain-card';
+    var stepsHtml = chain.steps.map(function(step, i) {
+      var badge = step.status === 'ok' ? '<span class="agent-step-badge ok">\u2713</span>' :
+                  step.status === 'rerouted' ? '<span class="agent-step-badge rerouted">Rerouted</span>' :
+                  step.status === 'blocked' ? '<span class="agent-step-badge blocked">Blocked</span>' :
+                  '<span class="agent-step-badge pending">...</span>';
+      var modelInfo = step.rerouted_to ? '<span class="agent-step-model">\u2192 ' + step.rerouted_to + '</span>' :
+                      step.status !== 'pending' ? '<span class="agent-step-model">' + data.model + '</span>' : '';
+      return '<div class="agent-step ' + step.status + '">' +
+        '<span class="agent-step-num">' + (i+1) + '</span>' +
+        '<span class="agent-step-action">' + step.action + '</span>' +
+        modelInfo + badge + '</div>';
+    }).join('');
+    card.innerHTML = '<div class="agent-chain-header">' +
+      '<div class="agent-chain-name">' + chain.name + '</div>' +
+      '<span class="agent-chain-status ' + chain.status + '">' + chain.status + '</span>' +
+      '</div>' +
+      '<div class="agent-chain-meta">' +
+      '<span>' + chain.steps.length + ' steps</span>' +
+      '<span>Started ' + chain.started + '</span>' +
+      (chain.intervened ? '<span style="color:#ff8a5b">\u26A0 ' + chain.intervened + ' step(s) rerouted</span>' : '') +
+      '</div>' +
+      '<div class="agent-chain-steps">' + stepsHtml + '</div>';
+    chainsEl.appendChild(card);
   });
 
   overlay.classList.add('open');
