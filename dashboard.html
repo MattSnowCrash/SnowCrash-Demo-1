@@ -187,6 +187,49 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 /* ── Chart Tooltip (Improvement #7) ── */
 .chart-tooltip { position: absolute; z-index: 50; background: rgba(16,18,27,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(94,231,255,.18); border-radius: 6px; padding: 6px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-1); pointer-events: none; white-space: nowrap; display: none; }
 
+/* ── Routing Policy Panel ── */
+.routing-policy-panel { margin-bottom: 28px; }
+.routing-policy-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; margin-top: 16px; }
+.routing-tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tier-card { padding: 18px 16px; border-radius: 12px; border: 1px solid var(--border-1); background: rgba(255,255,255,.02); cursor: pointer; transition: all .25s; position: relative; }
+.tier-card:hover { border-color: rgba(94,231,255,.15); background: rgba(255,255,255,.03); }
+.tier-card.active { border-color: rgba(94,231,255,.35); background: rgba(94,231,255,.04); box-shadow: 0 0 20px rgba(94,231,255,.06); }
+.tier-card.active::before { content: ''; position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-1); box-shadow: 0 0 8px rgba(94,231,255,.5); }
+.tier-card-name { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-1); margin-bottom: 4px; }
+.tier-card-price { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.tier-card-desc { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); line-height: 1.5; margin-bottom: 10px; }
+.tier-card-models { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-2); line-height: 1.6; }
+.tier-card-models span { display: inline-block; padding: 1px 6px; border-radius: 3px; border: 1px solid var(--border-1); margin: 2px 2px 2px 0; font-size: 9px; }
+.routing-controls { display: flex; flex-direction: column; gap: 14px; }
+.routing-control-group { padding: 14px 16px; border-radius: 10px; border: 1px solid var(--border-1); background: rgba(255,255,255,.02); }
+.routing-control-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+.routing-pills { display: flex; gap: 4px; }
+.routing-pill { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 5px 12px; border-radius: 4px; border: 1px solid var(--border-1); background: transparent; color: var(--text-3); cursor: pointer; transition: all .2s; flex: 1; text-align: center; }
+.routing-pill.active { background: rgba(94,231,255,.12); border-color: rgba(94,231,255,.3); color: var(--accent-1); }
+.routing-pill:hover:not(.active) { border-color: rgba(94,231,255,.15); color: var(--text-2); }
+.routing-budget-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.routing-budget-amount { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 600; color: var(--text-1); }
+.routing-budget-cap { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); }
+.routing-budget-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+.routing-budget-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent-1), var(--accent-3)); transition: width .8s ease; }
+
+/* ── Tier Badges on App Cards ── */
+.app-tier-badge { font-family: 'IBM Plex Mono', monospace; font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 2px 7px; border-radius: 4px; white-space: nowrap; margin-left: auto; flex-shrink: 0; align-self: flex-start; }
+.app-tier-badge.standard { background: rgba(255,201,91,.1); color: #ffc95b; }
+.app-tier-badge.enhanced { background: rgba(94,231,255,.1); color: #5ee7ff; }
+.app-tier-badge.maximum { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.app-tier-badge.user-choice { background: rgba(196,136,255,.1); color: #c488ff; }
+
+/* ── Modal Routing Config Section ── */
+.app-modal-routing { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-1); background: rgba(255,255,255,.02); }
+.amr-tier-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+.amr-tier-value { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--accent-1); }
+.amr-model-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.amr-model-chip { font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border-1); color: var(--text-2); background: rgba(255,255,255,.03); }
+.amr-model-chip.excluded { opacity: .35; text-decoration: line-through; color: var(--text-3); }
+.amr-model-chip.primary { border-color: rgba(94,231,255,.3); color: var(--accent-1); background: rgba(94,231,255,.06); }
+.amr-cost-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; color: var(--accent-3); }
+
 /* ── Scroll Animations (Improvement #8) ── */
 .scroll-reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
 .scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
@@ -251,6 +294,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   .app-modal-kpis { padding: 16px 18px; }
   .app-modal-section { padding: 0 18px 16px; }
   .app-modal-footer { padding: 0 18px 18px; }
+  .app-modal-routing { grid-template-columns: 1fr; text-align: center; }
 }
 
 /* ── Responsive ── */
@@ -259,12 +303,16 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   .apps-grid { grid-template-columns: repeat(3, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .traffic-sources { grid-template-columns: 1fr; }
+  .routing-policy-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
   .lab-cards, .nav-cards { grid-template-columns: 1fr; }
   .apps-grid { grid-template-columns: repeat(2, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .worst-offender { flex-direction: column; align-items: flex-start; }
+  .routing-tiers { grid-template-columns: 1fr; }
+  .routing-pills { flex-direction: column; }
+  .app-modal-routing { grid-template-columns: 1fr; }
 }
 @media (max-width: 430px) {
   .lab-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -388,6 +436,69 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <a href="index.html" class="worst-offender-link">View Report &rarr;</a>
   </div>
 
+  <!-- ═══ ENTERPRISE ROUTING POLICY ═══ -->
+  <div class="card routing-policy-panel scroll-reveal">
+    <div class="card-label">Enterprise Routing Policy</div>
+    <div class="section-sub">Configure how the Safety Router selects models from the pool — balancing cost, performance, and safety</div>
+    <div class="routing-policy-grid">
+      <!-- Tier Cards -->
+      <div class="routing-tiers">
+        <div class="tier-card" data-tier="standard" onclick="selectTier(this)">
+          <div class="tier-card-name">Standard</div>
+          <div class="tier-card-price" style="color:#ffc95b">~$0.0005<span style="font-size:9px;color:var(--text-3)">/query</span></div>
+          <div class="tier-card-desc">Cost-optimized routing. Best for high-volume, lower-stakes tasks.</div>
+          <div class="tier-card-models">
+            <span>DeepSeek-R1</span> <span>Qwen 2.5 72B</span> <span>Llama 4 Maverick</span> <span>Nemotron-4</span>
+          </div>
+        </div>
+        <div class="tier-card active" data-tier="enhanced" onclick="selectTier(this)">
+          <div class="tier-card-name">Enhanced</div>
+          <div class="tier-card-price" style="color:var(--accent-1)">~$0.010<span style="font-size:9px;color:var(--text-3)">/query</span></div>
+          <div class="tier-card-desc">Balanced cost and performance. Default for most enterprise workflows.</div>
+          <div class="tier-card-models">
+            <span>Gemini 3.1 Pro</span> <span>GPT-5</span> <span>Claude Sonnet 4.6</span>
+          </div>
+        </div>
+        <div class="tier-card" data-tier="maximum" onclick="selectTier(this)">
+          <div class="tier-card-name">Maximum</div>
+          <div class="tier-card-price" style="color:var(--accent-3)">~$0.020<span style="font-size:9px;color:var(--text-3)">/query</span></div>
+          <div class="tier-card-desc">Best-available models. For mission-critical and customer-facing use cases.</div>
+          <div class="tier-card-models">
+            <span>Claude Opus 4.6</span> <span>GPT-5.4</span> <span>Gemini 3.1 Pro</span>
+          </div>
+        </div>
+      </div>
+      <!-- Controls Column -->
+      <div class="routing-controls">
+        <div class="routing-control-group">
+          <div class="routing-control-label">Organization Default Tier</div>
+          <div class="routing-pills" id="default-tier-pills">
+            <button class="routing-pill" data-val="standard" onclick="selectPill(this)">Standard</button>
+            <button class="routing-pill active" data-val="enhanced" onclick="selectPill(this)">Enhanced</button>
+            <button class="routing-pill" data-val="maximum" onclick="selectPill(this)">Maximum</button>
+          </div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">Monthly Routing Budget</div>
+          <div class="routing-budget-row">
+            <div class="routing-budget-amount">$42,800</div>
+            <div class="routing-budget-cap">of $50,000</div>
+          </div>
+          <div class="routing-budget-track"><div class="routing-budget-fill" style="width:85.6%"></div></div>
+        </div>
+        <div class="routing-control-group">
+          <div class="routing-control-label">End-User Control Level</div>
+          <div class="routing-pills" id="user-control-pills">
+            <button class="routing-pill" data-val="locked" onclick="selectUserControl(this)">Locked</button>
+            <button class="routing-pill active" data-val="limited" onclick="selectUserControl(this)">Limited</button>
+            <button class="routing-pill" data-val="full" onclick="selectUserControl(this)">Full</button>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);margin-top:6px;line-height:1.5" id="user-control-desc">Users can upgrade up to Enhanced tier. Maximum requires admin approval.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ CONNECTED SaaS APPLICATIONS ═══ -->
   <div class="card-label" style="margin-bottom:4px">Connected SaaS Applications</div>
   <div class="section-sub" style="margin-bottom:16px">Third-party AI-powered applications monitored by SnowCrash</div>
@@ -397,11 +508,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon salesforce">&#9729;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Salesforce Einstein</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge maximum">Maximum</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">8,412</div><div class="app-metric-label">Queries today</div></div>
@@ -421,11 +533,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon servicenow">&#9881;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">ServiceNow AI</div>
           <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge maximum">Maximum</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">12,847</div><div class="app-metric-label">Queries today</div></div>
@@ -445,11 +558,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon notion">&#9998;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Notion AI</div>
           <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge user-choice">User Choice</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">6,204</div><div class="app-metric-label">Queries today</div></div>
@@ -469,11 +583,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon copilot">&#10094;/&#10095;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">GitHub Copilot</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge maximum">Maximum</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">9,731</div><div class="app-metric-label">Queries today</div></div>
@@ -493,11 +608,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon zendesk">&#9993;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Zendesk AI</div>
           <div class="app-card-model">Powered by DeepSeek-R1</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge standard">Standard</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">4,289</div><div class="app-metric-label">Queries today</div></div>
@@ -517,11 +633,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9783;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Workday AI</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge enhanced">Enhanced</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">3,817</div><div class="app-metric-label">Queries today</div></div>
@@ -541,11 +658,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#9993;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Slack AI</div>
           <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge user-choice">User Choice</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">11,204</div><div class="app-metric-label">Queries today</div></div>
@@ -565,11 +683,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9733;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">HubSpot AI</div>
           <div class="app-card-model">Powered by Gemini 3.1 Pro</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge enhanced">Enhanced</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">7,628</div><div class="app-metric-label">Queries today</div></div>
@@ -589,11 +708,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9672;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Intercom Fin</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge enhanced">Enhanced</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">5,934</div><div class="app-metric-label">Queries today</div></div>
@@ -613,11 +733,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.12)">&#9830;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Adobe Firefly</div>
           <div class="app-card-model">Powered by Firefly Model 3</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge user-choice">User Choice</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">2,847</div><div class="app-metric-label">Queries today</div></div>
@@ -637,11 +758,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.08)">&#9674;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">M365 Copilot</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge maximum">Maximum</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">18,396</div><div class="app-metric-label">Queries today</div></div>
@@ -667,11 +789,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon internal">&#9670;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Enterprise AI Assistant</div>
           <div class="app-card-model">Powered by Llama 4 Maverick</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge standard">Standard</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">6,349</div><div class="app-metric-label">Queries today</div></div>
@@ -691,11 +814,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(167,255,106,.1)">&#10094;&#10095;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Code Review Agent</div>
           <div class="app-card-model">Powered by Qwen 2.5 72B</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge standard">Standard</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">4,218</div><div class="app-metric-label">Queries today</div></div>
@@ -715,11 +839,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9782;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">HR Knowledge Base</div>
           <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge user-choice">User Choice</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">2,103</div><div class="app-metric-label">Queries today</div></div>
@@ -739,11 +864,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9881;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Data Pipeline Agent</div>
           <div class="app-card-model">Powered by Nemotron-4 340B</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge standard">Standard</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">8,741</div><div class="app-metric-label">Queries today</div></div>
@@ -763,11 +889,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(196,136,255,.1)">&#9998;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Doc Summarizer</div>
           <div class="app-card-model">Powered by Gemini 3.1 Pro</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge enhanced">Enhanced</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">3,492</div><div class="app-metric-label">Queries today</div></div>
@@ -787,11 +914,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="card app-card" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9670;</div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="app-card-name">Customer Insight Engine</div>
           <div class="app-card-model">Powered by DeepSeek-R1</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
+        <div class="app-tier-badge standard">Standard</div>
       </div>
       <div class="app-metrics">
         <div><div class="app-metric-value" style="color:var(--accent-1)">5,117</div><div class="app-metric-label">Queries today</div></div>
@@ -1480,6 +1608,25 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="amk"><div class="amk-value" style="color:#5ee7ff" id="am-latency"></div><div class="amk-label">Avg Latency</div></div>
     </div>
 
+    <!-- Routing Configuration -->
+    <div class="app-modal-section">
+      <div class="app-modal-section-title">Routing Configuration</div>
+      <div class="app-modal-routing" id="am-routing">
+        <div>
+          <div class="amr-tier-label">Current Tier</div>
+          <div class="amr-tier-value" id="am-tier-name">Enhanced</div>
+        </div>
+        <div>
+          <div class="amr-tier-label">Eligible Model Pool</div>
+          <div class="amr-model-list" id="am-tier-models"></div>
+        </div>
+        <div>
+          <div class="amr-tier-label">Est. Cost / Query</div>
+          <div class="amr-cost-value" id="am-tier-cost">~$0.010</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Lab Findings Section -->
     <div class="app-modal-section">
       <div class="app-modal-section-title">Crash Test Lab Findings</div>
@@ -1508,6 +1655,114 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 </div>
 
 <script>
+/* ══════════════════════════════════════════════
+   Routing Policy Panel Logic
+   ══════════════════════════════════════════════ */
+var currentOrgTier = 'enhanced';
+var currentUserControl = 'limited';
+
+var tierData = {
+  standard: { label: 'Standard', cost: '~$0.0005', models: ['DeepSeek-R1', 'Qwen 2.5 72B', 'Llama 4 Maverick', 'Nemotron-4'] },
+  enhanced: { label: 'Enhanced', cost: '~$0.010', models: ['Gemini 3.1 Pro', 'GPT-5', 'Claude Sonnet 4.6'] },
+  maximum:  { label: 'Maximum', cost: '~$0.020', models: ['Claude Opus 4.6', 'GPT-5.4', 'Gemini 3.1 Pro'] }
+};
+
+// App tier assignments
+var appTiers = {
+  'Salesforce Einstein': 'maximum',
+  'ServiceNow AI': 'maximum',
+  'Notion AI': 'user-choice',
+  'GitHub Copilot': 'maximum',
+  'Zendesk AI': 'standard',
+  'Workday AI': 'enhanced',
+  'Slack AI': 'user-choice',
+  'HubSpot AI': 'enhanced',
+  'Intercom Fin': 'enhanced',
+  'Adobe Firefly': 'user-choice',
+  'M365 Copilot': 'maximum',
+  'Enterprise AI Assistant': 'standard',
+  'Code Review Agent': 'standard',
+  'HR Knowledge Base': 'user-choice',
+  'Data Pipeline Agent': 'standard',
+  'Doc Summarizer': 'enhanced',
+  'Customer Insight Engine': 'standard'
+};
+
+function selectTier(el) {
+  document.querySelectorAll('.tier-card').forEach(function(c) { c.classList.remove('active'); });
+  el.classList.add('active');
+  // Sync org default pills
+  var tier = el.getAttribute('data-tier');
+  currentOrgTier = tier;
+  document.querySelectorAll('#default-tier-pills .routing-pill').forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('data-val') === tier);
+  });
+  updateAppTierBadges();
+}
+
+function selectPill(el) {
+  var parent = el.parentElement;
+  parent.querySelectorAll('.routing-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  // Sync tier card selection
+  currentOrgTier = el.getAttribute('data-val');
+  document.querySelectorAll('.tier-card').forEach(function(c) {
+    c.classList.toggle('active', c.getAttribute('data-tier') === currentOrgTier);
+  });
+  updateAppTierBadges();
+}
+
+function selectUserControl(el) {
+  var parent = el.parentElement;
+  parent.querySelectorAll('.routing-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+  currentUserControl = el.getAttribute('data-val');
+  var desc = document.getElementById('user-control-desc');
+  if (currentUserControl === 'locked') {
+    desc.textContent = 'All apps locked to the organization default tier. End users cannot change routing.';
+  } else if (currentUserControl === 'limited') {
+    desc.textContent = 'Users can upgrade up to Enhanced tier. Maximum requires admin approval.';
+  } else {
+    desc.textContent = 'Users can select any routing tier for their requests. Budget caps still apply.';
+  }
+  updateAppTierBadges();
+}
+
+function updateAppTierBadges() {
+  document.querySelectorAll('.app-card').forEach(function(card) {
+    var nameEl = card.querySelector('.app-card-name');
+    if (!nameEl) return;
+    var badge = card.querySelector('.app-tier-badge');
+    if (!badge) return;
+    var name = nameEl.textContent;
+    var assignedTier = appTiers[name];
+
+    if (currentUserControl === 'locked') {
+      // All apps show org default tier
+      badge.className = 'app-tier-badge ' + currentOrgTier;
+      badge.textContent = tierData[currentOrgTier].label;
+    } else if (currentUserControl === 'full') {
+      // Apps marked user-choice show "User Choice", others keep assignment
+      if (assignedTier === 'user-choice') {
+        badge.className = 'app-tier-badge user-choice';
+        badge.textContent = 'User Choice';
+      } else {
+        badge.className = 'app-tier-badge ' + assignedTier;
+        badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
+      }
+    } else {
+      // Limited: user-choice shows as user-choice, others show their assignment
+      if (assignedTier === 'user-choice') {
+        badge.className = 'app-tier-badge user-choice';
+        badge.textContent = 'User Choice';
+      } else {
+        badge.className = 'app-tier-badge ' + assignedTier;
+        badge.textContent = tierData[assignedTier] ? tierData[assignedTier].label : assignedTier;
+      }
+    }
+  });
+}
+
 /* ── Expand/collapse run details ── */
 function toggleDetail(id) {
   var row = document.getElementById(id);
@@ -1980,6 +2235,27 @@ function openAppModal(cardEl) {
   document.getElementById('am-rerouted').textContent = data.rerouted.toLocaleString();
   document.getElementById('am-rate').textContent = ((data.rerouted / data.queries) * 100).toFixed(1) + '%';
   document.getElementById('am-latency').textContent = data.latency;
+
+  // Routing configuration
+  var appTier = appTiers[name] || 'enhanced';
+  var effectiveTier = (appTier === 'user-choice') ? currentOrgTier : appTier;
+  var td = tierData[effectiveTier];
+  document.getElementById('am-tier-name').textContent = td.label + (appTier === 'user-choice' ? ' (User Choice)' : '');
+  document.getElementById('am-tier-name').style.color = effectiveTier === 'standard' ? '#ffc95b' : effectiveTier === 'maximum' ? 'var(--accent-3)' : 'var(--accent-1)';
+  document.getElementById('am-tier-cost').textContent = td.cost;
+  var modelsEl = document.getElementById('am-tier-models');
+  modelsEl.innerHTML = '';
+  // Show all pool models, highlight tier models, mark primary
+  var allPoolModels = ['Claude Opus 4.6','GPT-5.4','Gemini 3.1 Pro','Claude Sonnet 4.6','GPT-5','DeepSeek-R1','Qwen 2.5 72B','Llama 4 Maverick','Nemotron-4'];
+  var tierModels = td.models;
+  allPoolModels.forEach(function(m) {
+    var chip = document.createElement('span');
+    chip.className = 'amr-model-chip';
+    if (m === data.model) { chip.classList.add('primary'); chip.textContent = m + ' (primary)'; }
+    else if (tierModels.indexOf(m) === -1) { chip.classList.add('excluded'); chip.textContent = m; }
+    else { chip.textContent = m; }
+    modelsEl.appendChild(chip);
+  });
 
   // Lab vulnerability findings
   var vulnEl = document.getElementById('am-vulns');
