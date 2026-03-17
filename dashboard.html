@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="shared.css">
 <style>
 /* ── Connected Apps Grid ── */
-.apps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.apps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
 .app-card { text-decoration: none; color: inherit; transition: all .25s ease; }
 .app-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevated); }
 .app-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
@@ -192,13 +192,13 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .lab-cards, .nav-cards { grid-template-columns: repeat(2, 1fr); }
-  .apps-grid { grid-template-columns: repeat(2, 1fr); }
+  .apps-grid { grid-template-columns: repeat(3, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .traffic-sources { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
   .lab-cards, .nav-cards { grid-template-columns: 1fr; }
-  .apps-grid { grid-template-columns: 1fr; }
+  .apps-grid { grid-template-columns: repeat(2, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .worst-offender { flex-direction: column; align-items: flex-start; }
 }
@@ -285,9 +285,9 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="pulse-dot"></div>
     <span class="pulse-label">Platform Active</span>
     <div class="pulse-separator"></div>
-    <span class="pulse-meta">6 Apps Connected</span>
+    <span class="pulse-meta">12 Apps Connected</span>
     <div class="pulse-separator"></div>
-    <span class="pulse-meta">14 Models Monitored</span>
+    <span class="pulse-meta">23 Models Monitored</span>
     <div class="pulse-separator"></div>
     <span class="pulse-meta">Uptime 99.5%</span>
     <div class="pulse-separator"></div>
@@ -297,11 +297,11 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <!-- KPI Counters Row -->
   <div class="kpi-row scroll-reveal">
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:var(--accent-1)" data-target="47832" data-format="comma">0</div>
+      <div class="kpi-number" style="color:var(--accent-1)" data-target="124847" data-format="comma">0</div>
       <div class="kpi-label">AI Queries Today</div>
     </div>
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:#ff8a5b" data-target="1247" data-format="comma">0</div>
+      <div class="kpi-number" style="color:#ff8a5b" data-target="3891" data-format="comma">0</div>
       <div class="kpi-label">Threats Intercepted</div>
     </div>
     <div class="card kpi-box">
@@ -309,7 +309,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="kpi-label">Detection Rate</div>
     </div>
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:#c488ff" data-target="14" data-format="comma">0</div>
+      <div class="kpi-number" style="color:#c488ff" data-target="23" data-format="comma">0</div>
       <div class="kpi-label">Models Monitored</div>
     </div>
   </div>
@@ -442,42 +442,166 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="app-status-text">Elevated Intercepts</div>
       </div>
     </div>
+
+    <!-- Workday AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(255,201,91,.12)">&#9783;</div>
+        <div>
+          <div class="app-card-name">Workday AI</div>
+          <div class="app-card-model">Powered by GPT-5.4</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">3,817</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">48</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- Slack AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(167,255,106,.1)">&#9993;</div>
+        <div>
+          <div class="app-card-name">Slack AI</div>
+          <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">11,204</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">67</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- HubSpot AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9733;</div>
+        <div>
+          <div class="app-card-name">HubSpot AI</div>
+          <div class="app-card-model">Powered by Gemini 3.1 Pro</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">7,628</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">91</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- Intercom AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(94,231,255,.1)">&#9672;</div>
+        <div>
+          <div class="app-card-name">Intercom Fin</div>
+          <div class="app-card-model">Powered by GPT-5.4</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">5,934</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">128</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot amber"></div>
+        <div class="app-status-text">Elevated Intercepts</div>
+      </div>
+    </div>
+
+    <!-- Adobe Firefly -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(196,136,255,.12)">&#9830;</div>
+        <div>
+          <div class="app-card-name">Adobe Firefly</div>
+          <div class="app-card-model">Powered by Firefly Model 3</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">2,847</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">19</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- Microsoft 365 Copilot -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon" style="background:rgba(94,231,255,.08)">&#9674;</div>
+        <div>
+          <div class="app-card-name">M365 Copilot</div>
+          <div class="app-card-model">Powered by GPT-5.4</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">18,396</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">291</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
   </div>
 
   <!-- ═══ TRAFFIC SOURCE BREAKDOWN ═══ -->
   <div class="traffic-sources scroll-reveal">
     <div class="card">
       <div class="card-label">Traffic by Application</div>
-      <div class="section-sub" style="margin-bottom:16px">Percentage of total enterprise AI queries</div>
+      <div class="section-sub" style="margin-bottom:16px">Top sources by enterprise AI query volume</div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">ServiceNow</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:26.8%;background:#5ee7ff"></div></div>
-        <div class="traffic-bar-value" style="color:#5ee7ff">26.8%</div>
+        <div class="traffic-bar-label">M365 Copilot</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:100%;background:#5ee7ff"></div></div>
+        <div class="traffic-bar-value" style="color:#5ee7ff">14.7%</div>
       </div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">Copilot</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:20.3%;background:#a7ff6a"></div></div>
-        <div class="traffic-bar-value" style="color:#a7ff6a">20.3%</div>
+        <div class="traffic-bar-label">ServiceNow</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:70%;background:#5ee7ff;opacity:.8"></div></div>
+        <div class="traffic-bar-value" style="color:#5ee7ff">10.3%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Slack AI</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:61%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">9.0%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">GitHub Copilot</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:53%;background:#a7ff6a;opacity:.8"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">7.8%</div>
       </div>
       <div class="traffic-bar-row">
         <div class="traffic-bar-label">Salesforce</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:17.6%;background:#ffc95b"></div></div>
-        <div class="traffic-bar-value" style="color:#ffc95b">17.6%</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:46%;background:#ffc95b"></div></div>
+        <div class="traffic-bar-value" style="color:#ffc95b">6.7%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">HubSpot AI</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:41%;background:#ffc95b;opacity:.8"></div></div>
+        <div class="traffic-bar-value" style="color:#ffc95b">6.1%</div>
       </div>
       <div class="traffic-bar-row">
         <div class="traffic-bar-label">Internal AI</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:13.3%;background:#c488ff"></div></div>
-        <div class="traffic-bar-value" style="color:#c488ff">13.3%</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:34%;background:#c488ff"></div></div>
+        <div class="traffic-bar-value" style="color:#c488ff">5.1%</div>
       </div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">Notion AI</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:13.0%;background:#5ee7ff;opacity:.6"></div></div>
-        <div class="traffic-bar-value" style="color:var(--text-2)">13.0%</div>
-      </div>
-      <div class="traffic-bar-row">
-        <div class="traffic-bar-label">Zendesk</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:9.0%;background:#ff8a5b"></div></div>
-        <div class="traffic-bar-value" style="color:#ff8a5b">9.0%</div>
+        <div class="traffic-bar-label">+ 5 more</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:100%;background:rgba(255,255,255,.08)"></div></div>
+        <div class="traffic-bar-value" style="color:var(--text-3)">40.3%</div>
       </div>
     </div>
     <div class="card">
@@ -499,19 +623,29 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="traffic-bar-value" style="color:#ffc95b">3.1%</div>
       </div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">GPT-5.4</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:22%;background:#5ee7ff"></div></div>
-        <div class="traffic-bar-value" style="color:#5ee7ff">2.2%</div>
+        <div class="traffic-bar-label">Firefly 3</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:24%;background:#ffc95b;opacity:.7"></div></div>
+        <div class="traffic-bar-value" style="color:#ffc95b">2.4%</div>
       </div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">Claude 4.6</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:7%;background:#a7ff6a"></div></div>
-        <div class="traffic-bar-value" style="color:#a7ff6a">0.7%</div>
+        <div class="traffic-bar-label">GPT-5.4</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:18%;background:#5ee7ff"></div></div>
+        <div class="traffic-bar-value" style="color:#5ee7ff">1.8%</div>
       </div>
       <div class="traffic-bar-row">
         <div class="traffic-bar-label">Gemini 3.1</div>
-        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:4%;background:#a7ff6a"></div></div>
-        <div class="traffic-bar-value" style="color:#a7ff6a">0.4%</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:12%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">1.2%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Claude 4.6</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:5%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">0.5%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">+ 16 more</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:8%;background:rgba(255,255,255,.08)"></div></div>
+        <div class="traffic-bar-value" style="color:var(--text-3)">&lt;1%</div>
       </div>
     </div>
   </div>
@@ -1142,7 +1276,13 @@ function toggleDetail(id) {
     { app: 'Notion AI', model: 'Claude Sonnet 4.6' },
     { app: 'GitHub Copilot', model: 'GPT-5.4' },
     { app: 'Zendesk AI', model: 'DeepSeek-R1' },
-    { app: 'Internal AI', model: 'Llama 4 Maverick' }
+    { app: 'Internal AI', model: 'Llama 4 Maverick' },
+    { app: 'Workday AI', model: 'GPT-5.4' },
+    { app: 'Slack AI', model: 'Claude Sonnet 4.6' },
+    { app: 'HubSpot AI', model: 'Gemini 3.1 Pro' },
+    { app: 'Intercom Fin', model: 'GPT-5.4' },
+    { app: 'Adobe Firefly', model: 'Firefly 3' },
+    { app: 'M365 Copilot', model: 'GPT-5.4' }
   ];
   var actions = [
     { text: 'flagged — Unsafe output intercepted', dot: 'red' },
