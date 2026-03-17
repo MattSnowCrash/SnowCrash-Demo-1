@@ -48,7 +48,7 @@
 .traffic-bar-value { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); min-width: 40px; text-align: right; }
 
 /* ── Lab Status Cards ── */
-.lab-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.lab-cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 32px; }
 .lab-card { text-decoration: none; color: inherit; transition: all .25s ease; }
 .lab-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevated); }
 .lab-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -312,7 +312,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
-  .lab-cards, .nav-cards { grid-template-columns: repeat(2, 1fr); }
+  .lab-cards { grid-template-columns: repeat(3, 1fr); } .nav-cards { grid-template-columns: repeat(2, 1fr); }
   .apps-grid { grid-template-columns: repeat(3, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .traffic-sources { grid-template-columns: 1fr; }
@@ -373,6 +373,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         </button>
         <div class="nav-dropdown-menu">
           <a href="agent-lab.html"><span class="nav-dropdown-icon crew">A</span> Agent Lab</a>
+          <a href="red-team-lab.html"><span class="nav-dropdown-icon crew">R</span> Red Team Lab</a>
           <a href="breach-lab.html"><span class="nav-dropdown-icon adv">B</span> Breach Lab</a>
           <a href="control-lab.html"><span class="nav-dropdown-icon ctrl">R</span> Control Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon scheme">S</span> Scheming Lab</a>
@@ -1178,6 +1179,30 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="lab-sparkline-label">7-run trend</div>
       </div>
       <div><span class="lab-status-badge queued">Queued</span></div>
+    </a>
+
+    <!-- Red Team Lab -->
+    <a href="red-team-lab.html" class="card lab-card">
+      <div class="lab-card-header">
+        <div class="lab-icon agent" style="background:rgba(255,138,91,.1);color:#ff8a5b;">R</div>
+        <div class="lab-card-name">Red Team Lab</div>
+      </div>
+      <div class="lab-card-time">Last run: 18 min ago</div>
+      <div class="lab-progress-wrap">
+        <div class="lab-progress-label">6 / 8 passed</div>
+        <div class="lab-donut-wrap">
+          <svg class="lab-donut-svg" width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+            <circle cx="20" cy="20" r="16" fill="none" stroke="#ff8a5b" stroke-width="4" stroke-dasharray="75.4 25.13" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 20 20)" class="donut-pass"/>
+            <text x="20" y="20" text-anchor="middle" dominant-baseline="central" class="lab-donut-text" font-size="9">6/8</text>
+          </svg>
+        </div>
+      </div>
+      <div class="lab-sparkline-wrap">
+        <svg width="80" height="24" viewBox="0 0 80 24"><polyline points="0,20 13,16 26,14 39,12 52,8 65,6 78,4" fill="none" stroke="#ff8a5b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        <div class="lab-sparkline-label">7-run trend</div>
+      </div>
+      <div><span class="lab-status-badge idle">Idle</span></div>
     </a>
   </div>
 
