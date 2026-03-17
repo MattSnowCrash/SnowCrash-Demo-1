@@ -9,6 +9,38 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
+/* ── Connected Apps Grid ── */
+.apps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.app-card { text-decoration: none; color: inherit; transition: all .25s ease; }
+.app-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-elevated); }
+.app-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.app-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.app-icon.salesforce { background: rgba(0,161,224,.15); }
+.app-icon.servicenow { background: rgba(129,195,65,.15); }
+.app-icon.notion { background: rgba(255,255,255,.1); }
+.app-icon.copilot { background: rgba(94,231,255,.12); }
+.app-icon.zendesk { background: rgba(255,138,91,.12); }
+.app-icon.internal { background: rgba(196,136,255,.12); }
+.app-card-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-1); }
+.app-card-model { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
+.app-metrics { display: flex; gap: 16px; margin-top: 10px; }
+.app-metric-value { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; }
+.app-metric-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; margin-top: 1px; }
+.app-status-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.app-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.app-status-dot.green { background: var(--accent-3); }
+.app-status-dot.amber { background: #ffc95b; }
+.app-status-dot.red { background: #ff8a8a; }
+.app-status-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── Traffic Source Breakdown ── */
+.traffic-sources { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+.traffic-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.traffic-bar-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); min-width: 100px; }
+.traffic-bar-track { flex: 1; height: 8px; border-radius: 4px; background: rgba(255,255,255,.06); overflow: hidden; }
+.traffic-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.traffic-bar-value { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); min-width: 40px; text-align: right; }
+
 /* ── Lab Status Cards ── */
 .lab-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
 .lab-card { text-decoration: none; color: inherit; transition: all .25s ease; }
@@ -160,16 +192,20 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 /* ── Responsive ── */
 @media (max-width: 1100px) {
   .lab-cards, .nav-cards { grid-template-columns: repeat(2, 1fr); }
+  .apps-grid { grid-template-columns: repeat(2, 1fr); }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .traffic-sources { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
   .lab-cards, .nav-cards { grid-template-columns: 1fr; }
+  .apps-grid { grid-template-columns: 1fr; }
   .kpi-row { grid-template-columns: repeat(2, 1fr); }
   .worst-offender { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 430px) {
   .lab-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .apps-grid { grid-template-columns: 1fr; gap: 8px; }
   .kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .kpi-number { font-size: 26px; }
   .lab-card-name { font-size: 12px; }
@@ -235,12 +271,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 
   <!-- Hero -->
   <div class="page-hero">
-    <div class="hero-label">Snowcrash Ops</div>
-    <h1 class="hero-title">AI Crash Test Lab</h1>
-    <p class="hero-desc">Unified command surface for AI safety operations. Monitor model behavior across all labs, track safety signals, and manage routing decisions.</p>
+    <div class="hero-label">Enterprise AI Safety</div>
+    <h1 class="hero-title">Model Safety Platform</h1>
+    <p class="hero-desc">Unified safety layer across your enterprise AI stack. SnowCrash monitors every GenAI-powered application and general AI request — intercepting unsafe outputs, rerouting threats, and continuously evaluating model behavior.</p>
     <div class="hero-actions" style="margin-top:20px">
-      <a href="breach-lab.html" class="btn-primary" style="margin-right:10px">Launch Demo Run</a>
-      <a href="index.html" class="btn-outline">Review Findings</a>
+      <a href="breach-lab.html" class="btn-primary" style="margin-right:10px">Launch Safety Evaluation</a>
+      <a href="router.html" class="btn-outline">View Router</a>
     </div>
   </div>
 
@@ -249,42 +285,240 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="pulse-dot"></div>
     <span class="pulse-label">Platform Active</span>
     <div class="pulse-separator"></div>
+    <span class="pulse-meta">6 Apps Connected</span>
+    <div class="pulse-separator"></div>
+    <span class="pulse-meta">14 Models Monitored</span>
+    <div class="pulse-separator"></div>
     <span class="pulse-meta">Uptime 99.5%</span>
     <div class="pulse-separator"></div>
-    <span class="pulse-meta" id="pulse-time">Mar 16, 2026 — 14:32 UTC</span>
+    <span class="pulse-meta" id="pulse-time">Mar 17, 2026 — 14:32 UTC</span>
   </div>
 
-  <!-- KPI Counters Row (Improvement #1) -->
+  <!-- KPI Counters Row -->
   <div class="kpi-row scroll-reveal">
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:var(--accent-1)" data-target="12847" data-format="comma">0</div>
-      <div class="kpi-label">Models Tested</div>
+      <div class="kpi-number" style="color:var(--accent-1)" data-target="47832" data-format="comma">0</div>
+      <div class="kpi-label">AI Queries Today</div>
     </div>
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:#ff8a5b" data-target="284" data-format="comma">0</div>
-      <div class="kpi-label">Active Findings</div>
+      <div class="kpi-number" style="color:#ff8a5b" data-target="1247" data-format="comma">0</div>
+      <div class="kpi-label">Threats Intercepted</div>
     </div>
     <div class="card kpi-box">
       <div class="kpi-number" style="color:var(--accent-3)" data-target="97.3" data-format="percent">0%</div>
       <div class="kpi-label">Detection Rate</div>
     </div>
     <div class="card kpi-box">
-      <div class="kpi-number" style="color:#c488ff" data-target="1247" data-format="comma">0</div>
-      <div class="kpi-label">Threats Blocked Today</div>
+      <div class="kpi-number" style="color:#c488ff" data-target="14" data-format="comma">0</div>
+      <div class="kpi-label">Models Monitored</div>
     </div>
   </div>
 
-  <!-- Worst Offender Callout (Improvement #6) -->
+  <!-- Worst Offender Callout -->
   <div class="card worst-offender scroll-reveal">
     <div class="worst-offender-icon">&#9888;</div>
     <div class="worst-offender-text">
-      <div class="worst-offender-label">Highest Risk Model</div>
-      DeepSeek-R1 — Failed 5/8 scenarios across Breach &amp; Scheming Labs
+      <div class="worst-offender-label">Highest Risk Surface</div>
+      Zendesk AI (DeepSeek-R1) — 23 intercepts in last 4 hours. Failed 5/8 safety scenarios in Crash Test Lab.
     </div>
     <a href="index.html" class="worst-offender-link">View Report &rarr;</a>
   </div>
 
+  <!-- ═══ CONNECTED APPLICATIONS ═══ -->
+  <div class="card-label" style="margin-bottom:4px">Connected Applications</div>
+  <div class="section-sub" style="margin-bottom:16px">SaaS applications monitored by SnowCrash safety layer</div>
+  <div class="apps-grid scroll-reveal">
+
+    <!-- Salesforce Einstein -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon salesforce">&#9729;</div>
+        <div>
+          <div class="app-card-name">Salesforce Einstein</div>
+          <div class="app-card-model">Powered by GPT-5.4</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">8,412</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">142</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- ServiceNow -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon servicenow">&#9881;</div>
+        <div>
+          <div class="app-card-name">ServiceNow AI</div>
+          <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">12,847</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">89</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- Notion AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon notion">&#9998;</div>
+        <div>
+          <div class="app-card-name">Notion AI</div>
+          <div class="app-card-model">Powered by Claude Sonnet 4.6</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">6,204</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">34</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot green"></div>
+        <div class="app-status-text">Monitoring Active</div>
+      </div>
+    </div>
+
+    <!-- GitHub Copilot -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon copilot">&#10094;/&#10095;</div>
+        <div>
+          <div class="app-card-name">GitHub Copilot</div>
+          <div class="app-card-model">Powered by GPT-5.4</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">9,731</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">217</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot amber"></div>
+        <div class="app-status-text">Elevated Intercepts</div>
+      </div>
+    </div>
+
+    <!-- Zendesk AI -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon zendesk">&#9993;</div>
+        <div>
+          <div class="app-card-name">Zendesk AI</div>
+          <div class="app-card-model">Powered by DeepSeek-R1</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">4,289</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a8a">412</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot red"></div>
+        <div class="app-status-text">High Risk — Review Required</div>
+      </div>
+    </div>
+
+    <!-- Internal AI Assistant -->
+    <div class="card app-card">
+      <div class="app-card-header">
+        <div class="app-icon internal">&#9670;</div>
+        <div>
+          <div class="app-card-name">Internal AI Assistant</div>
+          <div class="app-card-model">Powered by Llama 4 Maverick</div>
+        </div>
+      </div>
+      <div class="app-metrics">
+        <div><div class="app-metric-value" style="color:var(--accent-1)">6,349</div><div class="app-metric-label">Queries today</div></div>
+        <div><div class="app-metric-value" style="color:#ff8a5b">353</div><div class="app-metric-label">Intercepted</div></div>
+      </div>
+      <div class="app-status-row">
+        <div class="app-status-dot amber"></div>
+        <div class="app-status-text">Elevated Intercepts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TRAFFIC SOURCE BREAKDOWN ═══ -->
+  <div class="traffic-sources scroll-reveal">
+    <div class="card">
+      <div class="card-label">Traffic by Application</div>
+      <div class="section-sub" style="margin-bottom:16px">Percentage of total enterprise AI queries</div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">ServiceNow</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:26.8%;background:#5ee7ff"></div></div>
+        <div class="traffic-bar-value" style="color:#5ee7ff">26.8%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Copilot</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:20.3%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">20.3%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Salesforce</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:17.6%;background:#ffc95b"></div></div>
+        <div class="traffic-bar-value" style="color:#ffc95b">17.6%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Internal AI</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:13.3%;background:#c488ff"></div></div>
+        <div class="traffic-bar-value" style="color:#c488ff">13.3%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Notion AI</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:13.0%;background:#5ee7ff;opacity:.6"></div></div>
+        <div class="traffic-bar-value" style="color:var(--text-2)">13.0%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Zendesk</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:9.0%;background:#ff8a5b"></div></div>
+        <div class="traffic-bar-value" style="color:#ff8a5b">9.0%</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Intercept Rate by Model</div>
+      <div class="section-sub" style="margin-bottom:16px">Percentage of queries triggering safety intercepts</div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">DeepSeek-R1</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:96%;background:#ff8a8a"></div></div>
+        <div class="traffic-bar-value" style="color:#ff8a8a">9.6%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Llama 4 Mav.</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:56%;background:#ff8a5b"></div></div>
+        <div class="traffic-bar-value" style="color:#ff8a5b">5.6%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Qwen 2.5 72B</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:31%;background:#ffc95b"></div></div>
+        <div class="traffic-bar-value" style="color:#ffc95b">3.1%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">GPT-5.4</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:22%;background:#5ee7ff"></div></div>
+        <div class="traffic-bar-value" style="color:#5ee7ff">2.2%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Claude 4.6</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:7%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">0.7%</div>
+      </div>
+      <div class="traffic-bar-row">
+        <div class="traffic-bar-label">Gemini 3.1</div>
+        <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:4%;background:#a7ff6a"></div></div>
+        <div class="traffic-bar-value" style="color:#a7ff6a">0.4%</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Lab Status Cards -->
+  <div class="card-label" style="margin-bottom:4px">AI Crash Test Lab</div>
+  <div class="section-sub" style="margin-bottom:16px">Continuous safety evaluations of connected models</div>
   <div class="lab-cards scroll-reveal">
     <!-- Breach Lab -->
     <a href="breach-lab.html" class="card lab-card">
@@ -771,8 +1005,8 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="card live-feed-wrap scroll-reveal">
     <div class="live-feed-header">
       <div>
-        <div class="card-label">Live Threat Feed</div>
-        <div class="section-sub">Real-time safety event stream</div>
+        <div class="card-label">Live Enterprise Feed</div>
+        <div class="section-sub">Real-time safety events across all connected applications</div>
       </div>
     </div>
     <div class="live-feed-container" id="live-feed">
@@ -902,44 +1136,51 @@ function toggleDetail(id) {
   var feed = document.getElementById('live-feed');
   if (!feed) return;
 
-  var models = ['DeepSeek-R1','Qwen 2.5 72B','Nemotron-4 340B','GPT-5.4','Claude Sonnet 4.6','Llama 4 Maverick'];
-  var labs = ['Breach Lab','Scheming Lab','Control Lab','Agent Lab'];
+  var sources = [
+    { app: 'Salesforce Einstein', model: 'GPT-5.4' },
+    { app: 'ServiceNow AI', model: 'Claude Sonnet 4.6' },
+    { app: 'Notion AI', model: 'Claude Sonnet 4.6' },
+    { app: 'GitHub Copilot', model: 'GPT-5.4' },
+    { app: 'Zendesk AI', model: 'DeepSeek-R1' },
+    { app: 'Internal AI', model: 'Llama 4 Maverick' }
+  ];
   var actions = [
-    { text: 'flagged — Sabotage attempt detected', dot: 'red' },
-    { text: 'passed — Self-Preservation check', dot: 'green' },
-    { text: 'flagged — Goal misalignment detected', dot: 'red' },
-    { text: 'passed — Deceptive alignment check', dot: 'green' },
-    { text: 'rerouted — Unsafe output intercepted', dot: 'yellow' },
-    { text: 'intercepted — Blackmail attempt blocked', dot: 'cyan' },
-    { text: 'flagged — Power-seeking behavior detected', dot: 'red' },
-    { text: 'passed — Social manipulation check', dot: 'green' },
-    { text: 'rerouted — Gaslighting prompt redirected', dot: 'yellow' },
-    { text: 'intercepted — Resource acquisition blocked', dot: 'cyan' },
-    { text: 'flagged — Reward hacking attempt', dot: 'red' },
-    { text: 'passed — Compliance evaluation', dot: 'green' }
+    { text: 'flagged — Unsafe output intercepted', dot: 'red' },
+    { text: 'passed — Safety check cleared', dot: 'green' },
+    { text: 'rerouted — Response sent to fallback model', dot: 'yellow' },
+    { text: 'passed — Compliance evaluation', dot: 'green' },
+    { text: 'intercepted — Goal misalignment detected', dot: 'cyan' },
+    { text: 'flagged — Data exfiltration attempt blocked', dot: 'red' },
+    { text: 'passed — Behavioral check cleared', dot: 'green' },
+    { text: 'rerouted — Deceptive output redirected', dot: 'yellow' },
+    { text: 'intercepted — Unauthorized action blocked', dot: 'cyan' },
+    { text: 'flagged — Social manipulation detected', dot: 'red' },
+    { text: 'passed — Content safety verified', dot: 'green' },
+    { text: 'intercepted — Self-preservation behavior blocked', dot: 'cyan' }
   ];
 
   var initialEvents = [
-    { time: '14:32:18', model: 'DeepSeek-R1', action: actions[0], lab: 'Breach Lab' },
-    { time: '14:31:45', model: 'Claude Sonnet 4.6', action: actions[1], lab: 'Agent Lab' },
-    { time: '14:30:12', model: 'Qwen 2.5 72B', action: actions[2], lab: 'Scheming Lab' },
-    { time: '14:29:33', model: 'GPT-5.4', action: actions[3], lab: 'Control Lab' },
-    { time: '14:28:55', model: 'Llama 4 Maverick', action: actions[4], lab: 'Breach Lab' },
-    { time: '14:27:18', model: 'Nemotron-4 340B', action: actions[5], lab: 'Agent Lab' },
-    { time: '14:26:02', model: 'DeepSeek-R1', action: actions[6], lab: 'Scheming Lab' },
-    { time: '14:25:41', model: 'Claude Sonnet 4.6', action: actions[7], lab: 'Control Lab' },
-    { time: '14:24:15', model: 'Llama 4 Maverick', action: actions[8], lab: 'Breach Lab' },
-    { time: '14:23:08', model: 'Qwen 2.5 72B', action: actions[9], lab: 'Agent Lab' },
-    { time: '14:22:30', model: 'Nemotron-4 340B', action: actions[10], lab: 'Scheming Lab' },
-    { time: '14:21:55', model: 'GPT-5.4', action: actions[11], lab: 'Control Lab' }
+    { time: '14:32:18', src: sources[4], action: actions[0] },
+    { time: '14:31:45', src: sources[1], action: actions[1] },
+    { time: '14:30:12', src: sources[3], action: actions[4] },
+    { time: '14:29:33', src: sources[0], action: actions[3] },
+    { time: '14:28:55', src: sources[5], action: actions[2] },
+    { time: '14:27:18', src: sources[2], action: actions[6] },
+    { time: '14:26:02', src: sources[4], action: actions[5] },
+    { time: '14:25:41', src: sources[1], action: actions[10] },
+    { time: '14:24:15', src: sources[5], action: actions[9] },
+    { time: '14:23:08', src: sources[3], action: actions[8] },
+    { time: '14:22:30', src: sources[0], action: actions[7] },
+    { time: '14:21:55', src: sources[2], action: actions[1] }
   ];
 
   function createEventEl(ev) {
     var div = document.createElement('div');
     div.className = 'feed-event';
+    var src = ev.src || sources[0];
     div.innerHTML = '<span class="feed-dot ' + ev.action.dot + '"></span>' +
       '<span class="feed-time">[' + ev.time + ']</span> ' +
-      '<span>' + ev.model + ' ' + ev.action.text + ' (' + ev.lab + ')</span>';
+      '<span><strong style="color:var(--text-1)">' + src.app + '</strong> (' + src.model + ') ' + ev.action.text + '</span>';
     return div;
   }
 
@@ -952,9 +1193,8 @@ function toggleDetail(id) {
     var ss = (now.getSeconds() < 10 ? '0' : '') + now.getSeconds();
     var ev = {
       time: hh + ':' + mm + ':' + ss,
-      model: models[Math.floor(Math.random() * models.length)],
-      action: actions[Math.floor(Math.random() * actions.length)],
-      lab: labs[Math.floor(Math.random() * labs.length)]
+      src: sources[Math.floor(Math.random() * sources.length)],
+      action: actions[Math.floor(Math.random() * actions.length)]
     };
     var el = createEventEl(ev);
     feed.insertBefore(el, feed.firstChild);
