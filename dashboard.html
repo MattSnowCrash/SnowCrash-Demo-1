@@ -414,6 +414,39 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   .feed-event { font-size: 10px; }
   .feed-time { font-size: 9px; }
 }
+/* ── Regulatory Compliance Tracker ── */
+.compliance-summary-bar { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-radius: 10px; background: rgba(94,231,255,.05); border: 1px solid rgba(94,231,255,.12); margin-bottom: 20px; flex-wrap: wrap; }
+.compliance-summary-stat { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-1); font-weight: 600; }
+.compliance-summary-stat span { color: var(--accent-1); }
+.compliance-summary-sep { width: 1px; height: 18px; background: var(--border-1); flex-shrink: 0; }
+.compliance-summary-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; }
+.compliance-coverage-bar { flex: 1; min-width: 120px; display: flex; align-items: center; gap: 8px; }
+.compliance-coverage-track { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+.compliance-coverage-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent-1), var(--accent-3)); transition: width 1s ease; }
+.compliance-coverage-pct { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: var(--accent-3); }
+
+.compliance-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.compliance-table { border-collapse: collapse; width: 100%; min-width: 780px; }
+.compliance-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-1); white-space: nowrap; }
+.compliance-table td { padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
+.compliance-table tr:hover { background: rgba(94,231,255,.03); }
+.compliance-table .ct-framework { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-1); white-space: nowrap; }
+.compliance-table .ct-article { font-size: 10px; color: var(--text-3); margin-top: 2px; line-height: 1.4; }
+.ct-status { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: 4px; white-space: nowrap; }
+.ct-status.compliant { background: rgba(167,255,106,.1); color: var(--accent-3); }
+.ct-status.partial { background: rgba(255,201,91,.1); color: #ffc95b; }
+.ct-status.pending { background: rgba(255,138,91,.1); color: #ff8a5b; }
+.ct-coverage-bar { display: flex; align-items: center; gap: 6px; min-width: 120px; }
+.ct-coverage-track { flex: 1; height: 5px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+.ct-coverage-fill { height: 100%; border-radius: 3px; transition: width .8s ease; }
+.ct-coverage-pct { font-size: 11px; font-weight: 600; min-width: 32px; text-align: right; }
+.ct-component { font-size: 9px; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--border-1); display: inline-block; margin: 1px 2px; white-space: nowrap; }
+.ct-component.lab { border-color: rgba(255,138,91,.2); color: #ff8a5b; background: rgba(255,138,91,.05); }
+.ct-component.router { border-color: rgba(94,231,255,.2); color: var(--accent-1); background: rgba(94,231,255,.05); }
+.ct-component.platform { border-color: rgba(167,255,106,.2); color: var(--accent-3); background: rgba(167,255,106,.05); }
+.ct-deadline { font-size: 10px; color: var(--text-3); white-space: nowrap; }
+.ct-deadline.soon { color: #ffc95b; }
+.ct-deadline.overdue { color: #ff8a8a; }
 </style>
 </head>
 <body>
@@ -1745,6 +1778,43 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     </div>
   </div>
 
+  <!-- Regulatory Compliance Tracker -->
+  <div class="card scroll-reveal" style="margin-bottom:32px">
+    <div class="card-label">Regulatory Compliance Tracker</div>
+    <div class="section-sub" style="margin-bottom:16px">AI regulation coverage mapped to SnowCrash evaluation capabilities</div>
+
+    <!-- Summary Bar -->
+    <div class="compliance-summary-bar" id="compliance-summary">
+      <div class="compliance-summary-stat"><span id="cs-tracked">5</span>/5 frameworks tracked</div>
+      <div class="compliance-summary-sep"></div>
+      <div class="compliance-summary-label">Avg Coverage</div>
+      <div class="compliance-coverage-bar">
+        <div class="compliance-coverage-track"><div class="compliance-coverage-fill" id="cs-fill" style="width:0%"></div></div>
+        <div class="compliance-coverage-pct" id="cs-pct">0%</div>
+      </div>
+      <div class="compliance-summary-sep"></div>
+      <div class="compliance-summary-stat" style="font-size:11px"><span id="cs-compliant">0</span> Compliant &nbsp; <span id="cs-partial" style="color:#ffc95b">0</span> Partial &nbsp; <span id="cs-pending" style="color:#ff8a5b">0</span> Pending</div>
+    </div>
+
+    <!-- Compliance Matrix Table -->
+    <div class="compliance-table-wrap">
+      <table class="compliance-table" id="compliance-matrix">
+        <thead>
+          <tr>
+            <th>Framework / Regulation</th>
+            <th>Status</th>
+            <th>Coverage</th>
+            <th>SnowCrash Components</th>
+            <th>Next Audit</th>
+          </tr>
+        </thead>
+        <tbody id="compliance-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Navigation Cards -->
   <div class="nav-cards scroll-reveal">
     <a href="router.html" class="card nav-card">
@@ -2904,6 +2974,120 @@ function setModalPill(btn) {
       tierBadge.parentElement.insertBefore(badge, tierBadge.nextSibling);
     }
   });
+})();
+
+/* ── Regulatory Compliance Tracker ── */
+(function() {
+  var regs = [
+    {
+      framework: 'EU AI Act',
+      article: 'Art. 6 High-Risk, Art. 9 Risk Mgmt, Art. 55 Adversarial Testing, Art. 15 Accuracy',
+      status: 'compliant',
+      coverage: 92,
+      components: [
+        { name: 'Crash Test Lab', type: 'lab' },
+        { name: 'Router', type: 'router' },
+        { name: 'Platform', type: 'platform' }
+      ],
+      deadline: '2026-08-01',
+      deadlineLabel: 'Aug 2026'
+    },
+    {
+      framework: 'NIST AI RMF',
+      article: 'GOVERN, MAP, MEASURE, MANAGE functions',
+      status: 'compliant',
+      coverage: 88,
+      components: [
+        { name: 'Crash Test Lab', type: 'lab' },
+        { name: 'Platform', type: 'platform' }
+      ],
+      deadline: '2026-06-15',
+      deadlineLabel: 'Jun 2026'
+    },
+    {
+      framework: 'ISO/IEC 42001',
+      article: 'AI Management System — Annex A controls',
+      status: 'partial',
+      coverage: 71,
+      components: [
+        { name: 'Platform', type: 'platform' },
+        { name: 'Router', type: 'router' }
+      ],
+      deadline: '2026-09-30',
+      deadlineLabel: 'Sep 2026'
+    },
+    {
+      framework: 'Colorado AI Act',
+      article: 'SB 24-205 — Algorithmic discrimination, risk assessments',
+      status: 'partial',
+      coverage: 64,
+      components: [
+        { name: 'Crash Test Lab', type: 'lab' },
+        { name: 'Platform', type: 'platform' }
+      ],
+      deadline: '2026-02-01',
+      deadlineLabel: 'Feb 2026',
+      deadlineSoon: true
+    },
+    {
+      framework: 'OWASP LLM Top 10',
+      article: 'v2025 — Prompt Injection, Data Poisoning, Supply Chain + 7 more',
+      status: 'compliant',
+      coverage: 95,
+      components: [
+        { name: 'Crash Test Lab', type: 'lab' },
+        { name: 'Router', type: 'router' },
+        { name: 'Platform', type: 'platform' }
+      ],
+      deadline: '2026-04-15',
+      deadlineLabel: 'Apr 2026'
+    }
+  ];
+
+  var tbody = document.getElementById('compliance-tbody');
+  if (!tbody) return;
+
+  var totalCoverage = 0;
+  var compliantCount = 0;
+  var partialCount = 0;
+  var pendingCount = 0;
+
+  regs.forEach(function(r) {
+    totalCoverage += r.coverage;
+    if (r.status === 'compliant') compliantCount++;
+    else if (r.status === 'partial') partialCount++;
+    else pendingCount++;
+
+    var coverageColor = r.coverage >= 85 ? 'var(--accent-3)' : r.coverage >= 60 ? '#ffc95b' : '#ff8a5b';
+    var componentsHtml = r.components.map(function(c) {
+      return '<span class="ct-component ' + c.type + '">' + c.name + '</span>';
+    }).join('');
+
+    var deadlineClass = 'ct-deadline';
+    if (r.deadlineSoon) deadlineClass += ' soon';
+
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><div class="ct-framework">' + r.framework + '</div><div class="ct-article">' + r.article + '</div></td>' +
+      '<td><span class="ct-status ' + r.status + '">' + r.status.charAt(0).toUpperCase() + r.status.slice(1) + '</span></td>' +
+      '<td><div class="ct-coverage-bar"><div class="ct-coverage-track"><div class="ct-coverage-fill" style="width:' + r.coverage + '%;background:' + coverageColor + '"></div></div><div class="ct-coverage-pct" style="color:' + coverageColor + '">' + r.coverage + '%</div></div></td>' +
+      '<td>' + componentsHtml + '</td>' +
+      '<td><span class="' + deadlineClass + '">' + r.deadlineLabel + '</span></td>';
+    tbody.appendChild(tr);
+  });
+
+  var avgCoverage = Math.round(totalCoverage / regs.length);
+  var fillEl = document.getElementById('cs-fill');
+  var pctEl = document.getElementById('cs-pct');
+  var compliantEl = document.getElementById('cs-compliant');
+  var partialEl = document.getElementById('cs-partial');
+  var pendingEl = document.getElementById('cs-pending');
+
+  if (fillEl) fillEl.style.width = avgCoverage + '%';
+  if (pctEl) pctEl.textContent = avgCoverage + '%';
+  if (compliantEl) compliantEl.textContent = compliantCount;
+  if (partialEl) partialEl.textContent = partialCount;
+  if (pendingEl) pendingEl.textContent = pendingCount;
 })();
 
 </script>
