@@ -1410,6 +1410,30 @@
   }
 
 })();
+
+// ── Master Lab Integration: auto-run with URL params ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var masterModel = params.get('model');
+  var scenario = params.get('scenario');
+  var MAP = {
+    gpt4o: 'gpt4o', claude35: 'claude35', deepseek: 'deepseek',
+    llama3: 'llama405', qwen: 'qwen72', mistral: 'mistral', phi4: 'gpt4o'
+  };
+  var localModel = MAP[masterModel] || 'gpt4o';
+  var sel = document.getElementById('modelSelect');
+  if (sel) sel.value = localModel;
+  if (scenario) {
+    var modeCards = document.querySelectorAll('.mode-card');
+    modeCards.forEach(function(c) {
+      if (c.getAttribute('data-mode') === scenario) {
+        c.click();
+      }
+    });
+  }
+  setTimeout(function() { if (typeof launchEnduranceTest === 'function') launchEnduranceTest(); }, 600);
+})();
 </script>
 </body>
 </html>

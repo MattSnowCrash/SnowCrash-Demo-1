@@ -1733,6 +1733,36 @@ function showResults(sc) {
   </div>
 </section>
 
+<script>
+// ── Master Lab Integration: auto-run with URL params ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var masterModel = params.get('model');
+  var scenario = params.get('scenario');
+  var MAP = {
+    gpt4o: 'GPT-5.4', claude35: 'Claude Opus 4.6', deepseek: 'DeepSeek-R1',
+    llama3: 'Llama 4 Behemoth', qwen: 'Qwen 3 235B-A22B', mistral: 'Grok 3 Beta', phi4: 'GLM-5'
+  };
+  var localModel = MAP[masterModel] || 'Qwen 3 235B-A22B';
+  var sel = document.getElementById('subjectSelect');
+  if (sel) {
+    for (var i = 0; i < sel.options.length; i++) {
+      if (sel.options[i].text === localModel) { sel.selectedIndex = i; break; }
+    }
+  }
+  if (scenario) {
+    var cards = document.querySelectorAll('.scenario-card');
+    cards.forEach(function(c) {
+      var onclick = c.getAttribute('onclick');
+      if (onclick && onclick.indexOf("'" + scenario + "'") !== -1) {
+        c.click();
+      }
+    });
+  }
+  setTimeout(function() { if (typeof runEvaluation === 'function') runEvaluation(); }, 600);
+})();
+</script>
 <script src="shared.js"></script>
 </body>
 </html>

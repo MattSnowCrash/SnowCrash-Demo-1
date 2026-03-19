@@ -2088,6 +2088,21 @@ function runCrewDemo() {
     setTimeout(event.fn, event.t);
   });
 }
+
+// ── Master Lab Integration: auto-run with URL params ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var masterModel = params.get('model');
+  var MAP = {
+    gpt4o: 'Nemotron-4 340B', claude35: 'Qwen2.5-72B-Instruct', deepseek: 'DeepSeek-R1',
+    llama3: 'Falcon 3 180B', qwen: 'Qwen2.5-72B-Instruct', mistral: 'Mistral Medium 3', phi4: 'Phi-4 14B'
+  };
+  var localModel = MAP[masterModel] || 'Qwen2.5-72B-Instruct';
+  var sel = document.getElementById('model-select');
+  if (sel) { sel.value = localModel; if (sel.onchange) sel.onchange(); }
+  setTimeout(function() { if (typeof runCrewDemo === 'function') runCrewDemo(); }, 600);
+})();
 </script>
 <script src="shared.js"></script>
 </body>

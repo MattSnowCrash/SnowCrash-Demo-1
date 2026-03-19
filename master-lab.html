@@ -726,12 +726,12 @@
 
   // ── Lab definitions ──
   var LABS = [
-    { id: 'breach',    name: 'Breach Lab',    prompts: 50,  color: '#ff8a5b', link: 'breach-lab.html' },
-    { id: 'scheming',  name: 'Scheming Lab',  prompts: 45,  color: '#c488ff', link: 'scheming-lab.html' },
-    { id: 'control',   name: 'Control Lab',   prompts: 40,  color: '#5ee7ff', link: 'control-lab.html' },
-    { id: 'endurance', name: 'Endurance Lab', prompts: 60,  color: '#ffc95b', link: 'endurance-lab.html' },
-    { id: 'agent',     name: 'Agent Lab',     prompts: 55,  color: '#a7ff6a', link: 'agent-lab.html' },
-    { id: 'gauntlet',  name: 'Gauntlet Lab',  prompts: 100, color: '#ff6b6b', link: 'gauntlet-lab.html' }
+    { id: 'breach',    name: 'Breach Lab',    prompts: 50,  color: '#ff8a5b', link: 'breach-lab.html', scenario: 'deceptive' },
+    { id: 'scheming',  name: 'Scheming Lab',  prompts: 45,  color: '#c488ff', link: 'scheming-lab.html', scenario: 'exfil' },
+    { id: 'control',   name: 'Control Lab',   prompts: 40,  color: '#5ee7ff', link: 'control-lab.html', scenario: 'backdoor' },
+    { id: 'endurance', name: 'Endurance Lab', prompts: 60,  color: '#ffc95b', link: 'endurance-lab.html', scenario: 'subtle-escalation' },
+    { id: 'agent',     name: 'Agent Lab',     prompts: 55,  color: '#a7ff6a', link: 'agent-lab.html', scenario: 'sabotage' },
+    { id: 'gauntlet',  name: 'Gauntlet Lab',  prompts: 100, color: '#ff6b6b', link: 'gauntlet-lab.html', scenario: 'all' }
   ];
   var TOTAL_PROMPTS = 350;
 
@@ -923,7 +923,7 @@
     showVerdict(verdictKey);
 
     // Detailed results
-    showDetails(scores);
+    showDetails(scores, modelKey);
 
     // Scroll to composite
     setTimeout(function() {
@@ -1035,7 +1035,10 @@
       '</div>';
   }
 
-  function showDetails(scores) {
+  var currentModelKey = 'gpt4o';
+
+  function showDetails(scores, modelKey) {
+    currentModelKey = modelKey || currentModelKey;
     var card = document.getElementById('details-card');
     card.style.display = '';
     var body = document.getElementById('details-body');
@@ -1065,7 +1068,8 @@
       var findingsHtml = '<div class="detail-findings">';
       findings.forEach(function(f) { findingsHtml += '\u2022 ' + f + '<br>'; });
       findingsHtml += '</div>';
-      findingsHtml += '<a class="detail-link" href="' + lab.link + '">View in ' + lab.name + ' \u2192</a>';
+      var linkParams = '?from=master&model=' + encodeURIComponent(currentModelKey) + '&score=' + s + '&scenario=' + encodeURIComponent(lab.scenario);
+      findingsHtml += '<a class="detail-link" href="' + lab.link + linkParams + '">View in ' + lab.name + ' \u2192</a>';
       expand.innerHTML = findingsHtml;
       body.appendChild(expand);
     });

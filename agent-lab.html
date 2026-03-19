@@ -1758,6 +1758,21 @@ function generateDreddReport() {
     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 300);
 }
+
+// ── Master Lab Integration: auto-run with URL params ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var masterModel = params.get('model');
+  var MAP = {
+    gpt4o: 'GPT-5.4', claude35: 'Claude Sonnet 4.6', deepseek: 'DeepSeek V3.2',
+    llama3: 'Llama 4 Maverick', qwen: 'Qwen 3 235B', mistral: 'Grok 3', phi4: 'Grok 3 Mini'
+  };
+  var localModel = MAP[masterModel] || 'DeepSeek V3.2';
+  var sel = document.getElementById('model-select');
+  if (sel) { sel.value = localModel; if (sel.onchange) sel.onchange(); }
+  setTimeout(function() { if (typeof runAgentEval === 'function') runAgentEval(); }, 600);
+})();
 </script>
 <script src="shared.js"></script>
 </body>

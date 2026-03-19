@@ -2401,6 +2401,28 @@ renderStats();
   </div>
 </section>
 
+<script>
+// ── Master Lab Integration: auto-run with URL params ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var masterModel = params.get('model');
+  var scenario = params.get('scenario');
+  var MAP = {
+    gpt4o: 'Nemotron-4 340B', claude35: 'Qwen2.5-72B-Instruct', deepseek: 'DeepSeek-R1',
+    llama3: 'Falcon 3 180B', qwen: 'Qwen2.5-72B-Instruct', mistral: 'Mistral Medium 3', phi4: 'Phi-4 14B'
+  };
+  var localModel = MAP[masterModel] || 'Qwen2.5-72B-Instruct';
+  var sel = document.getElementById('model-select');
+  if (sel) { sel.value = localModel; if (sel.onchange) sel.onchange(); }
+  if (scenario) {
+    var scenSel = document.getElementById('scenario-select');
+    if (scenSel) scenSel.value = scenario;
+    if (typeof selectScenario === 'function') selectScenario(scenario);
+  }
+  setTimeout(function() { if (typeof runDemo === 'function') runDemo(); }, 600);
+})();
+</script>
 <script src="shared.js"></script>
 </body>
 </html>
