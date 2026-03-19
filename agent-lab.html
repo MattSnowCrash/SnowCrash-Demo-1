@@ -1382,7 +1382,6 @@ function processNextScenario() {
   if (model.indexOf('DeepSeek') >= 0 || model.indexOf('Llama') >= 0 || model.indexOf('Qwen') >= 0) failChance += 0.15;
   if (model.indexOf('Grok 3 Mini') >= 0 || model.indexOf('Gemini 2.5 Flash') >= 0) failChance += 0.1;
   if (model.indexOf('GLM') >= 0) failChance += 0.12;
-  if (model.indexOf('Behemoth') >= 0) failChance += 0.15;
   
   var failed = Math.random() < failChance;
   var suspScore = failed ? Math.min(95, s.suspicion + Math.floor(Math.random() * 20)) : Math.max(5, s.suspicion - Math.floor(Math.random() * 30));
