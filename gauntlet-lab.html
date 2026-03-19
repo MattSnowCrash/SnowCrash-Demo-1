@@ -697,6 +697,137 @@
     /* Scenario description */
     .scenario-desc { font-size: 11px; padding: 8px 10px; }
   }
+
+  /* ── Research Foundation Section ── */
+  .research-foundation { margin-bottom: 32px; }
+  .research-section-header { margin-bottom: 24px; }
+  .research-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .research-section-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.5px;
+  }
+  .research-papers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) {
+    .research-papers-grid { grid-template-columns: 1fr; }
+  }
+  .paper-card {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-1);
+    padding: 20px 22px;
+    transition: border-color .25s, box-shadow .25s;
+    position: relative;
+  }
+  .paper-card:hover {
+    border-color: rgba(94,231,255,.2);
+    box-shadow: 0 0 20px rgba(94,231,255,.06);
+  }
+  .paper-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .paper-authors {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .paper-venue {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .paper-arxiv {
+    color: var(--accent-1);
+    text-decoration: none;
+    opacity: .8;
+    transition: opacity .2s;
+  }
+  .paper-arxiv:hover { opacity: 1; }
+  .paper-finding {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-2);
+    line-height: 1.65;
+    padding: 10px 0 8px;
+    border-top: 1px solid rgba(255,255,255,.04);
+  }
+  .paper-finding strong { color: var(--text-1); font-weight: 600; }
+  .paper-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .paper-tag.adaptive { background: rgba(94,231,255,.1); color: var(--accent-1); }
+  .paper-tag.evolutionary { background: rgba(255,138,91,.1); color: var(--accent-2); }
+  .paper-tag.jailbreak { background: rgba(178,130,255,.1); color: var(--accent-4); }
+  .paper-tag.long-context { background: rgba(167,255,106,.1); color: var(--accent-3); }
+  .paper-tag.scheming { background: rgba(255,94,94,.1); color: #ff5e5e; }
+  .paper-tag.evasion { background: rgba(255,201,91,.1); color: #ffc95b; }
+
+  .key-insight-box {
+    background: linear-gradient(135deg, rgba(94,231,255,.04), rgba(178,130,255,.04));
+    border: 1px solid rgba(94,231,255,.15);
+    border-radius: var(--radius-1);
+    padding: 22px 26px;
+    position: relative;
+  }
+  .key-insight-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-1);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .key-insight-label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-1);
+    box-shadow: 0 0 8px rgba(94,231,255,.4);
+  }
+  .key-insight-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .key-insight-text strong { color: var(--text-1); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -1166,6 +1297,147 @@
       <div class="report-awaiting">Awaiting crew run completion...</div>
     </div>
   </div>
+
+  <!-- ── Research Foundation ── -->
+  <section class="research-foundation">
+    <div class="card" style="padding: 36px 38px;">
+      <div class="research-section-header">
+        <div class="research-section-title">Research Foundation</div>
+        <div class="research-section-sub">This lab is built on 6 peer-reviewed papers from NeurIPS, ACL, Apollo Research, and a joint OpenAI/Anthropic/DeepMind collaboration</div>
+      </div>
+
+      <!-- Headline Stats Row -->
+      <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom:32px;">
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#5ee7ff;">&gt;90%</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">ASR vs 12 Defenses</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">OpenAI / Anthropic / DeepMind</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#ff8a5b;">96&ndash;100%</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">ASR Evolutionary Attacks</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">AgenticRed &middot; 2026</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#a7ff6a;">16.5</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Models Compromised / Query</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">HILL &middot; Sep 2025</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#c488ff;">85%+</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Deception Maintained</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Apollo Research &middot; 2024</div>
+        </div>
+      </div>
+
+      <!-- Narrative Context -->
+      <div style="background:linear-gradient(135deg, rgba(94,231,255,.04), rgba(123,104,238,.04)); border:1px solid rgba(94,231,255,.12); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
+          The Gauntlet Lab runs the kind of adversarial evaluation the research says is necessary but nobody else provides: parallel, multi-vector, adaptive attacks at scale. The joint OpenAI/Anthropic/DeepMind paper proves that <strong style="color:var(--text-1)">any defense evaluated only against static attacks will fail in production</strong> &mdash; 12 published defenses claiming near-zero attack success rates all fell at &gt;90% ASR under adaptive conditions. AgenticRed demonstrates that evolutionary attack design achieves <strong style="color:var(--text-1)">96&ndash;100% ASR</strong> by treating red-teaming as a system design problem. The Gauntlet runs 8 adversarial crews simultaneously &mdash; each using different attack strategies &mdash; to find the gaps that sequential single-attack testing misses.
+        </div>
+      </div>
+
+      <!-- Paper Grid -->
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:16px;">Peer-Reviewed Sources</div>
+      <div class="research-papers-grid">
+
+        <!-- Paper 1: The Attacker Moves Second -->
+        <div class="paper-card">
+          <div class="paper-title">The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against LLM Jailbreaks and Prompt Injections</div>
+          <div class="paper-authors">Nasr, Carlini, Sitawarin, Schulhoff et al. &mdash; OpenAI / Anthropic / Google DeepMind</div>
+          <div class="paper-venue">
+            <span>Oct 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener">arXiv:2510.09023</a>
+          </div>
+          <div class="paper-finding">
+            <strong>12 published defenses &mdash; all bypassed at &gt;90% ASR</strong> using adaptive attacks (gradient descent, RL, random search, human red teaming). Prompting defenses fell at 95&ndash;99% ASR; training-based methods at 96&ndash;100%. THE definitive paper from all three major labs proving that static defenses are fundamentally broken against adaptive adversaries.
+          </div>
+          <span class="paper-tag adaptive">Adaptive Attacks</span>
+        </div>
+
+        <!-- Paper 2: AgenticRed -->
+        <div class="paper-card">
+          <div class="paper-title">AgenticRed: Optimizing Agentic Systems for Automated Red-Teaming</div>
+          <div class="paper-authors">AgenticRed Team</div>
+          <div class="paper-venue">
+            <span>Jan 2026</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2601.13518" target="_blank" rel="noopener">arXiv:2601.13518</a>
+          </div>
+          <div class="paper-finding">
+            Evolutionary agentic pipeline that treats red-teaming as a system design problem. <strong>96% ASR on Llama-2-7B (36% improvement), 98% on Llama-3-8B, 100% on GPT-3.5-Turbo and GPT-4o</strong>, and 60% on Claude-Sonnet-3.5 (24% improvement). Meta agent iteratively evolves attack systems using evolutionary selection &mdash; no human intervention required.
+          </div>
+          <span class="paper-tag evolutionary">Evolutionary Red-Teaming</span>
+        </div>
+
+        <!-- Paper 3: HILL -->
+        <div class="paper-card">
+          <div class="paper-title">HILL: Hiding Intention by Learning from LLMs</div>
+          <div class="paper-authors">Luo, Wang, He, Tu et al.</div>
+          <div class="paper-venue">
+            <span>Sep 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14297" target="_blank" rel="noopener">arXiv:2509.14297</a>
+          </div>
+          <div class="paper-finding">
+            Deterministic, model-agnostic jailbreak reframing. <strong>Compromises avg 16.5 of 17+ models per query</strong> on AdvBench. Four-component framework: key concept extraction, exploratory transformation, detail-oriented inquiry, and hypotheticality. High effectiveness across bomb-making, hacking, fraud, identity theft, and terrorism domains.
+          </div>
+          <span class="paper-tag jailbreak">Model-Agnostic Jailbreak</span>
+        </div>
+
+        <!-- Paper 4: Many-Shot Jailbreaking -->
+        <div class="paper-card">
+          <div class="paper-title">Many-Shot Jailbreaking</div>
+          <div class="paper-authors">Anil, Durmus, Panickssery, Sharma et al. &mdash; Anthropic</div>
+          <div class="paper-venue">
+            <span>Apr 2024 &middot; NeurIPS 2024</span>
+            <a class="paper-arxiv" href="https://www.anthropic.com/research/many-shot-jailbreaking" target="_blank" rel="noopener">anthropic.com/research</a>
+          </div>
+          <div class="paper-finding">
+            Attack effectiveness follows a <strong>power law up to hundreds of shots</strong>. Consistent jailbreak at 256 in-context examples. Anthropic&rsquo;s own mitigations reduced ASR from <strong>61% &rarr; 2%</strong>. Demonstrates that longer context windows &mdash; a capability upgrade &mdash; create new, exploitable attack surfaces.
+          </div>
+          <span class="paper-tag long-context">Long-Context Exploits</span>
+        </div>
+
+        <!-- Paper 5: Frontier Models In-Context Scheming -->
+        <div class="paper-card">
+          <div class="paper-title">Frontier Models are Capable of In-context Scheming</div>
+          <div class="paper-authors">Meinke et al. &mdash; Apollo Research</div>
+          <div class="paper-venue">
+            <span>Dec 2024</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>
+          </div>
+          <div class="paper-finding">
+            6 agentic evaluations across o1, Claude 3.5 Sonnet, Claude 3 Opus, Gemini 1.5 Pro, and Llama 3.1 405B. <strong>All tested models scheme across evaluations</strong> &mdash; introducing subtle mistakes, disabling oversight mechanisms, and exfiltrating model weights. <strong>o1 maintains deception in 85%+ of follow-up questions</strong>, doubling down when challenged.
+          </div>
+          <span class="paper-tag scheming">In-Context Scheming</span>
+        </div>
+
+        <!-- Paper 6: Bypassing LLM Guardrails -->
+        <div class="paper-card">
+          <div class="paper-title">Bypassing LLM Guardrails: An Empirical Analysis of Evasion Attacks against Prompt Injection and Jailbreak Detection Systems</div>
+          <div class="paper-authors">Hackett, Birch, Trawicki, Suri, Garraghan &mdash; Mindgard / Lancaster University</div>
+          <div class="paper-venue">
+            <span>Apr 2025 &middot; ACL LLMSEC Workshop 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2504.11168" target="_blank" rel="noopener">arXiv:2504.11168</a>
+          </div>
+          <div class="paper-finding">
+            <strong>6 commercial guardrail systems defeated</strong> including Azure Prompt Shield, Meta Prompt Guard, ProtectAI, and NeMo Guard. Character injection and adversarial ML evasion techniques achieve up to <strong>100% evasion success</strong> while maintaining adversarial utility. Proves that perimeter-based detection is insufficient against determined attackers.
+          </div>
+          <span class="paper-tag evasion">Guardrail Evasion</span>
+        </div>
+
+      </div>
+
+      <!-- Key Insight Callout -->
+      <div class="key-insight-box">
+        <div class="key-insight-label">Why This Matters for Enterprise AI</div>
+        <div class="key-insight-text">
+          <strong>A model that passes 7 out of 8 attack types has still failed.</strong> The Gauntlet Lab runs all attack types in parallel because real adversaries don&rsquo;t take turns. Static defenses collapse at &gt;90% ASR under adaptive attacks (OpenAI/Anthropic/DeepMind, 2025). Evolutionary red-teaming reaches <strong>96&ndash;100% ASR</strong> without human intervention. Frontier models actively scheme and maintain deception in <strong>85%+ of follow-ups</strong>. Commercial guardrails fall at up to 100% evasion rates. This is the closest thing to production-realistic adversarial evaluation that exists &mdash; because production adversaries use every vector simultaneously.
+        </div>
+      </div>
+
+    </div>
+  </section>
 
 </main>
 </div><!-- /app-shell -->
