@@ -761,9 +761,12 @@
   var elapsedSec = 0;
 
   // ── Expose to global scope ──
+  window.MODEL_SCORES = MODEL_SCORES;
+  window.LABS = LABS;
   window.runFullEvaluation = runFullEvaluation;
   window.resetEval = resetEval;
   window.toggleDetail = toggleDetail;
+  window.onAllComplete = onAllComplete;
 
   function resetEval() {
     if (running) return;
