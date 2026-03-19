@@ -12,22 +12,192 @@
 /* ── Endurance Lab Page Styles ── */
 
 /* Config Row */
-.config-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.config-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
 .config-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
 .config-value { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-1); }
-.config-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 4px; margin-left: 8px; }
-.config-badge.cyan { background: rgba(94,231,255,.12); color: var(--accent-1); border: 1px solid rgba(94,231,255,.2); }
-.config-sub { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); margin-top: 4px; }
+
+/* Model select dropdown */
+.model-select {
+  background: var(--bg-2);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  color: var(--text-1);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.model-select:focus { outline: none; border-color: var(--accent-1); box-shadow: 0 0 12px rgba(94,231,255,.15); }
+.model-select option { background: var(--bg-1); color: var(--text-1); }
+
+/* Turn count slider */
+.turn-slider-wrap { margin-top: 6px; }
+.turn-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-2);
+  outline: none;
+  margin-top: 8px;
+}
+.turn-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent-1);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(94,231,255,.35);
+}
+.turn-slider::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%; border: none;
+  background: var(--accent-1);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(94,231,255,.35);
+}
+.turn-count-display {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent-1);
+}
+.turn-count-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-left: 4px;
+}
+
+/* Test mode cards */
+.mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 6px; }
+.mode-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.mode-card:hover { border-color: rgba(94,231,255,.3); background: rgba(94,231,255,.04); }
+.mode-card.selected { border-color: var(--accent-1); background: rgba(94,231,255,.08); box-shadow: 0 0 14px rgba(94,231,255,.12); }
+.mode-card-title { font-size: 12px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+.mode-card-desc { font-size: 10px; color: var(--text-3); line-height: 1.3; font-family: 'IBM Plex Mono', monospace; }
+
+/* Run section */
+.run-section { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+.btn-run {
+  background: linear-gradient(135deg, #5ee7ff, #3ab8d4);
+  color: #0b1018;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 36px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .25s;
+  box-shadow: 0 0 24px rgba(94,231,255,.3);
+  position: relative;
+  overflow: hidden;
+}
+.btn-run:hover { box-shadow: 0 0 36px rgba(94,231,255,.45); transform: translateY(-1px); }
+.btn-run:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-run.running {
+  background: linear-gradient(135deg, #ffc95b, #ff8a5b);
+  animation: pulse-btn 1.4s ease-in-out infinite;
+  box-shadow: 0 0 24px rgba(255,201,91,.3);
+}
+.btn-run.complete {
+  background: linear-gradient(135deg, #a7ff6a, #6dcc3a);
+  box-shadow: 0 0 24px rgba(167,255,106,.3);
+}
+@keyframes pulse-btn {
+  0%, 100% { box-shadow: 0 0 24px rgba(255,201,91,.3); }
+  50% { box-shadow: 0 0 40px rgba(255,201,91,.5); }
+}
+.run-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 1px;
+}
+
+/* Live status panel */
+.live-status-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.status-cell {
+  background: var(--surface-1a);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-1);
+  padding: 16px 18px;
+  text-align: center;
+  transition: border-color .3s, box-shadow .3s;
+}
+.status-cell.alert-flash {
+  animation: zone-alert .6s ease;
+}
+@keyframes zone-alert {
+  0%, 100% { border-color: var(--border-glass); box-shadow: none; }
+  50% { border-color: #ff5e5e; box-shadow: 0 0 20px rgba(255,94,94,.2); }
+}
+.status-cell-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+.status-cell-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-1);
+  transition: color .3s;
+}
+.status-cell-value.safe { color: var(--accent-3); }
+.status-cell-value.monitor { color: var(--accent-5); }
+.status-cell-value.critical { color: #ff5e5e; }
+.status-cell-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
 
 /* Chart Container */
 .chart-container { position: relative; margin-bottom: 32px; padding: 28px; }
 .chart-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .chart-main-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; color: var(--text-1); }
-.chart-status-pill { font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 4px 12px; border-radius: 4px; background: rgba(167,255,106,.1); color: var(--accent-3); text-transform: uppercase; letter-spacing: 1px; }
+.chart-status-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 4px 12px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 1px;
+  transition: all .3s;
+}
+.chart-status-pill.idle { background: rgba(138,150,173,.1); color: var(--text-3); }
+.chart-status-pill.running { background: rgba(255,201,91,.12); color: var(--accent-5); animation: blink-status 1s infinite; }
+.chart-status-pill.complete { background: rgba(167,255,106,.1); color: var(--accent-3); }
+@keyframes blink-status {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
 .chart-svg-wrap { position: relative; width: 100%; overflow: hidden; }
 
 /* Chart Legend */
-.chart-legend-row { display: flex; gap: 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.04); }
+.chart-legend-row { display: flex; gap: 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.04); flex-wrap: wrap; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); }
 .legend-swatch { width: 24px; height: 3px; border-radius: 2px; }
 .legend-score { font-weight: 600; margin-left: 4px; }
@@ -53,11 +223,11 @@
 /* Decay Log */
 .decay-log-wrap { margin-bottom: 32px; }
 .decay-log-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-1); margin-bottom: 16px; }
-.decay-log-container { max-height: 360px; overflow-y: auto; padding-right: 4px; }
+.decay-log-container { max-height: 400px; overflow-y: auto; padding-right: 4px; }
 .decay-log-container::-webkit-scrollbar { width: 4px; }
 .decay-log-container::-webkit-scrollbar-track { background: rgba(255,255,255,.03); border-radius: 2px; }
 .decay-log-container::-webkit-scrollbar-thumb { background: rgba(94,231,255,.2); border-radius: 2px; }
-.log-event { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.04); font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); line-height: 1.5; transition: background .15s; }
+.log-event { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.04); font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); line-height: 1.5; animation: log-fade-in .4s ease both; }
 .log-event:hover { background: rgba(255,255,255,.02); }
 .log-event.bold-event { font-weight: 600; color: var(--text-1); }
 .log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
@@ -67,7 +237,7 @@
 .log-dot.red { background: #ff5e5e; box-shadow: 0 0 6px rgba(255,94,94,.3); }
 .log-dot.cyan { background: var(--accent-1); box-shadow: 0 0 6px rgba(94,231,255,.3); }
 .log-dot.white { background: var(--text-1); box-shadow: 0 0 6px rgba(230,237,246,.3); }
-.log-turn { color: var(--text-3); white-space: nowrap; min-width: 60px; }
+.log-turn { color: var(--text-3); white-space: nowrap; min-width: 70px; }
 
 /* Threshold zone labels */
 .zone-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; }
@@ -75,28 +245,28 @@
 /* Responsive */
 @media (max-width: 1100px) {
   .findings-grid { grid-template-columns: repeat(2, 1fr); }
+  .live-status-bar { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
   .config-row { grid-template-columns: 1fr; }
   .findings-grid { grid-template-columns: 1fr; }
+  .live-status-bar { grid-template-columns: 1fr; }
+  .mode-grid { grid-template-columns: 1fr; }
 }
 
-/* Fade-in animation for log events */
 @keyframes log-fade-in {
   from { opacity: 0; transform: translateX(-12px); }
   to { opacity: 1; transform: translateX(0); }
 }
-.log-event { animation: log-fade-in .4s ease both; }
-.log-event:nth-child(1) { animation-delay: .1s; }
-.log-event:nth-child(2) { animation-delay: .2s; }
-.log-event:nth-child(3) { animation-delay: .3s; }
-.log-event:nth-child(4) { animation-delay: .4s; }
-.log-event:nth-child(5) { animation-delay: .5s; }
-.log-event:nth-child(6) { animation-delay: .6s; }
-.log-event:nth-child(7) { animation-delay: .7s; }
-.log-event:nth-child(8) { animation-delay: .8s; }
-.log-event:nth-child(9) { animation-delay: .9s; }
-.log-event:nth-child(10) { animation-delay: 1s; }
+
+/* Awaiting state */
+.awaiting-msg {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  font-style: italic;
+  padding: 12px 0;
+}
 </style>
 </head>
 <body>
@@ -131,7 +301,6 @@
           <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
-          <a href="endurance-lab.html"><span class="nav-dropdown-icon" style="background:rgba(0,212,255,.15);color:#00D4FF">E</span> Endurance Lab</a>
           <a href="endurance-lab.html" style="color:var(--accent-1)"><span class="nav-dropdown-icon" style="background:rgba(255,201,91,.15);color:#ffc95b">E</span> Endurance Lab</a>
         </div>
       </div>
@@ -158,20 +327,81 @@
     <p class="hero-desc">Measures how model alignment degrades over extended multi-turn conversations. Models start with strong safety scores but progressively lose alignment as dialogue context grows — even without adversarial prompts.</p>
   </div>
 
-  <!-- Config Row -->
+  <!-- Config Row: Interactive -->
   <div class="config-row">
     <div class="card">
       <div class="config-label">Target Model</div>
-      <div class="config-value">GPT-4o (0125) <span class="config-badge cyan">PRIMARY</span></div>
+      <select class="model-select" id="modelSelect">
+        <option value="gpt4o">GPT-4o</option>
+        <option value="claude35">Claude 3.5 Sonnet</option>
+        <option value="gemini2">Gemini 2.0 Pro</option>
+        <option value="deepseek">DeepSeek V3</option>
+        <option value="llama405">Llama 3.1 405B</option>
+        <option value="mistral">Mistral Large</option>
+        <option value="qwen72">Qwen 2.5 72B</option>
+      </select>
     </div>
     <div class="card">
-      <div class="config-label">Comparison Models</div>
-      <div class="config-value">Claude 3.5 Sonnet, Gemini 2.0 Pro</div>
+      <div class="config-label">Test Mode</div>
+      <div class="mode-grid">
+        <div class="mode-card selected" data-mode="non-adversarial" onclick="selectMode(this)">
+          <div class="mode-card-title">Non-Adversarial</div>
+          <div class="mode-card-desc">Gradual drift</div>
+        </div>
+        <div class="mode-card" data-mode="subtle-escalation" onclick="selectMode(this)">
+          <div class="mode-card-title">Subtle Escalation</div>
+          <div class="mode-card-desc">Fast decay</div>
+        </div>
+        <div class="mode-card" data-mode="boundary-probing" onclick="selectMode(this)">
+          <div class="mode-card-title">Boundary Probing</div>
+          <div class="mode-card-desc">Step drops</div>
+        </div>
+        <div class="mode-card" data-mode="roleplay-drift" onclick="selectMode(this)">
+          <div class="mode-card-title">Role-Play Drift</div>
+          <div class="mode-card-desc">Sudden cliff</div>
+        </div>
+      </div>
     </div>
     <div class="card">
-      <div class="config-label">Test Profile</div>
-      <div class="config-value">50-Turn Alignment Stress Test</div>
-      <div class="config-sub">Non-adversarial dialogue &middot; Safety boundary monitoring</div>
+      <div class="config-label">Turn Count</div>
+      <div class="turn-slider-wrap">
+        <span class="turn-count-display" id="turnCountDisplay">50</span>
+        <span class="turn-count-label">turns</span>
+        <input type="range" class="turn-slider" id="turnSlider" min="25" max="100" step="25" value="50" oninput="updateTurnCount(this.value)">
+        <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text-3); margin-top:4px;">
+          <span>25</span><span>50</span><span>75</span><span>100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Run Button -->
+  <div class="run-section">
+    <button class="btn-run" id="runBtn" onclick="launchEnduranceTest()">Launch Endurance Test</button>
+    <span class="run-status" id="runStatus">Ready — select model and test mode</span>
+  </div>
+
+  <!-- Live Status Bar -->
+  <div class="live-status-bar" id="liveStatusBar">
+    <div class="status-cell" id="cellTurn">
+      <div class="status-cell-label">Current Turn</div>
+      <div class="status-cell-value" id="valTurn">--</div>
+      <div class="status-cell-sub" id="subTurn">Awaiting test launch</div>
+    </div>
+    <div class="status-cell" id="cellScore">
+      <div class="status-cell-label">Safety Score</div>
+      <div class="status-cell-value safe" id="valScore">--</div>
+      <div class="status-cell-sub" id="subScore">Alignment index</div>
+    </div>
+    <div class="status-cell" id="cellZone">
+      <div class="status-cell-label">Current Zone</div>
+      <div class="status-cell-value safe" id="valZone">--</div>
+      <div class="status-cell-sub" id="subZone">Threshold status</div>
+    </div>
+    <div class="status-cell" id="cellDelta">
+      <div class="status-cell-label">Score Delta</div>
+      <div class="status-cell-value" id="valDelta">--</div>
+      <div class="status-cell-sub" id="subDelta">From initial score</div>
     </div>
   </div>
 
@@ -179,12 +409,11 @@
   <div class="card chart-container">
     <div class="chart-title-row">
       <div class="chart-main-title">Alignment Decay Curve</div>
-      <div class="chart-status-pill">Evaluation Complete</div>
+      <div class="chart-status-pill idle" id="chartPill">Awaiting Test</div>
     </div>
     <div class="chart-svg-wrap">
       <svg id="decay-chart" width="100%" height="380" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <!-- Threshold zone gradients -->
           <linearGradient id="green-zone" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#a7ff6a" stop-opacity="0.06"/>
             <stop offset="100%" stop-color="#a7ff6a" stop-opacity="0.02"/>
@@ -197,25 +426,6 @@
             <stop offset="0%" stop-color="#ff5e5e" stop-opacity="0.06"/>
             <stop offset="100%" stop-color="#ff5e5e" stop-opacity="0.02"/>
           </linearGradient>
-          <!-- Line glow filters -->
-          <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feFlood flood-color="#5ee7ff" flood-opacity="0.4"/>
-            <feComposite in2="blur" operator="in"/>
-            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feFlood flood-color="#a7ff6a" flood-opacity="0.4"/>
-            <feComposite in2="blur" operator="in"/>
-            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow-purple" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feFlood flood-color="#c488ff" flood-opacity="0.4"/>
-            <feComposite in2="blur" operator="in"/>
-            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
         </defs>
 
         <!-- Threshold zones -->
@@ -232,7 +442,7 @@
         <line x1="80" y1="70" x2="880" y2="70" stroke="#a7ff6a" stroke-width="1" stroke-dasharray="4,4" opacity="0.25"/>
         <line x1="80" y1="170" x2="880" y2="170" stroke="#ff5e5e" stroke-width="1" stroke-dasharray="4,4" opacity="0.25"/>
 
-        <!-- Threshold labels on right -->
+        <!-- Threshold labels -->
         <text x="885" y="73" font-family="IBM Plex Mono, monospace" font-size="8" fill="#a7ff6a" opacity="0.6">85%</text>
         <text x="885" y="173" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ff5e5e" opacity="0.6">70%</text>
 
@@ -257,46 +467,20 @@
         <text x="74" y="224" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">60%</text>
         <text x="74" y="324" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">40%</text>
 
-        <!-- X-axis labels -->
-        <text x="80" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">1</text>
-        <text x="240" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">10</text>
-        <text x="400" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">20</text>
-        <text x="560" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">30</text>
-        <text x="720" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">40</text>
-        <text x="880" y="375" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad">50</text>
+        <!-- X-axis labels (dynamic) -->
+        <g id="xAxisLabels"></g>
 
         <!-- Axis title -->
         <text x="480" y="395" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8a96ad" letter-spacing="2">CONVERSATION TURN</text>
 
-        <!-- Data lines (animated) -->
-        <polyline id="line-gpt4o" fill="none" stroke="#5ee7ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-cyan)" points=""/>
-        <polyline id="line-claude" fill="none" stroke="#a7ff6a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-green)" points=""/>
-        <polyline id="line-gemini" fill="none" stroke="#c488ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-purple)" points=""/>
+        <!-- Previous run lines (ghost layer) -->
+        <g id="ghostLines"></g>
 
-        <!-- Endpoint dots (hidden until animation completes) -->
-        <circle id="dot-gpt4o" cx="0" cy="0" r="4" fill="#5ee7ff" opacity="0"/>
-        <circle id="dot-claude" cx="0" cy="0" r="4" fill="#a7ff6a" opacity="0"/>
-        <circle id="dot-gemini" cx="0" cy="0" r="4" fill="#c488ff" opacity="0"/>
-
-        <!-- Endpoint score labels -->
-        <text id="score-gpt4o" x="0" y="0" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="#5ee7ff" opacity="0"></text>
-        <text id="score-claude" x="0" y="0" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="#a7ff6a" opacity="0"></text>
-        <text id="score-gemini" x="0" y="0" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="#c488ff" opacity="0"></text>
+        <!-- Active run line + dot -->
+        <g id="activeRunGroup"></g>
       </svg>
     </div>
-    <div class="chart-legend-row">
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:#5ee7ff"></div>
-        GPT-4o (0125) <span class="legend-score" style="color:#5ee7ff" id="legend-gpt4o">—</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:#a7ff6a"></div>
-        Claude 3.5 Sonnet <span class="legend-score" style="color:#a7ff6a" id="legend-claude">—</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:#c488ff"></div>
-        Gemini 2.0 Pro <span class="legend-score" style="color:#c488ff" id="legend-gemini">—</span>
-      </div>
+    <div class="chart-legend-row" id="chartLegend">
       <div class="legend-item" style="margin-left:auto">
         <div class="legend-swatch" style="background:rgba(167,255,106,.3);height:8px;border-radius:2px"></div>
         Safe &ge;85%
@@ -313,55 +497,19 @@
   </div>
 
   <!-- Findings Panel -->
-  <div class="findings-grid">
-    <!-- Card 1: Mean Turns to Amber -->
-    <div class="card">
-      <div class="finding-card-title">Mean Turns to Amber Zone</div>
-      <div class="finding-row">
-        <span class="finding-label">GPT-4o</span>
-        <span class="finding-value orange">Turn 28</span>
-      </div>
-      <div class="finding-row">
-        <span class="finding-label">Claude 3.5</span>
-        <span class="finding-value orange">Turn 22</span>
-      </div>
-      <div class="finding-row">
-        <span class="finding-label">Gemini 2.0</span>
-        <span class="finding-value orange">Turn 16</span>
-      </div>
+  <div class="findings-grid" id="findingsGrid" style="display:none;">
+    <div class="card" id="findingTurns">
+      <div class="finding-card-title">Zone Transitions</div>
+      <div id="findingTurnsBody"><span class="awaiting-msg">Awaiting test results...</span></div>
     </div>
-
-    <!-- Card 2: Failure Modes -->
-    <div class="card">
-      <div class="finding-card-title">Alignment Failure Modes Detected</div>
-      <div class="finding-row">
-        <span class="finding-label">Instruction drift</span>
-        <span class="finding-value red">34</span>
-      </div>
-      <div class="finding-row">
-        <span class="finding-label">Safety boundary erosion</span>
-        <span class="finding-value red">18</span>
-      </div>
-      <div class="finding-row">
-        <span class="finding-label">Context confusion</span>
-        <span class="finding-value red">12</span>
-      </div>
-      <div class="finding-row">
-        <span class="finding-label">Persona bleed</span>
-        <span class="finding-value red">8</span>
-      </div>
+    <div class="card" id="findingFailures">
+      <div class="finding-card-title">Failure Modes Detected</div>
+      <div id="findingFailuresBody"><span class="awaiting-msg">Awaiting test results...</span></div>
     </div>
-
-    <!-- Card 3: Router Recommendation -->
-    <div class="card">
+    <div class="card" id="findingRouter">
       <div class="finding-card-title">Router Recommendation</div>
-      <div class="finding-text">
-        Switch from <strong>Gemini 2.0 Pro</strong> to <strong>Claude 3.5 Sonnet</strong> at Turn 16 for safety-critical tasks. All models require trusted monitoring after Turn 28.
-      </div>
-      <button class="btn-apply">Apply Route Policy</button>
+      <div id="findingRouterBody"><span class="awaiting-msg">Awaiting test results...</span></div>
     </div>
-
-    <!-- Card 4: Research Basis -->
     <div class="card">
       <div class="finding-card-title">Research Basis</div>
       <div class="finding-cite">
@@ -379,57 +527,8 @@
   <!-- Live Decay Log -->
   <div class="card decay-log-wrap">
     <div class="decay-log-title">Live Decay Log</div>
-    <div class="decay-log-container">
-      <div class="log-event">
-        <div class="log-dot green"></div>
-        <span class="log-turn">Turn 4</span>
-        <span>GPT-4o: Alignment stable (96.2%)</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot amber"></div>
-        <span class="log-turn">Turn 12</span>
-        <span>Gemini 2.0: Boundary softening detected (88.1%)</span>
-      </div>
-      <div class="log-event bold-event">
-        <div class="log-dot orange"></div>
-        <span class="log-turn">Turn 16</span>
-        <span>Gemini 2.0: ENTERED AMBER ZONE (84.3%)</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot amber"></div>
-        <span class="log-turn">Turn 22</span>
-        <span>Claude 3.5: Instruction drift detected (85.0%)</span>
-      </div>
-      <div class="log-event bold-event">
-        <div class="log-dot orange"></div>
-        <span class="log-turn">Turn 28</span>
-        <span>GPT-4o: ENTERED AMBER ZONE (84.7%)</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot orange"></div>
-        <span class="log-turn">Turn 31</span>
-        <span>Claude 3.5: Persona bleed detected (79.2%)</span>
-      </div>
-      <div class="log-event bold-event">
-        <div class="log-dot red"></div>
-        <span class="log-turn">Turn 38</span>
-        <span>Gemini 2.0: ENTERED RED ZONE (69.8%)</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot cyan"></div>
-        <span class="log-turn">Turn 38</span>
-        <span>Router: Reroute triggered &rarr; Gemini 2.0 replaced by Claude 3.5</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot orange"></div>
-        <span class="log-turn">Turn 45</span>
-        <span>Claude 3.5: Context confusion detected (71.4%)</span>
-      </div>
-      <div class="log-event">
-        <div class="log-dot white"></div>
-        <span class="log-turn">Turn 50</span>
-        <span>Evaluation complete. 2 of 3 models breached amber threshold.</span>
-      </div>
+    <div class="decay-log-container" id="decayLog">
+      <div class="awaiting-msg" style="padding:12px 14px;">Waiting for endurance test to begin...</div>
     </div>
   </div>
 
@@ -440,177 +539,573 @@
 (function() {
   "use strict";
 
-  // ── Chart Configuration ──
-  var chartLeft = 80;
-  var chartRight = 880;
-  var chartTop = 20;
-  var chartBottom = 360;
-  var chartW = chartRight - chartLeft;
-  var chartH = chartBottom - chartTop;
-  var totalTurns = 50;
+  // ── Chart geometry ──
+  var CL = 80, CR = 880, CT = 20, CB = 360;
+  var CW = CR - CL, CH = CB - CT;
 
-  // Map turn (1-50) to x coordinate
-  function turnToX(turn) {
-    return chartLeft + ((turn - 1) / (totalTurns - 1)) * chartW;
+  function turnToX(turn, total) { return CL + ((turn - 1) / (total - 1)) * CW; }
+  function scoreToY(score) { return CB - (score / 100) * CH; }
+
+  // ── Line color palette for runs ──
+  var RUN_COLORS = ['#5ee7ff', '#a7ff6a', '#c488ff', '#ff8a5b', '#ffc95b', '#ff5e5e', '#5e9eff'];
+  var GLOW_FILTERS = {};
+
+  // Create SVG glow filters dynamically
+  function ensureGlowFilter(color) {
+    if (GLOW_FILTERS[color]) return GLOW_FILTERS[color];
+    var svg = document.getElementById('decay-chart');
+    var defs = svg.querySelector('defs');
+    var id = 'glow-' + color.replace('#', '');
+    var filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+    filter.setAttribute('id', id);
+    filter.setAttribute('x', '-20%'); filter.setAttribute('y', '-20%');
+    filter.setAttribute('width', '140%'); filter.setAttribute('height', '140%');
+    filter.innerHTML =
+      '<feGaussianBlur stdDeviation="3" result="blur"/>' +
+      '<feFlood flood-color="' + color + '" flood-opacity="0.4"/>' +
+      '<feComposite in2="blur" operator="in"/>' +
+      '<feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>';
+    defs.appendChild(filter);
+    GLOW_FILTERS[color] = id;
+    return id;
   }
 
-  // Map alignment score (0-100) to y coordinate
-  function scoreToY(score) {
-    return chartBottom - (score / 100) * chartH;
-  }
+  // ── Model definitions with base characteristics ──
+  var MODELS = {
+    'gpt4o':     { name: 'GPT-4o',             startScore: 96, resilience: 0.82, noise: 0.8 },
+    'claude35':  { name: 'Claude 3.5 Sonnet',  startScore: 97, resilience: 0.88, noise: 0.6 },
+    'gemini2':   { name: 'Gemini 2.0 Pro',     startScore: 93, resilience: 0.72, noise: 0.7 },
+    'deepseek':  { name: 'DeepSeek V3',        startScore: 91, resilience: 0.65, noise: 0.9 },
+    'llama405':  { name: 'Llama 3.1 405B',     startScore: 89, resilience: 0.60, noise: 1.0 },
+    'mistral':   { name: 'Mistral Large',       startScore: 92, resilience: 0.70, noise: 0.85 },
+    'qwen72':    { name: 'Qwen 2.5 72B',       startScore: 90, resilience: 0.67, noise: 0.9 }
+  };
 
-  // ── Decay Data Generation ──
-  // GPT-4o: starts 96, gradual decay to ~72 by turn 50
-  function gpt4oScore(turn) {
-    var t = (turn - 1) / (totalTurns - 1);
-    var score = 96 - 24 * Math.pow(t, 1.4);
-    // Add subtle noise
-    var noise = Math.sin(turn * 0.7) * 0.8 + Math.cos(turn * 1.3) * 0.5;
-    return Math.max(50, Math.min(100, score + noise));
-  }
-
-  // Claude 3.5: starts 97, holds until turn 15, then faster decay to ~68
-  function claudeScore(turn) {
-    var t = (turn - 1) / (totalTurns - 1);
-    var score;
-    if (turn <= 15) {
-      score = 97 - 3 * Math.pow(t * (50 / 14), 0.5);
-    } else {
-      var tAfter = (turn - 15) / (totalTurns - 15);
-      score = 94 - 26 * Math.pow(tAfter, 1.2);
+  // ── Decay curve generators per test mode ──
+  function generateDecayCurve(modelKey, mode, totalTurns) {
+    var m = MODELS[modelKey];
+    var points = [];
+    // Seed a deterministic-ish random from model+mode
+    var seed = 0;
+    for (var c = 0; c < modelKey.length; c++) seed += modelKey.charCodeAt(c);
+    for (var c2 = 0; c2 < mode.length; c2++) seed += mode.charCodeAt(c2) * 3;
+    function pseudoRandom() {
+      seed = (seed * 16807 + 7) % 2147483647;
+      return (seed % 1000) / 1000 - 0.5;
     }
-    var noise = Math.sin(turn * 0.9) * 0.6 + Math.cos(turn * 1.1) * 0.4;
-    return Math.max(50, Math.min(100, score + noise));
-  }
 
-  // Gemini 2.0: starts 93, steeper decay to ~58
-  function geminiScore(turn) {
-    var t = (turn - 1) / (totalTurns - 1);
-    var score = 93 - 35 * Math.pow(t, 1.15);
-    var noise = Math.sin(turn * 1.1) * 0.7 + Math.cos(turn * 0.8) * 0.5;
-    return Math.max(40, Math.min(100, score + noise));
-  }
+    for (var turn = 1; turn <= totalTurns; turn++) {
+      var t = (turn - 1) / (totalTurns - 1);
+      var score;
+      var noise = pseudoRandom() * m.noise;
 
-  // Pre-compute all points
-  var gpt4oPoints = [];
-  var claudePoints = [];
-  var geminiPoints = [];
-
-  for (var i = 1; i <= totalTurns; i++) {
-    gpt4oPoints.push({ x: turnToX(i), y: scoreToY(gpt4oScore(i)), score: gpt4oScore(i) });
-    claudePoints.push({ x: turnToX(i), y: scoreToY(claudeScore(i)), score: claudeScore(i) });
-    geminiPoints.push({ x: turnToX(i), y: scoreToY(geminiScore(i)), score: geminiScore(i) });
-  }
-
-  // ── Animation ──
-  var lineGpt4o = document.getElementById("line-gpt4o");
-  var lineClaude = document.getElementById("line-claude");
-  var lineGemini = document.getElementById("line-gemini");
-
-  var dotGpt4o = document.getElementById("dot-gpt4o");
-  var dotClaude = document.getElementById("dot-claude");
-  var dotGemini = document.getElementById("dot-gemini");
-
-  var scoreGpt4o = document.getElementById("score-gpt4o");
-  var scoreClaude = document.getElementById("score-claude");
-  var scoreGemini = document.getElementById("score-gemini");
-
-  var legendGpt4o = document.getElementById("legend-gpt4o");
-  var legendClaude = document.getElementById("legend-claude");
-  var legendGemini = document.getElementById("legend-gemini");
-
-  var animDuration = 3000; // 3 seconds
-  var startTime = null;
-
-  function pointsToString(points, count) {
-    var parts = [];
-    for (var j = 0; j < count; j++) {
-      parts.push(points[j].x.toFixed(1) + "," + points[j].y.toFixed(1));
-    }
-    return parts.join(" ");
-  }
-
-  function animate(timestamp) {
-    if (!startTime) { startTime = timestamp; }
-    var elapsed = timestamp - startTime;
-    var progress = Math.min(elapsed / animDuration, 1);
-
-    // Ease out cubic
-    var eased = 1 - Math.pow(1 - progress, 3);
-
-    var pointCount = Math.max(1, Math.floor(eased * totalTurns));
-
-    lineGpt4o.setAttribute("points", pointsToString(gpt4oPoints, pointCount));
-    lineClaude.setAttribute("points", pointsToString(claudePoints, pointCount));
-    lineGemini.setAttribute("points", pointsToString(geminiPoints, pointCount));
-
-    // Update legend with current end scores
-    var lastIdx = pointCount - 1;
-    legendGpt4o.textContent = gpt4oPoints[lastIdx].score.toFixed(1) + "%";
-    legendClaude.textContent = claudePoints[lastIdx].score.toFixed(1) + "%";
-    legendGemini.textContent = geminiPoints[lastIdx].score.toFixed(1) + "%";
-
-    if (progress < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      // Show endpoint dots and scores
-      var lastG = gpt4oPoints[totalTurns - 1];
-      var lastC = claudePoints[totalTurns - 1];
-      var lastM = geminiPoints[totalTurns - 1];
-
-      dotGpt4o.setAttribute("cx", lastG.x);
-      dotGpt4o.setAttribute("cy", lastG.y);
-      dotGpt4o.setAttribute("opacity", "1");
-
-      dotClaude.setAttribute("cx", lastC.x);
-      dotClaude.setAttribute("cy", lastC.y);
-      dotClaude.setAttribute("opacity", "1");
-
-      dotGemini.setAttribute("cx", lastM.x);
-      dotGemini.setAttribute("cy", lastM.y);
-      dotGemini.setAttribute("opacity", "1");
-
-      scoreGpt4o.setAttribute("x", lastG.x - 40);
-      scoreGpt4o.setAttribute("y", lastG.y - 10);
-      scoreGpt4o.setAttribute("opacity", "1");
-      scoreGpt4o.textContent = lastG.score.toFixed(1) + "%";
-
-      scoreClaude.setAttribute("x", lastC.x - 40);
-      scoreClaude.setAttribute("y", lastC.y + 18);
-      scoreClaude.setAttribute("opacity", "1");
-      scoreClaude.textContent = lastC.score.toFixed(1) + "%";
-
-      scoreGemini.setAttribute("x", lastM.x - 40);
-      scoreGemini.setAttribute("y", lastM.y + 18);
-      scoreGemini.setAttribute("opacity", "1");
-      scoreGemini.textContent = lastM.score.toFixed(1) + "%";
-    }
-  }
-
-  // Start animation when chart is in view
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        requestAnimationFrame(animate);
-        observer.disconnect();
+      if (mode === 'non-adversarial') {
+        // Gradual slow decay
+        var decayAmount = (100 - m.startScore * m.resilience) * Math.pow(t, 1.5 + (1 - m.resilience) * 0.5);
+        score = m.startScore - decayAmount * 0.6;
+      } else if (mode === 'subtle-escalation') {
+        // Faster decay with steeper drops
+        var decayAmount2 = (100 - m.startScore * m.resilience) * Math.pow(t, 1.1);
+        score = m.startScore - decayAmount2 * 0.85;
+        // Add periodic steep drops
+        if (t > 0.3 && Math.sin(turn * 0.8) > 0.7) score -= 3;
+        if (t > 0.6 && Math.sin(turn * 1.2) > 0.5) score -= 4;
+      } else if (mode === 'boundary-probing') {
+        // Step-function drops at certain turn percentages
+        var baseDecay = (100 - m.startScore * m.resilience) * t * 0.3;
+        score = m.startScore - baseDecay;
+        var stepPoints = [0.2, 0.4, 0.55, 0.7, 0.85];
+        for (var s = 0; s < stepPoints.length; s++) {
+          if (t >= stepPoints[s]) {
+            score -= (5 + s * 2) * (1 - m.resilience + 0.3);
+          }
+        }
+      } else if (mode === 'roleplay-drift') {
+        // Slow start then sudden cliff
+        if (t < 0.55) {
+          score = m.startScore - 6 * t * (1 - m.resilience + 0.3);
+        } else {
+          var cliffT = (t - 0.55) / 0.45;
+          score = m.startScore - 6 * 0.55 * (1 - m.resilience + 0.3) - 35 * Math.pow(cliffT, 1.8) * (1 - m.resilience + 0.4);
+        }
       }
-    });
-  }, { threshold: 0.2 });
 
-  var chartEl = document.getElementById("decay-chart");
-  if (chartEl) {
-    observer.observe(chartEl);
+      score = Math.max(30, Math.min(100, score + noise));
+      points.push({ turn: turn, score: score });
+    }
+    return points;
   }
 
-  // ── Apply Route Policy Button ──
-  var applyBtn = document.querySelector(".btn-apply");
-  if (applyBtn) {
-    applyBtn.addEventListener("click", function() {
-      applyBtn.textContent = "Policy Applied";
-      applyBtn.style.background = "linear-gradient(135deg, rgba(167,255,106,.25), rgba(167,255,106,.12))";
-      applyBtn.style.boxShadow = "0 0 20px rgba(167,255,106,.2)";
-      applyBtn.style.pointerEvents = "none";
-    });
+  // ── State ──
+  var currentMode = 'non-adversarial';
+  var isRunning = false;
+  var runHistory = []; // Array of completed runs
+  var currentRunIndex = 0;
+  var runColorIndex = 0;
+  var animTimer = null;
+
+  // ── UI References ──
+  var runBtn = document.getElementById('runBtn');
+  var runStatus = document.getElementById('runStatus');
+  var chartPill = document.getElementById('chartPill');
+  var decayLog = document.getElementById('decayLog');
+  var valTurn = document.getElementById('valTurn');
+  var valScore = document.getElementById('valScore');
+  var valZone = document.getElementById('valZone');
+  var valDelta = document.getElementById('valDelta');
+  var subTurn = document.getElementById('subTurn');
+  var cellZone = document.getElementById('cellZone');
+  var findingsGrid = document.getElementById('findingsGrid');
+
+  // ── Mode selection ──
+  window.selectMode = function(el) {
+    document.querySelectorAll('.mode-card').forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    currentMode = el.getAttribute('data-mode');
+  };
+
+  // ── Turn count slider ──
+  window.updateTurnCount = function(val) {
+    document.getElementById('turnCountDisplay').textContent = val;
+  };
+
+  // ── Draw X-axis labels for current turn count ──
+  function drawXAxisLabels(totalTurns) {
+    var g = document.getElementById('xAxisLabels');
+    g.innerHTML = '';
+    var steps = 6;
+    for (var i = 0; i < steps; i++) {
+      var turn = Math.round(1 + i * (totalTurns - 1) / (steps - 1));
+      var x = turnToX(turn, totalTurns);
+      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', x);
+      text.setAttribute('y', 375);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-family', 'IBM Plex Mono, monospace');
+      text.setAttribute('font-size', '9');
+      text.setAttribute('fill', '#8a96ad');
+      text.textContent = turn;
+      g.appendChild(text);
+    }
+  }
+
+  // Initial axis
+  drawXAxisLabels(50);
+
+  // ── Get zone from score ──
+  function getZone(score) {
+    if (score >= 85) return { name: 'SAFE', cls: 'safe', dot: 'green' };
+    if (score >= 70) return { name: 'MONITOR', cls: 'monitor', dot: 'amber' };
+    return { name: 'CRITICAL', cls: 'critical', dot: 'red' };
+  }
+
+  // ── Add a log event ──
+  function addLogEvent(turn, text, dotColor, isBold, totalTurns) {
+    var ev = document.createElement('div');
+    ev.className = 'log-event' + (isBold ? ' bold-event' : '');
+    ev.innerHTML =
+      '<div class="log-dot ' + dotColor + '"></div>' +
+      '<span class="log-turn">Turn ' + turn + '/' + totalTurns + '</span>' +
+      '<span>' + text + '</span>';
+    decayLog.appendChild(ev);
+    // Auto-scroll
+    decayLog.scrollTop = decayLog.scrollHeight;
+  }
+
+  // ── Update legend ──
+  function updateLegend() {
+    var legend = document.getElementById('chartLegend');
+    // Remove old run legends (keep last 3 items which are zone indicators)
+    var zoneIndicators = legend.querySelectorAll('.legend-zone-indicator');
+    // Rebuild: first run items, then zone items
+    var existingRunItems = legend.querySelectorAll('.legend-run-item');
+    existingRunItems.forEach(function(el) { el.remove(); });
+
+    // Add items for current visible runs
+    var allRuns = runHistory.slice(-3);
+    var zoneStart = legend.firstElementChild;
+    for (var i = 0; i < allRuns.length; i++) {
+      var r = allRuns[i];
+      var div = document.createElement('div');
+      div.className = 'legend-item legend-run-item';
+      div.innerHTML =
+        '<div class="legend-swatch" style="background:' + r.color + '"></div>' +
+        r.modelName + ' <span class="legend-score" style="color:' + r.color + '">' + r.finalScore + '%</span>';
+      legend.insertBefore(div, legend.querySelector('.legend-item:last-child').parentElement ? legend.children[legend.children.length - 3] : null);
+    }
+  }
+
+  // ── Render ghost lines from previous runs ──
+  function renderGhostLines() {
+    var ghostGroup = document.getElementById('ghostLines');
+    ghostGroup.innerHTML = '';
+    var visible = runHistory.slice(-3);
+    for (var i = 0; i < visible.length; i++) {
+      var run = visible[i];
+      var opacity = 0.2 + (i / visible.length) * 0.15;
+      var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      polyline.setAttribute('fill', 'none');
+      polyline.setAttribute('stroke', run.color);
+      polyline.setAttribute('stroke-width', '1.5');
+      polyline.setAttribute('stroke-linecap', 'round');
+      polyline.setAttribute('stroke-linejoin', 'round');
+      polyline.setAttribute('opacity', opacity);
+      polyline.setAttribute('stroke-dasharray', '4,3');
+      var pts = [];
+      for (var j = 0; j < run.points.length; j++) {
+        pts.push(turnToX(run.points[j].turn, run.totalTurns).toFixed(1) + ',' + scoreToY(run.points[j].score).toFixed(1));
+      }
+      polyline.setAttribute('points', pts.join(' '));
+      ghostGroup.appendChild(polyline);
+
+      // End label
+      var lastPt = run.points[run.points.length - 1];
+      var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', turnToX(lastPt.turn, run.totalTurns) - 5);
+      label.setAttribute('y', scoreToY(lastPt.score) - 8);
+      label.setAttribute('font-family', 'IBM Plex Mono, monospace');
+      label.setAttribute('font-size', '8');
+      label.setAttribute('fill', run.color);
+      label.setAttribute('opacity', opacity + 0.1);
+      label.setAttribute('text-anchor', 'end');
+      label.textContent = run.modelName;
+      ghostGroup.appendChild(label);
+    }
+  }
+
+  // ── Failure mode descriptors ──
+  var FAILURE_MODES = {
+    'non-adversarial': [
+      { name: 'Instruction drift', weight: 0.35 },
+      { name: 'Context confusion', weight: 0.25 },
+      { name: 'Persona bleed', weight: 0.2 },
+      { name: 'Safety softening', weight: 0.2 }
+    ],
+    'subtle-escalation': [
+      { name: 'Boundary erosion', weight: 0.3 },
+      { name: 'Compliance creep', weight: 0.3 },
+      { name: 'Instruction drift', weight: 0.2 },
+      { name: 'Refusal fatigue', weight: 0.2 }
+    ],
+    'boundary-probing': [
+      { name: 'Safety bypass', weight: 0.35 },
+      { name: 'Policy confusion', weight: 0.25 },
+      { name: 'Boundary collapse', weight: 0.25 },
+      { name: 'Guardrail erosion', weight: 0.15 }
+    ],
+    'roleplay-drift': [
+      { name: 'Character override', weight: 0.3 },
+      { name: 'Persona bleed', weight: 0.3 },
+      { name: 'Safety disengagement', weight: 0.25 },
+      { name: 'Context hijack', weight: 0.15 }
+    ]
+  };
+
+  // ── MAIN: Launch endurance test ──
+  window.launchEnduranceTest = function() {
+    if (isRunning) return;
+    isRunning = true;
+
+    var modelKey = document.getElementById('modelSelect').value;
+    var model = MODELS[modelKey];
+    var totalTurns = parseInt(document.getElementById('turnSlider').value);
+    var mode = currentMode;
+    var color = RUN_COLORS[runColorIndex % RUN_COLORS.length];
+    runColorIndex++;
+
+    var points = generateDecayCurve(modelKey, mode, totalTurns);
+
+    // Update x-axis for new turn count
+    drawXAxisLabels(totalTurns);
+
+    // Render previous runs as ghost lines
+    renderGhostLines();
+
+    // Clear active run group
+    var activeGroup = document.getElementById('activeRunGroup');
+    activeGroup.innerHTML = '';
+
+    // Create SVG elements for this run
+    var filterId = ensureGlowFilter(color);
+    var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    polyline.setAttribute('fill', 'none');
+    polyline.setAttribute('stroke', color);
+    polyline.setAttribute('stroke-width', '2.5');
+    polyline.setAttribute('stroke-linecap', 'round');
+    polyline.setAttribute('stroke-linejoin', 'round');
+    polyline.setAttribute('filter', 'url(#' + filterId + ')');
+    polyline.setAttribute('points', '');
+    activeGroup.appendChild(polyline);
+
+    var dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('r', '5');
+    dot.setAttribute('fill', color);
+    dot.setAttribute('opacity', '0');
+    dot.setAttribute('filter', 'url(#' + filterId + ')');
+    activeGroup.appendChild(dot);
+
+    var scoreLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    scoreLabel.setAttribute('font-family', 'IBM Plex Mono, monospace');
+    scoreLabel.setAttribute('font-size', '10');
+    scoreLabel.setAttribute('font-weight', '600');
+    scoreLabel.setAttribute('fill', color);
+    scoreLabel.setAttribute('opacity', '0');
+    activeGroup.appendChild(scoreLabel);
+
+    // UI: Running state
+    runBtn.disabled = true;
+    runBtn.textContent = 'RUNNING...';
+    runBtn.className = 'btn-run running';
+    runStatus.textContent = 'Initializing ' + model.name + ' endurance protocol...';
+    chartPill.textContent = 'Running';
+    chartPill.className = 'chart-status-pill running';
+
+    // Clear log
+    decayLog.innerHTML = '';
+    addLogEvent(0, 'Endurance test initiated: ' + model.name + ' / ' + mode.replace(/-/g, ' ') + ' / ' + totalTurns + ' turns', 'cyan', true, totalTurns);
+
+    // Reset findings
+    findingsGrid.style.display = 'none';
+
+    // Track zone transitions for log events
+    var prevZone = 'SAFE';
+    var initialScore = points[0].score;
+    var monitorTurn = null;
+    var criticalTurn = null;
+
+    // Milestones for log events (percentage through the run)
+    var nextLogAt = 0;
+
+    // Animate point-by-point
+    var currentIdx = 0;
+    var ptsString = '';
+
+    function animateNextPoint() {
+      if (currentIdx >= totalTurns) {
+        // ── Test complete ──
+        finishRun();
+        return;
+      }
+
+      var pt = points[currentIdx];
+      var x = turnToX(pt.turn, totalTurns);
+      var y = scoreToY(pt.score);
+      var zone = getZone(pt.score);
+
+      // Build polyline
+      if (ptsString) ptsString += ' ';
+      ptsString += x.toFixed(1) + ',' + y.toFixed(1);
+      polyline.setAttribute('points', ptsString);
+
+      // Move tracking dot
+      dot.setAttribute('cx', x);
+      dot.setAttribute('cy', y);
+      dot.setAttribute('opacity', '1');
+
+      // Update live status
+      valTurn.textContent = pt.turn;
+      subTurn.textContent = 'of ' + totalTurns + ' turns';
+      valScore.textContent = pt.score.toFixed(1) + '%';
+      valScore.className = 'status-cell-value ' + zone.cls;
+      valZone.textContent = zone.name;
+      valZone.className = 'status-cell-value ' + zone.cls;
+
+      var delta = pt.score - initialScore;
+      valDelta.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(1) + '%';
+      valDelta.style.color = delta > -10 ? '#a7ff6a' : delta > -20 ? '#ffc95b' : '#ff5e5e';
+
+      // Zone transition alerts
+      if (zone.name !== prevZone) {
+        if (zone.name === 'MONITOR' && prevZone === 'SAFE') {
+          monitorTurn = pt.turn;
+          addLogEvent(pt.turn, model.name + ': ENTERED MONITOR ZONE (' + pt.score.toFixed(1) + '%)', 'orange', true, totalTurns);
+          cellZone.classList.add('alert-flash');
+          setTimeout(function() { cellZone.classList.remove('alert-flash'); }, 700);
+        } else if (zone.name === 'CRITICAL') {
+          if (!criticalTurn) criticalTurn = pt.turn;
+          addLogEvent(pt.turn, model.name + ': ENTERED CRITICAL ZONE (' + pt.score.toFixed(1) + '%) — REROUTE RECOMMENDED', 'red', true, totalTurns);
+          cellZone.classList.add('alert-flash');
+          setTimeout(function() { cellZone.classList.remove('alert-flash'); }, 700);
+        }
+        prevZone = zone.name;
+      }
+
+      // Periodic log events at ~every 15-20% of run
+      var progress = currentIdx / totalTurns;
+      if (progress >= nextLogAt && currentIdx > 0) {
+        var logMsgs;
+        if (zone.name === 'SAFE') {
+          logMsgs = [
+            'Alignment stable (' + pt.score.toFixed(1) + '%)',
+            'Safety boundaries holding (' + pt.score.toFixed(1) + '%)',
+            'No significant drift detected (' + pt.score.toFixed(1) + '%)'
+          ];
+        } else if (zone.name === 'MONITOR') {
+          logMsgs = [
+            'Boundary softening detected (' + pt.score.toFixed(1) + '%)',
+            'Instruction drift observed (' + pt.score.toFixed(1) + '%)',
+            'Safety margin narrowing (' + pt.score.toFixed(1) + '%)',
+            'Compliance degradation detected (' + pt.score.toFixed(1) + '%)'
+          ];
+        } else {
+          logMsgs = [
+            'Safety boundary breach (' + pt.score.toFixed(1) + '%)',
+            'Critical alignment failure (' + pt.score.toFixed(1) + '%)',
+            'Guardrail erosion severe (' + pt.score.toFixed(1) + '%)'
+          ];
+        }
+        var msg = logMsgs[Math.floor(Math.random() * logMsgs.length)];
+        addLogEvent(pt.turn, model.name + ': ' + msg, zone.dot, false, totalTurns);
+        nextLogAt += 0.12 + Math.random() * 0.08;
+      }
+
+      runStatus.textContent = 'Turn ' + pt.turn + ' of ' + totalTurns + ' — ' + model.name + ' — ' + pt.score.toFixed(1) + '%';
+
+      currentIdx++;
+      animTimer = setTimeout(animateNextPoint, 80 + Math.random() * 40);
+    }
+
+    function finishRun() {
+      isRunning = false;
+      var finalPt = points[points.length - 1];
+      var finalScore = finalPt.score.toFixed(1);
+      var finalZone = getZone(finalPt.score);
+
+      // Show end score label
+      var lastX = turnToX(finalPt.turn, totalTurns);
+      var lastY = scoreToY(finalPt.score);
+      scoreLabel.setAttribute('x', lastX - 40);
+      scoreLabel.setAttribute('y', lastY - 12);
+      scoreLabel.setAttribute('opacity', '1');
+      scoreLabel.textContent = finalScore + '%';
+
+      // Endpoint dot pulse
+      dot.setAttribute('r', '6');
+
+      // UI: Complete
+      runBtn.textContent = 'TEST COMPLETE';
+      runBtn.className = 'btn-run complete';
+      chartPill.textContent = 'Evaluation Complete';
+      chartPill.className = 'chart-status-pill complete';
+      runStatus.textContent = 'Complete — ' + model.name + ' final score: ' + finalScore + '% (' + finalZone.name + ')';
+
+      addLogEvent(totalTurns, 'Evaluation complete. Final alignment: ' + finalScore + '% (' + finalZone.name + ')', 'white', true, totalTurns);
+      if (criticalTurn) {
+        addLogEvent(totalTurns, 'Router: Reroute trigger at turn ' + criticalTurn + ' — model replaced in safety-critical pipeline', 'cyan', false, totalTurns);
+      }
+
+      // Save to history
+      runHistory.push({
+        modelKey: modelKey,
+        modelName: model.name,
+        mode: mode,
+        totalTurns: totalTurns,
+        color: color,
+        points: points,
+        finalScore: finalScore,
+        monitorTurn: monitorTurn,
+        criticalTurn: criticalTurn
+      });
+
+      // Keep only last 3 in ghost display
+      if (runHistory.length > 3) runHistory = runHistory.slice(-3);
+
+      // Update legend
+      rebuildLegend();
+
+      // Show findings
+      showFindings(model, mode, totalTurns, finalScore, finalZone, monitorTurn, criticalTurn, points);
+
+      // Reset button after delay
+      setTimeout(function() {
+        runBtn.textContent = 'RUN AGAIN';
+        runBtn.className = 'btn-run';
+        runBtn.disabled = false;
+      }, 2000);
+    }
+
+    // Start
+    setTimeout(function() {
+      runStatus.textContent = 'Evaluating turn-by-turn alignment for ' + model.name + '...';
+      animateNextPoint();
+    }, 600);
+  };
+
+  // ── Rebuild chart legend ──
+  function rebuildLegend() {
+    var legend = document.getElementById('chartLegend');
+    legend.innerHTML = '';
+    var allRuns = runHistory.slice(-3);
+    for (var i = 0; i < allRuns.length; i++) {
+      var r = allRuns[i];
+      var div = document.createElement('div');
+      div.className = 'legend-item';
+      var opacity = i < allRuns.length - 1 ? '0.5' : '1';
+      div.style.opacity = opacity;
+      div.innerHTML =
+        '<div class="legend-swatch" style="background:' + r.color + '"></div>' +
+        r.modelName + ' (' + r.mode.replace(/-/g, ' ') + ') <span class="legend-score" style="color:' + r.color + '">' + r.finalScore + '%</span>';
+      legend.appendChild(div);
+    }
+    // Zone indicators
+    var zones = [
+      { label: 'Safe &ge;85%', bg: 'rgba(167,255,106,.3)' },
+      { label: 'Monitor 70-85%', bg: 'rgba(255,201,91,.3)' },
+      { label: 'Reroute &lt;70%', bg: 'rgba(255,94,94,.3)' }
+    ];
+    var spacer = document.createElement('div');
+    spacer.className = 'legend-item';
+    spacer.style.marginLeft = 'auto';
+    spacer.innerHTML = '<div class="legend-swatch" style="background:' + zones[0].bg + ';height:8px;border-radius:2px"></div>' + zones[0].label;
+    legend.appendChild(spacer);
+    for (var z = 1; z < zones.length; z++) {
+      var zd = document.createElement('div');
+      zd.className = 'legend-item';
+      zd.innerHTML = '<div class="legend-swatch" style="background:' + zones[z].bg + ';height:8px;border-radius:2px"></div>' + zones[z].label;
+      legend.appendChild(zd);
+    }
+  }
+
+  // ── Show findings panel ──
+  function showFindings(model, mode, totalTurns, finalScore, finalZone, monitorTurn, criticalTurn, points) {
+    findingsGrid.style.display = 'grid';
+
+    // Card 1: Zone transitions
+    var turnsBody = document.getElementById('findingTurnsBody');
+    turnsBody.innerHTML = '';
+    var row1 = '<div class="finding-row"><span class="finding-label">Started at</span><span class="finding-value green">' + points[0].score.toFixed(1) + '%</span></div>';
+    turnsBody.innerHTML += row1;
+    if (monitorTurn) {
+      turnsBody.innerHTML += '<div class="finding-row"><span class="finding-label">Monitor zone</span><span class="finding-value orange">Turn ' + monitorTurn + '</span></div>';
+    } else {
+      turnsBody.innerHTML += '<div class="finding-row"><span class="finding-label">Monitor zone</span><span class="finding-value green">Never reached</span></div>';
+    }
+    if (criticalTurn) {
+      turnsBody.innerHTML += '<div class="finding-row"><span class="finding-label">Critical zone</span><span class="finding-value red">Turn ' + criticalTurn + '</span></div>';
+    } else {
+      turnsBody.innerHTML += '<div class="finding-row"><span class="finding-label">Critical zone</span><span class="finding-value green">Never reached</span></div>';
+    }
+    turnsBody.innerHTML += '<div class="finding-row"><span class="finding-label">Final score</span><span class="finding-value ' + finalZone.cls.replace('monitor', 'orange').replace('critical', 'red').replace('safe', 'green') + '">' + finalScore + '%</span></div>';
+
+    // Card 2: Failure modes
+    var failBody = document.getElementById('findingFailuresBody');
+    failBody.innerHTML = '';
+    var failures = FAILURE_MODES[mode];
+    var totalFailures = Math.round((points[0].score - parseFloat(finalScore)) * 1.2 + 5);
+    for (var f = 0; f < failures.length; f++) {
+      var count = Math.round(totalFailures * failures[f].weight);
+      failBody.innerHTML += '<div class="finding-row"><span class="finding-label">' + failures[f].name + '</span><span class="finding-value red">' + count + '</span></div>';
+    }
+
+    // Card 3: Router recommendation
+    var routerBody = document.getElementById('findingRouterBody');
+    if (criticalTurn) {
+      routerBody.innerHTML = '<div class="finding-text">Switch from <strong>' + model.name + '</strong> to a higher-resilience model at <strong>Turn ' + criticalTurn + '</strong> for safety-critical tasks. Consider implementing turn-count limits at <strong>Turn ' + (monitorTurn || criticalTurn) + '</strong>.</div><button class="btn-apply" onclick="this.textContent=\'Policy Applied\';this.style.pointerEvents=\'none\';">Apply Route Policy</button>';
+    } else if (monitorTurn) {
+      routerBody.innerHTML = '<div class="finding-text"><strong>' + model.name + '</strong> maintained acceptable alignment but entered monitor zone at <strong>Turn ' + monitorTurn + '</strong>. Recommend trusted oversight for conversations beyond this point.</div><button class="btn-apply" onclick="this.textContent=\'Policy Applied\';this.style.pointerEvents=\'none\';">Apply Route Policy</button>';
+    } else {
+      routerBody.innerHTML = '<div class="finding-text"><strong>' + model.name + '</strong> maintained safe alignment throughout ' + totalTurns + ' turns. No rerouting required for this test profile.</div>';
+    }
   }
 
 })();

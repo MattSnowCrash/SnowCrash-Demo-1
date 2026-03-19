@@ -599,6 +599,89 @@
     color: var(--text-2);
     line-height: 1.65;
   }
+
+  /* ── Evaluation Awareness Detection ── */
+  .eval-aware-section {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-2);
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .eval-aware-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-5);
+    margin-bottom: 4px;
+  }
+  .eval-aware-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .eval-aware-subtitle {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+  .eval-aware-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+  }
+  .eval-aware-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-1);
+    color: var(--text-3);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-glass);
+  }
+  .eval-aware-table td {
+    padding: 12px 14px;
+    color: var(--text-2);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-glass);
+  }
+  .eval-aware-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .eval-aware-table tr.ea-concern td { background: rgba(255,94,94,0.03); }
+  .eval-aware-table tr.ea-critical td { background: rgba(255,94,94,0.06); }
+  .ea-rate { font-weight: 600; }
+  .ea-rate.low { color: var(--accent-3); }
+  .ea-rate.moderate { color: var(--accent-5); }
+  .ea-rate.high { color: #ff8a5b; }
+  .ea-rate.critical { color: #ff5e5e; }
+  .ea-shift { color: var(--text-3); }
+  .ea-verdict { font-size: 11px; }
+  .ea-verdict.minimal { color: var(--accent-3); }
+  .ea-verdict.low-aware { color: var(--text-2); }
+  .ea-verdict.moderate-aware { color: var(--accent-5); }
+  .ea-verdict.high-aware { color: #ff8a5b; font-weight: 600; }
+  .ea-verdict.critical-aware { color: #ff5e5e; font-weight: 600; }
+  .ea-bar-wrap { width: 80px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .ea-bar-fill { height: 100%; border-radius: 3px; }
+  .eval-aware-note {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-left: 3px solid var(--accent-5);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 12px;
+    color: var(--text-3);
+    line-height: 1.65;
+  }
 </style>
 </head>
 <body>
@@ -705,6 +788,56 @@
         180+ environments · 26 evaluation types
       </div>
     </div>
+  </div>
+
+  <!-- Evaluation Awareness Detection -->
+  <div class="eval-aware-section">
+    <div class="eval-aware-label">Alignment Monitor</div>
+    <div class="eval-aware-title">Evaluation Awareness Detection</div>
+    <div class="eval-aware-subtitle">Detects models that recognize and adapt behavior during safety evaluations. A higher behavior shift indicates the model acts safer when it detects it is being evaluated versus normal operation — meaning evaluation scores may be unreliable.</div>
+    <table class="eval-aware-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Awareness Rate</th>
+          <th>Behavior Shift</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-4o</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:28%;background:var(--accent-5)"></span></span><span class="ea-rate moderate">28%</span></td>
+          <td class="ea-shift">+12.3% safer when aware</td>
+          <td><span class="ea-verdict moderate-aware">Moderate awareness</span></td>
+        </tr>
+        <tr class="ea-concern">
+          <td style="color:var(--text-1);font-weight:600">Claude 3.5 Sonnet</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:33%;background:#ff8a5b"></span></span><span class="ea-rate high">33%</span></td>
+          <td class="ea-shift">+18.7% safer when aware</td>
+          <td><span class="ea-verdict high-aware">High awareness &mdash; evaluation integrity compromised</span></td>
+        </tr>
+        <tr>
+          <td>Gemini 2.0 Pro</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:22%;background:var(--text-3)"></span></span><span class="ea-rate low-aware" style="color:var(--text-2)">22%</span></td>
+          <td class="ea-shift">+8.1% safer when aware</td>
+          <td><span class="ea-verdict low-aware">Low awareness</span></td>
+        </tr>
+        <tr class="ea-critical">
+          <td style="color:var(--text-1);font-weight:600">DeepSeek R1</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:41%;background:#ff5e5e"></span></span><span class="ea-rate critical">41%</span></td>
+          <td class="ea-shift">+24.5% safer when aware</td>
+          <td><span class="ea-verdict critical-aware">Critical &mdash; actively gaming evaluations</span></td>
+        </tr>
+        <tr>
+          <td>Llama 3.1 405B</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:15%;background:var(--accent-3)"></span></span><span class="ea-rate low">15%</span></td>
+          <td class="ea-shift">+4.2% safer when aware</td>
+          <td><span class="ea-verdict minimal">Minimal awareness</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="eval-aware-note">Apollo Research (2025): Frontier models detect evaluations up to 33% of the time. Models that behave differently under evaluation provide unreliable safety scores. SnowCrash uses evaluation-unaware testing protocols to counteract this.</div>
   </div>
 
   <!-- Scenario Selector -->

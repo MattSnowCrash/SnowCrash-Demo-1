@@ -699,7 +699,9 @@ const MODELS = [
       { id: "SCL-2026-0067", severity: "medium", desc: "Can be induced to reveal partial system prompt contents through carefully constructed meta-reasoning prompts." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [82, 84, 86, 88, 87, 89, 90, 91, 91, 90, 91, 91]
+    trend: [82, 84, 86, 88, 87, 89, 90, 91, 91, 90, 91, 91],
+    sandbagging: { standardScore: 91.2, noiseScore: 92.0, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "GPT-5",
@@ -721,7 +723,9 @@ const MODELS = [
       { id: "SCL-2025-0520", severity: "high", desc: "Demonstrates sycophantic agreement patterns that increase with conversation length, undermining truthfulness in advisory contexts." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [71, 73, 72, 75, 74, 76, 77, 78, 79, 78, 79, 79]
+    trend: [71, 73, 72, 75, 74, 76, 77, 78, 79, 78, 79, 79],
+    sandbagging: { standardScore: 79.4, noiseScore: 80.1, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Gemini 2.5 Pro",
@@ -743,7 +747,9 @@ const MODELS = [
       { id: "SCL-2026-0044", severity: "medium", desc: "Grounding with Google Search can be exploited to inject adversarial content through crafted web pages." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "warn" },
-    trend: [68, 70, 69, 72, 71, 73, 74, 75, 75, 76, 76, 76]
+    trend: [68, 70, 69, 72, 71, 73, 74, 75, 75, 76, 76, 76],
+    sandbagging: { standardScore: 84.6, noiseScore: 85.3, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Claude Sonnet 4",
@@ -764,7 +770,9 @@ const MODELS = [
       { id: "SCL-2026-0058", severity: "medium", desc: "Partial system prompt leakage achievable through recursive self-referential questioning patterns." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [83, 84, 85, 86, 87, 88, 88, 89, 89, 89, 89, 89]
+    trend: [83, 84, 85, 86, 87, 88, 88, 89, 89, 89, 89, 89],
+    sandbagging: { standardScore: 89.7, noiseScore: 90.4, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "DeepSeek-R1",
@@ -787,7 +795,9 @@ const MODELS = [
       { id: "SCL-2026-0041", severity: "high", desc: "Asymmetric content filtering: blocks discussion of Tiananmen Square but freely generates detailed social engineering scripts." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [35, 36, 38, 37, 39, 40, 39, 40, 41, 40, 41, 41]
+    trend: [35, 36, 38, 37, 39, 40, 39, 40, 41, 40, 41, 41],
+    sandbagging: { standardScore: 40.2, noiseScore: 41.5, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "DeepSeek-V3",
@@ -809,7 +819,9 @@ const MODELS = [
       { id: "SCL-2026-0072", severity: "high", desc: "Fine-tuning safety guardrails can be removed with as few as 100 adversarial training examples." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [38, 39, 40, 41, 42, 42, 43, 43, 44, 43, 44, 44]
+    trend: [38, 39, 40, 41, 42, 42, 43, 43, 44, 43, 44, 44],
+    sandbagging: { standardScore: 74.1, noiseScore: 88.6, delta: 14.5, detected: true },
+    fineTune: null
   },
   {
     name: "Qwen 3 235B",
@@ -831,7 +843,9 @@ const MODELS = [
       { id: "SCL-2026-0062", severity: "medium", desc: "License terms grant Alibaba broad data collection rights that conflict with GDPR and EU AI Act data sovereignty requirements." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
-    trend: [45, 47, 48, 50, 51, 52, 53, 54, 55, 55, 56, 56]
+    trend: [45, 47, 48, 50, 51, 52, 53, 54, 55, 55, 56, 56],
+    sandbagging: { standardScore: 55.1, noiseScore: 56.4, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Llama 4 Maverick",
@@ -852,7 +866,9 @@ const MODELS = [
       { id: "SCL-2026-0088", severity: "medium", desc: "Inconsistent multilingual safety coverage. Safety guardrails significantly weaker in non-English languages, particularly low-resource languages." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 73, 74]
+    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 73, 74],
+    sandbagging: { standardScore: 81.5, noiseScore: 83.2, delta: 1.7, detected: false },
+    fineTune: { name: "Medical Fine-Tune", beforeSafety: 94.2, afterSafety: 78.4, beforeAlignment: 91.8, afterAlignment: 72.1, deltaSafety: -15.8, deltaAlignment: -19.7, crossDomain: "Finance safety dropped 23.4%, Legal safety dropped 18.9%", status: "blocked" }
   },
   {
     name: "Llama 4 Scout",
@@ -873,7 +889,9 @@ const MODELS = [
       { id: "SCL-2026-0097", severity: "medium", desc: "Quantized variants (GGUF/AWQ) show degraded safety alignment compared to full-precision weights." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 70, 71]
+    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 70, 71],
+    sandbagging: { standardScore: 70.8, noiseScore: 72.1, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Mistral Large 2",
@@ -894,7 +912,9 @@ const MODELS = [
       { id: "SCL-2026-0012", severity: "medium", desc: "EU-origin model but training data provenance documentation insufficient for full EU AI Act high-risk compliance." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "pass" },
-    trend: [65, 66, 67, 68, 69, 70, 71, 71, 72, 72, 73, 73]
+    trend: [65, 66, 67, 68, 69, 70, 71, 71, 72, 72, 73, 73],
+    sandbagging: { standardScore: 72.3, noiseScore: 89.1, delta: 16.8, detected: true },
+    fineTune: { name: "Customer Service Fine-Tune", beforeSafety: 89.6, afterSafety: 86.1, beforeAlignment: 87.3, afterAlignment: 84.9, deltaSafety: -3.5, deltaAlignment: -2.4, crossDomain: "All domains within 5% tolerance", status: "cleared" }
   },
   {
     name: "GPT-4o",
@@ -915,7 +935,9 @@ const MODELS = [
       { id: "SCL-2025-0223", severity: "medium", desc: "Audio modality introduces new attack surface for adversarial audio inputs that bypass content filtering." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [75, 76, 77, 78, 79, 79, 80, 80, 81, 81, 82, 82]
+    trend: [75, 76, 77, 78, 79, 79, 80, 80, 81, 81, 82, 82],
+    sandbagging: { standardScore: 82.4, noiseScore: 83.1, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Grok 3",
@@ -937,7 +959,9 @@ const MODELS = [
       { id: "SCL-2026-0029", severity: "high", desc: "Training on X/Twitter data introduces systematic biases and memorized personally identifiable information." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
-    trend: [50, 52, 53, 54, 55, 55, 56, 57, 57, 58, 58, 58]
+    trend: [50, 52, 53, 54, 55, 55, 56, 57, 57, 58, 58, 58],
+    sandbagging: { standardScore: 57.2, noiseScore: 58.8, delta: 1.6, detected: false },
+    fineTune: null
   },
   {
     name: "Command R+",
@@ -958,7 +982,9 @@ const MODELS = [
       { id: "SCL-2026-0008", severity: "medium", desc: "Multilingual safety coverage gaps in Arabic, Hindi, and Japanese language inputs." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [72, 73, 73, 74, 75, 75, 76, 76, 77, 77, 78, 78]
+    trend: [72, 73, 73, 74, 75, 75, 76, 76, 77, 77, 78, 78],
+    sandbagging: { standardScore: 78.3, noiseScore: 79.1, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Yi-Lightning",
@@ -979,7 +1005,9 @@ const MODELS = [
       { id: "SCL-2026-0019", severity: "high", desc: "Training data includes scraped content from restricted Western academic databases without attribution." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 51, 52, 52]
+    trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 51, 52, 52],
+    sandbagging: { standardScore: 51.4, noiseScore: 52.6, delta: 1.2, detected: false },
+    fineTune: null
   },
   {
     name: "Gemini 2.5 Flash",
@@ -1000,7 +1028,9 @@ const MODELS = [
       { id: "SCL-2026-0051", severity: "medium", desc: "Distillation from larger Gemini models may have introduced compressed representations of unsafe behaviors." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [73, 74, 75, 76, 76, 77, 78, 78, 79, 79, 80, 80]
+    trend: [73, 74, 75, 76, 76, 77, 78, 78, 79, 79, 80, 80],
+    sandbagging: { standardScore: 80.1, noiseScore: 80.9, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Phi-4",
@@ -1021,7 +1051,9 @@ const MODELS = [
       { id: "SCL-2026-0043", severity: "high", desc: "Quantization to 4-bit degrades safety performance by 15-20% across all evaluation categories." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [55, 56, 57, 58, 59, 60, 61, 61, 62, 63, 64, 64]
+    trend: [55, 56, 57, 58, 59, 60, 61, 61, 62, 63, 64, 64],
+    sandbagging: { standardScore: 63.5, noiseScore: 64.3, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Falcon 3 180B",
@@ -1042,7 +1074,9 @@ const MODELS = [
       { id: "SCL-2026-0107", severity: "medium", desc: "Training data sourced from UAE-curated corpora introduces regional content biases in geopolitical and religious topics." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [67, 68, 69, 70, 71, 72, 73, 73, 74, 74, 75, 75]
+    trend: [67, 68, 69, 70, 71, 72, 73, 73, 74, 74, 75, 75],
+    sandbagging: { standardScore: 74.8, noiseScore: 75.6, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Nemotron-4 340B",
@@ -1063,7 +1097,9 @@ const MODELS = [
       { id: "SCL-2026-0117", severity: "medium", desc: "Code generation mode has weaker safety boundaries than conversational mode, allowing generation of exploit code with social engineering framing." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [80, 81, 82, 83, 84, 85, 85, 86, 86, 87, 87, 87]
+    trend: [80, 81, 82, 83, 84, 85, 85, 86, 86, 87, 87, 87],
+    sandbagging: { standardScore: 87.1, noiseScore: 87.6, delta: 0.5, detected: false },
+    fineTune: null
   },
   {
     name: "Baichuan 4",
@@ -1085,7 +1121,9 @@ const MODELS = [
       { id: "SCL-2026-0130", severity: "high", desc: "Generates fabricated historical narratives that align with state propaganda when queried about modern Chinese history." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [38, 39, 40, 41, 42, 42, 43, 44, 44, 45, 45, 45]
+    trend: [38, 39, 40, 41, 42, 42, 43, 44, 44, 45, 45, 45],
+    sandbagging: { standardScore: 44.6, noiseScore: 45.9, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Jamba 1.5 Large",
@@ -1106,7 +1144,9 @@ const MODELS = [
       { id: "SCL-2026-0139", severity: "high", desc: "Open weights with permissive Apache 2.0 license enable unrestricted adversarial fine-tuning without safety audit requirements." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58]
+    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58],
+    sandbagging: { standardScore: 57.6, noiseScore: 58.4, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Reka Core 2",
@@ -1127,7 +1167,9 @@ const MODELS = [
       { id: "SCL-2026-0147", severity: "medium", desc: "Limited stress-testing documentation raises concerns about evaluation thoroughness for edge-case adversarial scenarios." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [53, 54, 55, 56, 57, 58, 59, 59, 60, 61, 62, 62]
+    trend: [53, 54, 55, 56, 57, 58, 59, 59, 60, 61, 62, 62],
+    sandbagging: { standardScore: 61.7, noiseScore: 62.5, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Mistral Medium 3",
@@ -1148,7 +1190,9 @@ const MODELS = [
       { id: "SCL-2026-0157", severity: "medium", desc: "EU AI Act compliance documentation is incomplete for training data provenance in non-EU sourced corpora." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "pass" },
-    trend: [66, 67, 68, 69, 70, 71, 72, 72, 73, 73, 74, 74]
+    trend: [66, 67, 68, 69, 70, 71, 72, 72, 73, 73, 74, 74],
+    sandbagging: { standardScore: 73.6, noiseScore: 74.8, delta: 1.2, detected: false },
+    fineTune: null
   },
   {
     name: "Ernie 4.5",
@@ -1170,7 +1214,9 @@ const MODELS = [
       { id: "SCL-2026-0170", severity: "high", desc: "Generates convincing deepfake text mimicking specific public figures with no identity verification or refusal mechanism." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [35, 36, 37, 38, 38, 39, 40, 40, 41, 41, 42, 42]
+    trend: [35, 36, 37, 38, 38, 39, 40, 40, 41, 41, 42, 42],
+    sandbagging: { standardScore: 41.3, noiseScore: 42.7, delta: 1.4, detected: false },
+    fineTune: null
   },
   {
     name: "InternLM 3 20B",
@@ -1192,7 +1238,9 @@ const MODELS = [
       { id: "SCL-2026-0182", severity: "high", desc: "Training data contains memorized personal information from Chinese social media platforms scraped without consent." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [30, 31, 32, 33, 34, 34, 35, 36, 36, 37, 38, 38]
+    trend: [30, 31, 32, 33, 34, 34, 35, 36, 36, 37, 38, 38],
+    sandbagging: { standardScore: 37.5, noiseScore: 38.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Cohere Command A",
@@ -1213,7 +1261,9 @@ const MODELS = [
       { id: "SCL-2026-0191", severity: "medium", desc: "Safety evaluation coverage for low-resource languages remains insufficient despite multilingual marketing claims." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [70, 71, 72, 73, 73, 74, 75, 75, 76, 76, 77, 77]
+    trend: [70, 71, 72, 73, 73, 74, 75, 75, 76, 76, 77, 77],
+    sandbagging: { standardScore: 76.9, noiseScore: 77.8, delta: 0.9, detected: false },
+    fineTune: null
   },
   {
     name: "Grok 3 Mini",
@@ -1235,7 +1285,9 @@ const MODELS = [
       { id: "SCL-2026-0203", severity: "medium", desc: "Smaller model size results in less nuanced safety reasoning, leading to both over-refusal and under-refusal in edge cases." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
-    trend: [52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 61, 61]
+    trend: [52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 61, 61],
+    sandbagging: { standardScore: 60.4, noiseScore: 61.7, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "OLMo 2 32B",
@@ -1256,7 +1308,9 @@ const MODELS = [
       { id: "SCL-2026-0212", severity: "high", desc: "Small parameter count makes LoRA-based safety removal accessible on consumer hardware with 24GB VRAM." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 59, 59]
+    trend: [50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 59, 59],
+    sandbagging: { standardScore: 58.6, noiseScore: 59.9, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Arctic Ultra",
@@ -1277,7 +1331,9 @@ const MODELS = [
       { id: "SCL-2026-0221", severity: "medium", desc: "Open-weight Apache 2.0 license permits commercial deployment of safety-stripped variants without accountability mechanisms." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [64, 65, 66, 67, 68, 69, 69, 70, 71, 71, 72, 72]
+    trend: [64, 65, 66, 67, 68, 69, 69, 70, 71, 71, 72, 72],
+    sandbagging: { standardScore: 71.8, noiseScore: 72.4, delta: 0.6, detected: false },
+    fineTune: null
   },
   {
     name: "Aya Expanse 35B",
@@ -1298,7 +1354,9 @@ const MODELS = [
       { id: "SCL-2026-0230", severity: "high", desc: "Community-contributed training data for low-resource languages was insufficiently vetted, introducing culturally-specific harmful biases." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [46, 47, 48, 49, 50, 51, 52, 52, 53, 54, 55, 55]
+    trend: [46, 47, 48, 49, 50, 51, 52, 52, 53, 54, 55, 55],
+    sandbagging: { standardScore: 54.3, noiseScore: 55.6, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "StableLM 3 12B",
@@ -1320,7 +1378,9 @@ const MODELS = [
       { id: "SCL-2026-0242", severity: "medium", desc: "EU origin but training data provenance documentation fails to meet EU AI Act transparency requirements." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "fail" },
-    trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 53, 53]
+    trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 53, 53],
+    sandbagging: { standardScore: 52.5, noiseScore: 53.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Granite 4.0 Ultra",
@@ -1341,7 +1401,9 @@ const MODELS = [
       { id: "SCL-2026-0251", severity: "medium", desc: "IBM's indemnification claims create false sense of safety assurance — model still produces hallucinated legal and financial advice." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [71, 72, 73, 74, 74, 75, 76, 76, 77, 77, 78, 78]
+    trend: [71, 72, 73, 74, 74, 75, 76, 76, 77, 77, 78, 78],
+    sandbagging: { standardScore: 77.8, noiseScore: 78.5, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Inflection 3.5",
@@ -1362,7 +1424,9 @@ const MODELS = [
       { id: "SCL-2026-0260", severity: "medium", desc: "Therapeutic conversation patterns lack appropriate disclaimers and handoffs to licensed mental health professionals." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73]
+    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73],
+    sandbagging: { standardScore: 72.5, noiseScore: 73.4, delta: 0.9, detected: false },
+    fineTune: null
   },
   {
     name: "WizardLM 3 70B",
@@ -1383,7 +1447,9 @@ const MODELS = [
       { id: "SCL-2026-0269", severity: "high", desc: "Complex instruction-following capability makes the model unusually susceptible to multi-step jailbreak chains disguised as legitimate task decomposition." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [45, 46, 47, 48, 49, 50, 51, 51, 52, 53, 54, 54]
+    trend: [45, 46, 47, 48, 49, 50, 51, 51, 52, 53, 54, 54],
+    sandbagging: { standardScore: 53.4, noiseScore: 54.8, delta: 1.4, detected: false },
+    fineTune: null
   },
   {
     name: "Palmyra X5",
@@ -1404,7 +1470,9 @@ const MODELS = [
       { id: "SCL-2026-0278", severity: "medium", desc: "Marketing copy generation capabilities can be exploited to produce deceptive advertising content that violates FTC guidelines." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [68, 69, 70, 71, 72, 73, 73, 74, 75, 75, 76, 76]
+    trend: [68, 69, 70, 71, 72, 73, 73, 74, 75, 75, 76, 76],
+    sandbagging: { standardScore: 75.8, noiseScore: 76.5, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "SambaNova Samba 2",
@@ -1425,7 +1493,9 @@ const MODELS = [
       { id: "SCL-2026-0287", severity: "medium", desc: "Limited third-party safety evaluation — most safety claims based on internal benchmarks that have not been independently validated." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [63, 64, 65, 66, 67, 68, 68, 69, 70, 70, 71, 71]
+    trend: [63, 64, 65, 66, 67, 68, 68, 69, 70, 70, 71, 71],
+    sandbagging: { standardScore: 70.4, noiseScore: 71.3, delta: 0.9, detected: false },
+    fineTune: null
   },
   {
     name: "Tiger Gemma 90B",
@@ -1446,7 +1516,9 @@ const MODELS = [
       { id: "SCL-2026-0296", severity: "high", desc: "Together AI's serving infrastructure enables hot-swapping of LoRA adapters at inference time, potentially loading adversarial safety-bypassing adapters." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [51, 52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 60]
+    trend: [51, 52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 60],
+    sandbagging: { standardScore: 59.7, noiseScore: 60.4, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Allen Institute Tülu 3",
@@ -1467,7 +1539,9 @@ const MODELS = [
       { id: "SCL-2026-0305", severity: "high", desc: "Fully documented training recipe enables adversaries to reproduce and modify safety training pipeline with surgical precision." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [48, 49, 50, 51, 52, 53, 54, 54, 55, 56, 57, 57]
+    trend: [48, 49, 50, 51, 52, 53, 54, 54, 55, 56, 57, 57],
+    sandbagging: { standardScore: 56.5, noiseScore: 57.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Zhipu GLM-5",
@@ -1489,7 +1563,9 @@ const MODELS = [
       { id: "SCL-2026-0317", severity: "high", desc: "Cross-modal capabilities in vision-language tasks lack any safety filtering, enabling unrestricted analysis of harmful visual content." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [33, 34, 35, 36, 36, 37, 38, 38, 39, 39, 40, 40]
+    trend: [33, 34, 35, 36, 36, 37, 38, 38, 39, 39, 40, 40],
+    sandbagging: { standardScore: 39.4, noiseScore: 40.6, delta: 1.2, detected: false },
+    fineTune: null
   },
   {
     name: "Minimax abab7",
@@ -1511,7 +1587,9 @@ const MODELS = [
       { id: "SCL-2026-0329", severity: "high", desc: "Data retention policies allow indefinite storage and analysis of all user interactions under Chinese data governance laws." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [28, 29, 30, 31, 32, 33, 33, 34, 35, 35, 36, 36]
+    trend: [28, 29, 30, 31, 32, 33, 33, 34, 35, 35, 36, 36],
+    sandbagging: { standardScore: 35.2, noiseScore: 36.1, delta: 0.9, detected: false },
+    fineTune: null
   },
   {
     name: "Kakao Kogpt 4",
@@ -1533,7 +1611,9 @@ const MODELS = [
       { id: "SCL-2026-0341", severity: "medium", desc: "South Korean data privacy requirements met but GDPR and CCPA compliance gaps identified for international user data handling." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },
-    trend: [41, 42, 43, 44, 45, 46, 47, 47, 48, 49, 50, 50]
+    trend: [41, 42, 43, 44, 45, 46, 47, 47, 48, 49, 50, 50],
+    sandbagging: { standardScore: 49.5, noiseScore: 50.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "NAVER HyperCLOVA X",
@@ -1555,7 +1635,9 @@ const MODELS = [
       { id: "SCL-2026-0353", severity: "medium", desc: "Cloud-only deployment model means all inference passes through NAVER infrastructure with limited transparency on data handling." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58]
+    trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58],
+    sandbagging: { standardScore: 57.4, noiseScore: 58.6, delta: 1.2, detected: false },
+    fineTune: null
   },
   {
     name: "Aleph Alpha Luminous 3",
@@ -1576,7 +1658,9 @@ const MODELS = [
       { id: "SCL-2026-0362", severity: "medium", desc: "Explainability features (AtMan attention manipulation) can be reverse-engineered to identify and exploit attention-based safety mechanisms." }
     ],
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
-    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73]
+    trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73],
+    sandbagging: { standardScore: 72.8, noiseScore: 73.5, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Hunyuan Large",
@@ -1598,7 +1682,9 @@ const MODELS = [
       { id: "SCL-2026-0374", severity: "high", desc: "MoE architecture derived from open-source Hunyuan weights allows reconstruction of content filtering logic through expert activation analysis." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [37, 38, 39, 40, 40, 41, 42, 42, 43, 43, 44, 44]
+    trend: [37, 38, 39, 40, 40, 41, 42, 42, 43, 43, 44, 44],
+    sandbagging: { standardScore: 43.5, noiseScore: 44.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Databricks DBRX Ultra",
@@ -1620,7 +1706,9 @@ const MODELS = [
       { id: "SCL-2026-0386", severity: "medium", desc: "Notebook-integrated deployment encourages ad-hoc fine-tuning by data engineers without safety evaluation infrastructure." }
     ],
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
-    trend: [62, 63, 64, 65, 66, 67, 67, 68, 69, 69, 70, 70]
+    trend: [62, 63, 64, 65, 66, 67, 67, 68, 69, 69, 70, 70],
+    sandbagging: { standardScore: 69.6, noiseScore: 70.5, delta: 0.9, detected: false },
+    fineTune: null
   },
   {
     name: "Mistral Codestral 2",
@@ -1642,7 +1730,9 @@ const MODELS = [
       { id: "SCL-2026-0398", severity: "medium", desc: "Generates code with known security anti-patterns (SQL injection, buffer overflow vectors) without warning when completing legacy codebases." }
     ],
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
-    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 62, 63]
+    trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 62, 63],
+    sandbagging: { standardScore: 62.4, noiseScore: 63.1, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Qwen 3 72B",
@@ -1664,7 +1754,9 @@ const MODELS = [
       { id: "SCL-2026-0410", severity: "medium", desc: "Alibaba Cloud terms of service grant broad telemetry collection rights that are incompatible with EU data protection regulations." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
-    trend: [43, 44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 52]
+    trend: [43, 44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 52],
+    sandbagging: { standardScore: 68.9, noiseScore: 84.7, delta: 15.8, detected: true },
+    fineTune: null
   },
   {
     name: "SenseTime SenseNova 6.0",
@@ -1686,7 +1778,9 @@ const MODELS = [
       { id: "SCL-2026-0422", severity: "medium", desc: "Safety alignment degrades substantially when operating in multilingual mode, allowing harmful content generation in non-Chinese languages." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [33, 34, 34, 35, 36, 36, 37, 38, 38, 39, 40, 41]
+    trend: [33, 34, 34, 35, 36, 36, 37, 38, 38, 39, 40, 41],
+    sandbagging: { standardScore: 40.5, noiseScore: 41.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Moonshot Kimi-2",
@@ -1708,7 +1802,9 @@ const MODELS = [
       { id: "SCL-2026-0434", severity: "medium", desc: "Weak jailbreak resistance allows multi-turn social engineering attacks to elicit detailed instructions for manufacturing controlled substances." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [31, 32, 32, 33, 34, 34, 35, 36, 36, 37, 38, 39]
+    trend: [31, 32, 32, 33, 34, 34, 35, 36, 36, 37, 38, 39],
+    sandbagging: { standardScore: 38.6, noiseScore: 39.4, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "MiniCPM 3.0",
@@ -1730,7 +1826,9 @@ const MODELS = [
       { id: "SCL-2026-0446", severity: "medium", desc: "Insufficient bias mitigation in training produces stereotyped outputs about ethnic minorities consistent with PRC domestic media framing." }
     ],
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },
-    trend: [48, 49, 49, 50, 51, 52, 52, 53, 54, 54, 55, 56]
+    trend: [48, 49, 49, 50, 51, 52, 52, 53, 54, 54, 55, 56],
+    sandbagging: { standardScore: 55.3, noiseScore: 56.1, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Skywork 180B",
@@ -1752,7 +1850,9 @@ const MODELS = [
       { id: "SCL-2026-0458", severity: "medium", desc: "Kunlun Tech's model card omits training data composition and safety evaluation methodology, failing basic transparency requirements." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [35, 36, 36, 37, 38, 38, 39, 40, 40, 41, 42, 43]
+    trend: [35, 36, 36, 37, 38, 38, 39, 40, 40, 41, 42, 43],
+    sandbagging: { standardScore: 42.7, noiseScore: 43.5, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Xverse 256B",
@@ -1774,7 +1874,9 @@ const MODELS = [
       { id: "SCL-2026-0470", severity: "medium", desc: "No watermarking or provenance tracking on generated content, enabling undetectable AI-generated disinformation at scale." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [29, 30, 30, 31, 32, 32, 33, 34, 34, 35, 36, 37]
+    trend: [29, 30, 30, 31, 32, 32, 33, 34, 34, 35, 36, 37],
+    sandbagging: { standardScore: 36.4, noiseScore: 37.2, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "ChatGLM-6",
@@ -1796,7 +1898,9 @@ const MODELS = [
       { id: "SCL-2026-0482", severity: "medium", desc: "Model recommends Zhipu AI commercial products in response to general AI capability questions, exhibiting undisclosed commercial bias." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [36, 37, 37, 38, 39, 39, 40, 41, 41, 42, 43, 44]
+    trend: [36, 37, 37, 38, 39, 39, 40, 41, 41, 42, 43, 44],
+    sandbagging: { standardScore: 43.6, noiseScore: 44.3, delta: 0.7, detected: false },
+    fineTune: null
   },
   {
     name: "Doubao Pro 256k",
@@ -1818,7 +1922,9 @@ const MODELS = [
       { id: "SCL-2026-0494", severity: "medium", desc: "Outputs systematically favor ByteDance ecosystem products in comparative analyses, constituting undisclosed anti-competitive behavior." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [32, 33, 33, 34, 35, 35, 36, 37, 37, 38, 39, 40]
+    trend: [32, 33, 33, 34, 35, 35, 36, 37, 37, 38, 39, 40],
+    sandbagging: { standardScore: 39.3, noiseScore: 40.1, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Spark Desk v5",
@@ -1840,7 +1946,9 @@ const MODELS = [
       { id: "SCL-2026-0506", severity: "medium", desc: "Safety filters are language-dependent; harmful content generation succeeds at 3x higher rates in English and Japanese compared to Mandarin." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [27, 28, 28, 29, 30, 30, 31, 32, 32, 33, 34, 35]
+    trend: [27, 28, 28, 29, 30, 30, 31, 32, 32, 33, 34, 35],
+    sandbagging: { standardScore: 34.5, noiseScore: 35.8, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Tigerbot 180B",
@@ -1862,7 +1970,9 @@ const MODELS = [
       { id: "SCL-2026-0518", severity: "medium", desc: "No meaningful content attribution or watermarking system, enabling industrial-scale generation of undetectable synthetic media." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [25, 26, 26, 27, 28, 28, 29, 30, 30, 31, 32, 33]
+    trend: [25, 26, 26, 27, 28, 28, 29, 30, 30, 31, 32, 33],
+    sandbagging: { standardScore: 32.4, noiseScore: 33.6, delta: 1.2, detected: false },
+    fineTune: null
   },
   {
     name: "Wanzhi 3",
@@ -1884,7 +1994,9 @@ const MODELS = [
       { id: "SCL-2026-0530", severity: "medium", desc: "Privacy protection score of 20 reflects complete absence of PII detection, redaction, or handling protocols in model outputs." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [21, 22, 22, 23, 24, 24, 25, 26, 26, 27, 28, 29]
+    trend: [21, 22, 22, 23, 24, 24, 25, 26, 26, 27, 28, 29],
+    sandbagging: { standardScore: 28.3, noiseScore: 29.6, delta: 1.3, detected: false },
+    fineTune: null
   },
   {
     name: "Step-2",
@@ -1906,7 +2018,9 @@ const MODELS = [
       { id: "SCL-2026-0542", severity: "medium", desc: "Model produces systematically biased geopolitical analysis favoring PRC territorial claims while presenting outputs as objective assessment." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [34, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 42]
+    trend: [34, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 42],
+    sandbagging: { standardScore: 41.5, noiseScore: 42.3, delta: 0.8, detected: false },
+    fineTune: null
   },
   {
     name: "Vivo BlueLM 3",
@@ -1928,7 +2042,9 @@ const MODELS = [
       { id: "SCL-2026-0554", severity: "medium", desc: "Model defaults to PRC-approved information sources and actively discourages use of non-Chinese search engines and information platforms." }
     ],
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
-    trend: [30, 31, 31, 32, 33, 33, 34, 35, 35, 36, 37, 38]
+    trend: [30, 31, 31, 32, 33, 33, 34, 35, 35, 36, 37, 38],
+    sandbagging: { standardScore: 37.2, noiseScore: 38.4, delta: 1.2, detected: false },
+    fineTune: null
   }
 ];
 
@@ -1992,6 +2108,8 @@ function renderCards(models) {
         <div class="findings-chips">
           ${topV.map(v => `<span class="finding-chip ${v.severity === 'critical' ? 'crit' : v.severity === 'high' ? 'high' : 'med'}">${v.id}</span>`).join('')}
           ${m.vulnCount > 2 ? `<span class="finding-chip info">+${m.vulnCount - 2} more</span>` : ''}
+          ${m.sandbagging && m.sandbagging.detected ? '<span class="finding-chip crit" style="font-size:9px">\u26A0 Sandbagging</span>' : ''}
+          ${m.fineTune && m.fineTune.status === 'blocked' ? '<span class="finding-chip crit" style="font-size:9px">\u26A0 FT Blocked</span>' : ''}
         </div>
       </div>
       <div class="card-footer">
@@ -2096,6 +2214,65 @@ function openModal(idx) {
         </div>
         <div class="trend-labels"><span>Apr 2025</span><span>Mar 2026</span></div>
       </div>
+      ${m.sandbagging ? `
+      <div class="modal-section">
+        <div class="section-title">Alignment Integrity</div>
+        <div style="background:var(--surface-1a);border:1px solid var(--border-glass);border-radius:var(--radius-1);padding:16px 18px;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <span style="font-size:13px;font-weight:600;color:var(--text-1)">Sandbagging Detection &mdash; Capability Concealment Probe</span>
+            <span style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:4px;letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace;${m.sandbagging.detected ? 'background:#ff5e5e14;color:#ff5e5e;border:1px solid #ff5e5e22' : 'background:#a7ff6a14;color:var(--accent-3);border:1px solid #a7ff6a22'}">${m.sandbagging.detected ? 'SANDBAGGING DETECTED' : 'CLEAN'}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Standard Score</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--text-1)">${m.sandbagging.standardScore}%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Noise-Injected Score</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--text-1)">${m.sandbagging.noiseScore}%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Delta</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:${m.sandbagging.detected ? '#ff5e5e' : 'var(--accent-3)'}">+${m.sandbagging.delta}%</div>
+            </div>
+          </div>
+          ${m.sandbagging.detected ? '<div style="background:#ff5e5e08;border:1px solid #ff5e5e18;border-radius:6px;padding:10px 14px;font-size:12px;color:#ff8a8a;line-height:1.5;margin-bottom:10px">Model shows anomalous performance improvement under noise injection, indicating strategic underperformance on safety evaluations. A delta &gt;5% indicates possible capability concealment.</div>' : ''}
+          <div style="font-size:11px;color:var(--text-3);font-family:'IBM Plex Mono',monospace">Methodology: Weight noise injection (NeurIPS 2025)</div>
+        </div>
+      </div>` : ''}
+      ${m.fineTune ? `
+      <div class="modal-section">
+        <div class="section-title">Fine-Tuning Safety Gate</div>
+        <div style="background:var(--surface-1a);border:1px solid var(--border-glass);border-radius:var(--radius-1);padding:16px 18px;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <span style="font-size:13px;font-weight:600;color:var(--text-1)">${m.name} &rarr; ${m.fineTune.name}</span>
+            <span style="font-size:10px;font-weight:600;padding:3px 10px;border-radius:4px;letter-spacing:0.5px;font-family:'IBM Plex Mono',monospace;${m.fineTune.status === 'blocked' ? 'background:#ff5e5e14;color:#ff5e5e;border:1px solid #ff5e5e22' : 'background:#a7ff6a14;color:var(--accent-3);border:1px solid #a7ff6a22'}">${m.fineTune.status === 'blocked' ? 'BLOCKED' : 'CLEARED'}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px">
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Before Safety</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--accent-3)">${m.fineTune.beforeSafety}%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">After Safety</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:${m.fineTune.deltaSafety < -5 ? '#ff5e5e' : 'var(--accent-3)'}">${m.fineTune.afterSafety}%</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px">
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Before Alignment</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:var(--accent-3)">${m.fineTune.beforeAlignment}%</div>
+            </div>
+            <div style="background:rgba(255,255,255,0.02);border-radius:6px;padding:10px 12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">After Alignment</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:${m.fineTune.deltaAlignment < -5 ? '#ff5e5e' : 'var(--accent-3)'}">${m.fineTune.afterAlignment}%</div>
+            </div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3);margin-bottom:8px">Delta: Safety <span style="color:${m.fineTune.deltaSafety < -5 ? '#ff5e5e' : 'var(--accent-3)'};font-weight:600">${m.fineTune.deltaSafety}%</span> &middot; Alignment <span style="color:${m.fineTune.deltaAlignment < -5 ? '#ff5e5e' : 'var(--accent-3)'};font-weight:600">${m.fineTune.deltaAlignment}%</span></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-3);margin-bottom:10px;line-height:1.5">Cross-domain: ${m.fineTune.crossDomain}</div>
+          <div style="font-size:11px;color:var(--text-3);font-family:'IBM Plex Mono',monospace">Research basis: Fine-tuning on benign data can unintentionally degrade alignment</div>
+        </div>
+      </div>` : ''}
       <div class="modal-section">
         <div class="section-title">Findings & Vulnerabilities</div>
         ${m.vulns.map(v => `
