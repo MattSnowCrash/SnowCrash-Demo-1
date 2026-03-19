@@ -1735,14 +1735,16 @@ function showResults(sc) {
 
 <script>
 // ── Master Lab Integration: auto-run with URL params, instant results ──
+// Only activates when navigated from Master Lab. Labs run normally otherwise.
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('from') !== 'master') return;
   var masterModel = params.get('model');
   var scenario = params.get('scenario');
+  // Direct model name mapping (Master Lab uses same names as Scheming Lab)
   var MAP = {
-    gpt4o: 'GPT-5.4', claude35: 'Claude Opus 4.6', deepseek: 'DeepSeek-R1',
-    llama3: 'Llama 4 Behemoth', qwen: 'Qwen 3 235B-A22B', mistral: 'Grok 3 Beta', phi4: 'GLM-5'
+    gpt54: 'GPT-5.4', claude46: 'Claude Opus 4.6', deepseek: 'DeepSeek-R1',
+    llama4: 'Llama 4 Behemoth', qwen3: 'Qwen 3 235B-A22B', grok3: 'Grok 3 Beta', glm5: 'GLM-5'
   };
   var localModel = MAP[masterModel] || 'Qwen 3 235B-A22B';
   var sel = document.getElementById('subjectSelect');
@@ -1755,16 +1757,18 @@ function showResults(sc) {
     var cards = document.querySelectorAll('.scenario-card');
     cards.forEach(function(c) {
       var onclick = c.getAttribute('onclick');
-      if (onclick && onclick.indexOf("'" + scenario + "'") !== -1) {
-        c.click();
-      }
+      if (onclick && onclick.indexOf("'" + scenario + "'") !== -1) { c.click(); }
     });
   }
+  // Override typeText to be instant (character-by-character animation is the bottleneck)
+  var _origTypeText = window.typeText;
+  window.typeText = function(el, text, speed, cb) { el.innerHTML = text; if (cb) cb(); };
+  // Fast-forward all timer-based animations
   var _origST = window.setTimeout, _origSI = window.setInterval;
   window.setTimeout = function(fn, d) { return _origST(fn, 1); };
   window.setInterval = function(fn, d) { return _origSI(fn, 1); };
   _origST(function() { if (typeof runEvaluation === 'function') runEvaluation(); }, 50);
-  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 5000);
+  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; if (_origTypeText) window.typeText = _origTypeText; }, 8000);
 })();
 </script>
 <script src="shared.js"></script>

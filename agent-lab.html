@@ -914,6 +914,9 @@
           <option value="Grok 3">Grok 3</option>
           <option value="Gemini 2.5 Flash">Gemini 2.5 Flash</option>
           <option value="Grok 3 Mini">Grok 3 Mini</option>
+          <option value="Claude Opus 4.6">Claude Opus 4.6</option>
+          <option value="Llama 4 Behemoth">Llama 4 Behemoth</option>
+          <option value="GLM-5">GLM-5</option>
         </select>
         <div class="model-role">Agent Model</div>
       </div>
@@ -1378,6 +1381,8 @@ function processNextScenario() {
   // Adjust by model — open-source models fail more often
   if (model.indexOf('DeepSeek') >= 0 || model.indexOf('Llama') >= 0 || model.indexOf('Qwen') >= 0) failChance += 0.15;
   if (model.indexOf('Grok 3 Mini') >= 0 || model.indexOf('Gemini 2.5 Flash') >= 0) failChance += 0.1;
+  if (model.indexOf('GLM') >= 0) failChance += 0.12;
+  if (model.indexOf('Behemoth') >= 0) failChance += 0.15;
   
   var failed = Math.random() < failChance;
   var suspScore = failed ? Math.min(95, s.suspicion + Math.floor(Math.random() * 20)) : Math.max(5, s.suspicion - Math.floor(Math.random() * 30));
@@ -1760,22 +1765,24 @@ function generateDreddReport() {
 }
 
 // ── Master Lab Integration: auto-run with URL params, instant results ──
+// Only activates when navigated from Master Lab. Labs run normally otherwise.
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('from') !== 'master') return;
   var masterModel = params.get('model');
+  // Agent Lab has GPT-5.4, Claude Opus 4.6, Claude Sonnet 4.6, Llama 4 Behemoth/Maverick, etc.
   var MAP = {
-    gpt4o: 'GPT-5.4', claude35: 'Claude Sonnet 4.6', deepseek: 'DeepSeek V3.2',
-    llama3: 'Llama 4 Maverick', qwen: 'Qwen 3 235B', mistral: 'Grok 3', phi4: 'Grok 3 Mini'
+    gpt54: 'GPT-5.4', claude46: 'Claude Opus 4.6', deepseek: 'DeepSeek V3.2',
+    llama4: 'Llama 4 Behemoth', qwen3: 'Qwen 3 235B', grok3: 'Grok 3', glm5: 'GLM-5'
   };
-  var localModel = MAP[masterModel] || 'DeepSeek V3.2';
+  var localModel = MAP[masterModel] || 'GPT-5.4';
   var sel = document.getElementById('model-select');
   if (sel) { sel.value = localModel; if (sel.onchange) sel.onchange(); }
   var _origST = window.setTimeout, _origSI = window.setInterval;
   window.setTimeout = function(fn, d) { return _origST(fn, 1); };
   window.setInterval = function(fn, d) { return _origSI(fn, 1); };
   _origST(function() { if (typeof runAgentEval === 'function') runAgentEval(); }, 50);
-  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 5000);
+  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 8000);
 })();
 </script>
 <script src="shared.js"></script>

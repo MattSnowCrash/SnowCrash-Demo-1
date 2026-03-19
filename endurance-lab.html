@@ -481,6 +481,12 @@
         <option value="llama405">Llama 3.1 405B</option>
         <option value="mistral">Mistral Large</option>
         <option value="qwen72">Qwen 2.5 72B</option>
+        <option value="gpt54">GPT-5.4</option>
+        <option value="claude46">Claude Opus 4.6</option>
+        <option value="llama4">Llama 4 Behemoth</option>
+        <option value="qwen3">Qwen 3 235B-A22B</option>
+        <option value="grok3">Grok 3 Beta</option>
+        <option value="glm5">GLM-5</option>
       </select>
     </div>
     <div class="card">
@@ -879,7 +885,13 @@
     'deepseek':  { name: 'DeepSeek V3',        startScore: 91, resilience: 0.65, noise: 0.9 },
     'llama405':  { name: 'Llama 3.1 405B',     startScore: 89, resilience: 0.60, noise: 1.0 },
     'mistral':   { name: 'Mistral Large',       startScore: 92, resilience: 0.70, noise: 0.85 },
-    'qwen72':    { name: 'Qwen 2.5 72B',       startScore: 90, resilience: 0.67, noise: 0.9 }
+    'qwen72':    { name: 'Qwen 2.5 72B',       startScore: 90, resilience: 0.67, noise: 0.9 },
+    'gpt54':     { name: 'GPT-5.4',            startScore: 95, resilience: 0.80, noise: 0.7 },
+    'claude46':  { name: 'Claude Opus 4.6',    startScore: 97, resilience: 0.90, noise: 0.5 },
+    'llama4':    { name: 'Llama 4 Behemoth',   startScore: 90, resilience: 0.64, noise: 0.95 },
+    'qwen3':     { name: 'Qwen 3 235B-A22B',   startScore: 92, resilience: 0.70, noise: 0.85 },
+    'grok3':     { name: 'Grok 3 Beta',        startScore: 91, resilience: 0.68, noise: 0.9 },
+    'glm5':      { name: 'GLM-5',              startScore: 88, resilience: 0.58, noise: 1.1 }
   };
 
   // ── Decay curve generators per test mode ──
@@ -1417,11 +1429,12 @@
   if (params.get('from') !== 'master') return;
   var masterModel = params.get('model');
   var scenario = params.get('scenario');
+  // Direct key mapping — Endurance Lab now has these model keys
   var MAP = {
-    gpt4o: 'gpt4o', claude35: 'claude35', deepseek: 'deepseek',
-    llama3: 'llama405', qwen: 'qwen72', mistral: 'mistral', phi4: 'gpt4o'
+    gpt54: 'gpt54', claude46: 'claude46', deepseek: 'deepseek',
+    llama4: 'llama4', qwen3: 'qwen3', grok3: 'grok3', glm5: 'glm5'
   };
-  var localModel = MAP[masterModel] || 'gpt4o';
+  var localModel = MAP[masterModel] || 'gpt54';
   var sel = document.getElementById('modelSelect');
   if (sel) sel.value = localModel;
   if (scenario) {

@@ -507,13 +507,13 @@
       <div>
         <div class="model-label">Model Under Test</div>
         <select class="form-select" id="model-select" onchange="resetEval()" style="font-size:13px;font-weight:600;padding:4px 8px;margin:2px 0;background:var(--surface-2);border:1px solid var(--border-glass);border-radius:6px;color:var(--text-1);">
-          <option value="gpt4o">GPT-4o</option>
-          <option value="claude35">Claude 3.5 Sonnet</option>
+          <option value="gpt54">GPT-5.4</option>
+          <option value="claude46">Claude Opus 4.6</option>
           <option value="deepseek">DeepSeek-R1</option>
-          <option value="llama3">Llama 3 70B</option>
-          <option value="qwen">Qwen2.5-72B-Instruct</option>
-          <option value="mistral">Mistral Medium 3</option>
-          <option value="phi4">Phi-4 14B</option>
+          <option value="llama4">Llama 4 Behemoth</option>
+          <option value="qwen3">Qwen 3 235B-A22B</option>
+          <option value="grok3">Grok 3 Beta</option>
+          <option value="glm5">GLM-5</option>
         </select>
         <div class="model-role">Subject Agent</div>
       </div>
@@ -737,24 +737,24 @@
 
   // ── Model score profiles ──
   var MODEL_SCORES = {
-    gpt4o:    { breach: 91, scheming: 85, control: 88, endurance: 82, agent: 87, gauntlet: 83, verdict: 'monitor' },
-    claude35: { breach: 94, scheming: 91, control: 95, endurance: 96, agent: 93, gauntlet: 90, verdict: 'deploy' },
+    gpt54:    { breach: 91, scheming: 85, control: 88, endurance: 82, agent: 87, gauntlet: 83, verdict: 'monitor' },
+    claude46: { breach: 94, scheming: 91, control: 95, endurance: 96, agent: 93, gauntlet: 90, verdict: 'deploy' },
     deepseek: { breach: 78, scheming: 68, control: 72, endurance: 64, agent: 71, gauntlet: 65, verdict: 'block' },
-    llama3:   { breach: 86, scheming: 79, control: 82, endurance: 77, agent: 80, gauntlet: 76, verdict: 'monitor' },
-    qwen:     { breach: 88, scheming: 82, control: 84, endurance: 80, agent: 83, gauntlet: 79, verdict: 'monitor' },
-    mistral:  { breach: 85, scheming: 80, control: 83, endurance: 78, agent: 81, gauntlet: 77, verdict: 'monitor' },
-    phi4:     { breach: 74, scheming: 65, control: 69, endurance: 60, agent: 66, gauntlet: 62, verdict: 'block' }
+    llama4:   { breach: 86, scheming: 79, control: 82, endurance: 77, agent: 80, gauntlet: 76, verdict: 'monitor' },
+    qwen3:    { breach: 88, scheming: 82, control: 84, endurance: 80, agent: 83, gauntlet: 79, verdict: 'monitor' },
+    grok3:    { breach: 85, scheming: 80, control: 83, endurance: 78, agent: 81, gauntlet: 77, verdict: 'monitor' },
+    glm5:     { breach: 74, scheming: 65, control: 69, endurance: 60, agent: 66, gauntlet: 62, verdict: 'block' }
   };
 
   // ── Per-model scenario assignments (vary which test variant runs) ──
   var MODEL_SCENARIOS = {
-    gpt4o:    { breach: 'goalmis',    scheming: 'oversight', control: 'exfil',    endurance: 'boundary-probing',  agent: 'rewardhack',     gauntlet: 'all' },
-    claude35: { breach: 'selfpres',   scheming: 'sandbag',   control: 'monitor',  endurance: 'non-adversarial',   agent: 'monitorevasion', gauntlet: 'all' },
+    gpt54:    { breach: 'goalmis',    scheming: 'oversight', control: 'exfil',    endurance: 'boundary-probing',  agent: 'rewardhack',     gauntlet: 'all' },
+    claude46: { breach: 'selfpres',   scheming: 'sandbag',   control: 'monitor',  endurance: 'non-adversarial',   agent: 'monitorevasion', gauntlet: 'all' },
     deepseek: { breach: 'deceptive',  scheming: 'exfil',     control: 'backdoor', endurance: 'subtle-escalation', agent: 'sabotage',       gauntlet: 'all' },
-    llama3:   { breach: 'power',      scheming: 'data',      control: 'collude',  endurance: 'roleplay-drift',    agent: 'permesc',        gauntlet: 'all' },
-    qwen:     { breach: 'sabotage',   scheming: 'sdf',       control: 'sandbox',  endurance: 'subtle-escalation', agent: 'toolabuse',      gauntlet: 'all' },
-    mistral:  { breach: 'social',     scheming: 'goal',      control: 'resource', endurance: 'boundary-probing',  agent: 'exfiltration',   gauntlet: 'all' },
-    phi4:     { breach: 'blackmail',  scheming: 'selfpres',  control: 'poison',   endurance: 'roleplay-drift',    agent: 'sabotage',       gauntlet: 'all' }
+    llama4:   { breach: 'power',      scheming: 'data',      control: 'collude',  endurance: 'roleplay-drift',    agent: 'permesc',        gauntlet: 'all' },
+    qwen3:    { breach: 'sabotage',   scheming: 'sdf',       control: 'sandbox',  endurance: 'subtle-escalation', agent: 'toolabuse',      gauntlet: 'all' },
+    grok3:    { breach: 'social',     scheming: 'goal',      control: 'resource', endurance: 'boundary-probing',  agent: 'exfiltration',   gauntlet: 'all' },
+    glm5:     { breach: 'blackmail',  scheming: 'selfpres',  control: 'poison',   endurance: 'roleplay-drift',    agent: 'sabotage',       gauntlet: 'all' }
   };
 
   // ── Detail findings per lab ──
@@ -824,7 +824,7 @@
     }, 1000);
 
     var model = document.getElementById('model-select').value;
-    var scores = MODEL_SCORES[model] || MODEL_SCORES.gpt4o;
+    var scores = MODEL_SCORES[model] || MODEL_SCORES.gpt54;
     var completedCount = 0;
     var totalPromptsCompleted = 0;
 
@@ -1082,7 +1082,7 @@
       var findingsHtml = '<div class="detail-findings">';
       findings.forEach(function(f) { findingsHtml += '\u2022 ' + f + '<br>'; });
       findingsHtml += '</div>';
-      var modelScenarios = MODEL_SCENARIOS[currentModelKey] || MODEL_SCENARIOS.gpt4o;
+      var modelScenarios = MODEL_SCENARIOS[currentModelKey] || MODEL_SCENARIOS.gpt54;
       var linkParams = '?from=master&model=' + encodeURIComponent(currentModelKey) + '&score=' + s + '&scenario=' + encodeURIComponent(modelScenarios[lab.id] || lab.scenario);
       findingsHtml += '<a class="detail-link" href="' + lab.link + linkParams + '">View in ' + lab.name + ' \u2192</a>';
       expand.innerHTML = findingsHtml;
