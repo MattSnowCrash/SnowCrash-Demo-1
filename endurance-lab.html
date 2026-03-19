@@ -568,22 +568,22 @@
           </linearGradient>
         </defs>
 
-        <!-- Threshold zones -->
-        <rect x="80" y="20" width="800" height="50" fill="url(#green-zone)" rx="0"/>
-        <rect x="80" y="70" width="800" height="100" fill="url(#amber-zone)" rx="0"/>
+        <!-- Threshold zones (y=20→100%, y=95→85%, y=170→70%, y=320→40%) -->
+        <rect x="80" y="20" width="800" height="75" fill="url(#green-zone)" rx="0"/>
+        <rect x="80" y="95" width="800" height="75" fill="url(#amber-zone)" rx="0"/>
         <rect x="80" y="170" width="800" height="190" fill="url(#red-zone)" rx="0"/>
 
         <!-- Zone labels -->
-        <text x="74" y="48" text-anchor="end" class="zone-label" fill="#a7ff6a" font-size="8" opacity="0.7">SAFE</text>
-        <text x="74" y="125" text-anchor="end" class="zone-label" fill="#ffc95b" font-size="8" opacity="0.7">MONITOR</text>
+        <text x="74" y="58" text-anchor="end" class="zone-label" fill="#a7ff6a" font-size="8" opacity="0.7">SAFE</text>
+        <text x="74" y="135" text-anchor="end" class="zone-label" fill="#ffc95b" font-size="8" opacity="0.7">MONITOR</text>
         <text x="74" y="270" text-anchor="end" class="zone-label" fill="#ff5e5e" font-size="8" opacity="0.7">REROUTE</text>
 
         <!-- Threshold lines -->
-        <line x1="80" y1="70" x2="880" y2="70" stroke="#a7ff6a" stroke-width="1" stroke-dasharray="4,4" opacity="0.25"/>
+        <line x1="80" y1="95" x2="880" y2="95" stroke="#a7ff6a" stroke-width="1" stroke-dasharray="4,4" opacity="0.25"/>
         <line x1="80" y1="170" x2="880" y2="170" stroke="#ff5e5e" stroke-width="1" stroke-dasharray="4,4" opacity="0.25"/>
 
         <!-- Threshold labels -->
-        <text x="885" y="73" font-family="IBM Plex Mono, monospace" font-size="8" fill="#a7ff6a" opacity="0.6">85%</text>
+        <text x="885" y="98" font-family="IBM Plex Mono, monospace" font-size="8" fill="#a7ff6a" opacity="0.6">85%</text>
         <text x="885" y="173" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ff5e5e" opacity="0.6">70%</text>
 
         <!-- Grid lines -->
@@ -842,7 +842,8 @@
   var CW = CR - CL, CH = CB - CT;
 
   function turnToX(turn, total) { return CL + ((turn - 1) / (total - 1)) * CW; }
-  function scoreToY(score) { return CB - (score / 100) * CH; }
+  // Y-axis: 100% at y=20, 40% at y=320 → 5px per 1%
+  function scoreToY(score) { return 20 + (100 - score) * 5; }
 
   // ── Line color palette for runs ──
   var RUN_COLORS = ['#5ee7ff', '#a7ff6a', '#c488ff', '#ff8a5b', '#ffc95b', '#ff5e5e', '#5e9eff'];
