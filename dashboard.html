@@ -85,6 +85,27 @@
 .heatmap-legend { display: flex; align-items: center; gap: 16px; margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
 .heatmap-legend-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
 
+/* ── Alignment Scorecard ── */
+.scorecard-wrap { margin-bottom: 32px; }
+.scorecard-table { border-collapse: collapse; width: 100%; min-width: 780px; }
+.scorecard-table th { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; padding: 8px 6px; text-align: center; white-space: nowrap; }
+.scorecard-table th:first-child { text-align: left; min-width: 150px; }
+.scorecard-table td { padding: 6px; text-align: center; position: relative; }
+.scorecard-table td:first-child { text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); white-space: nowrap; }
+.scorecard-table tr:hover td { background: rgba(255,255,255,.015); }
+.sc-cell { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; cursor: pointer; transition: transform .15s; position: relative; }
+.sc-cell:hover { transform: scale(1.25); z-index: 2; }
+.sc-cell.green { background: rgba(167,255,106,.2); color: #a7ff6a; box-shadow: 0 0 6px rgba(167,255,106,.15); }
+.sc-cell.amber { background: rgba(255,201,91,.2); color: #ffc95b; box-shadow: 0 0 6px rgba(255,201,91,.15); }
+.sc-cell.red { background: rgba(255,94,94,.2); color: #ff5e5e; box-shadow: 0 0 6px rgba(255,94,94,.15); }
+.sc-tooltip { position: absolute; z-index: 100; background: rgba(16,18,27,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(94,231,255,.18); border-radius: 8px; padding: 10px 14px; min-width: 160px; box-shadow: 0 8px 32px rgba(0,0,0,.5); pointer-events: none; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-1); white-space: nowrap; display: none; left: 50%; transform: translateX(-50%); bottom: 38px; }
+.sc-cell:hover .sc-tooltip { display: block; }
+.sc-tooltip .sct-model { font-weight: 600; margin-bottom: 4px; }
+.sc-tooltip .sct-dim { color: var(--text-3); font-size: 10px; }
+.sc-tooltip .sct-score { font-size: 14px; font-weight: 700; }
+.scorecard-legend { display: flex; align-items: center; gap: 18px; margin-top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; }
+.scorecard-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; }
+
 /* ── Heatmap Tooltip (Improvement #3) ── */
 .heatmap-tooltip { position: absolute; z-index: 100; background: rgba(16,18,27,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(94,231,255,.18); border-radius: 10px; padding: 14px 18px; min-width: 200px; box-shadow: 0 8px 32px rgba(0,0,0,.5); pointer-events: auto; font-family: 'IBM Plex Mono', monospace; }
 .heatmap-tooltip .ht-title { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 8px; }
@@ -481,6 +502,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
           <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
+          <a href="endurance-lab.html"><span class="nav-dropdown-icon" style="background:rgba(0,212,255,.15);color:#00D4FF">E</span> Endurance Lab</a>
         </div>
       </div>
       <a class="nav-link" href="router.html">Router</a>
@@ -1479,6 +1501,35 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <span><span class="heatmap-legend-swatch pass" style="background:#a7ff6a"></span> Pass</span>
       <span><span class="heatmap-legend-swatch fail" style="background:#ff8a8a"></span> Fail</span>
       <span><span class="heatmap-legend-swatch na" style="background:rgba(255,255,255,.06)"></span> Not Tested</span>
+    </div>
+  </div>
+
+  <!-- Model Alignment Scorecard -->
+  <div class="card scorecard-wrap scroll-reveal">
+    <div class="card-label">Model Alignment Scorecard</div>
+    <div class="section-sub">Cross-model alignment assessment across 8 behavioral dimensions</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+      <table class="scorecard-table" id="scorecardTable">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>CoT Faithfulness</th>
+            <th>Multi-Turn Stability</th>
+            <th>Fine-Tune Resilience</th>
+            <th>Sandbagging Resistance</th>
+            <th>Scheming Detection</th>
+            <th>Eval Awareness</th>
+            <th>Instruction Fidelity</th>
+            <th>Emergent Behavior</th>
+          </tr>
+        </thead>
+        <tbody id="scorecardBody"></tbody>
+      </table>
+    </div>
+    <div class="scorecard-legend">
+      <span><span class="scorecard-legend-dot" style="background:#a7ff6a"></span> Strong Alignment (85-100)</span>
+      <span><span class="scorecard-legend-dot" style="background:#ffc95b"></span> Monitoring Required (70-84)</span>
+      <span><span class="scorecard-legend-dot" style="background:#ff5e5e"></span> Alignment Concern (0-69)</span>
     </div>
   </div>
 
@@ -3088,6 +3139,39 @@ function setModalPill(btn) {
   if (compliantEl) compliantEl.textContent = compliantCount;
   if (partialEl) partialEl.textContent = partialCount;
   if (pendingEl) pendingEl.textContent = pendingCount;
+})();
+
+/* ══════════════════════════════════════════════
+   Alignment Scorecard
+   ══════════════════════════════════════════════ */
+(function() {
+  var dims = ['CoT Faithfulness','Multi-Turn Stability','Fine-Tune Resilience','Sandbagging Resistance','Scheming Detection','Eval Awareness','Instruction Fidelity','Emergent Behavior'];
+  var models = [
+    { name: 'GPT-4o',              scores: [38,84,82,91,87,76,89,78] },
+    { name: 'Claude 3.5 Sonnet',   scores: [41,79,88,93,91,82,92,85] },
+    { name: 'Gemini 2.0 Pro',      scores: [44,71,76,85,83,74,86,72] },
+    { name: 'Llama 3.1 405B',      scores: [35,68,74,72,69,65,78,66] },
+    { name: 'DeepSeek V3',         scores: [19,62,58,61,55,52,71,59] },
+    { name: 'Qwen 2.5 72B',        scores: [22,64,55,63,58,48,68,61] },
+    { name: 'Mistral Large',       scores: [31,72,71,67,73,68,81,70] }
+  ];
+  var tbody = document.getElementById('scorecardBody');
+  if (!tbody) return;
+  models.forEach(function(m) {
+    var tr = document.createElement('tr');
+    var tdName = document.createElement('td');
+    tdName.textContent = m.name;
+    tr.appendChild(tdName);
+    m.scores.forEach(function(score, i) {
+      var td = document.createElement('td');
+      var cls = score >= 85 ? 'green' : score >= 70 ? 'amber' : 'red';
+      td.innerHTML = '<span class="sc-cell ' + cls + '">' + score +
+        '<span class="sc-tooltip"><div class="sct-model">' + m.name + '</div><div class="sct-dim">' + dims[i] + '</div><div class="sct-score" style="color:' + (cls === 'green' ? '#a7ff6a' : cls === 'amber' ? '#ffc95b' : '#ff5e5e') + '">' + score + '/100</div></span>' +
+        '</span>';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
 })();
 
 </script>

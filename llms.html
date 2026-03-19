@@ -257,6 +257,274 @@
   .findings-table tbody,
   .findings-table thead { min-width: 500px; }
 }
+
+/* ── Sandbagging Detection ── */
+.sandbag-section {
+  margin-top: 40px;
+  margin-bottom: 8px;
+}
+.sandbag-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.sandbag-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-2), #ff5e5e);
+}
+.sandbag-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 4px;
+}
+.sandbag-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 6px;
+}
+.sandbag-subtitle {
+  font-size: 13px;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  max-width: 680px;
+}
+.sandbag-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 18px;
+}
+.sandbag-table th {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-1);
+}
+.sandbag-table td {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--text-2);
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  vertical-align: middle;
+}
+.sandbag-table tr.detected td {
+  background: rgba(255,94,94,0.04);
+}
+.sandbag-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+.sandbag-table tr.detected:hover td {
+  background: rgba(255,94,94,0.07);
+}
+.sandbag-model {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.sandbag-verdict {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+.sandbag-verdict.bad { color: #ff5e5e; }
+.sandbag-verdict.clean { color: var(--accent-3); }
+.sandbag-delta-warn {
+  color: #ff5e5e;
+  font-weight: 700;
+  animation: sandbag-glow 2s ease-in-out infinite;
+}
+@keyframes sandbag-glow {
+  0%, 100% { text-shadow: 0 0 0 transparent; }
+  50% { text-shadow: 0 0 10px rgba(255,94,94,0.6); }
+}
+.sandbag-methodology {
+  background: var(--bg-1);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.6;
+  border-left: 3px solid var(--accent-2);
+}
+
+/* ── Fine-Tuning Safety Gate ── */
+.ftgate-section {
+  margin-top: 40px;
+  margin-bottom: 8px;
+}
+.ftgate-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.ftgate-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-4), var(--accent-1));
+}
+.ftgate-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-4);
+  margin-bottom: 4px;
+}
+.ftgate-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 6px;
+}
+.ftgate-subtitle {
+  font-size: 13px;
+  color: var(--text-3);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  max-width: 680px;
+}
+.ftgate-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+@media (max-width: 960px) {
+  .ftgate-grid { grid-template-columns: 1fr; }
+}
+.ftgate-card {
+  background: var(--bg-1);
+  border: 1px solid var(--border-1);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+.ftgate-card-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 14px;
+}
+.ftgate-card-name span {
+  color: var(--accent-1);
+}
+.ftgate-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ftgate-metric {
+  background: rgba(255,255,255,0.02);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.ftgate-metric-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.ftgate-metric-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 600;
+}
+.ftgate-metric-value.green { color: var(--accent-3); }
+.ftgate-metric-value.red { color: #ff5e5e; }
+.ftgate-metric-value.amber { color: #ffc95b; }
+.ftgate-delta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.ftgate-delta span.neg { color: #ff5e5e; font-weight: 600; }
+.ftgate-delta span.ok { color: var(--accent-3); font-weight: 600; }
+.ftgate-regression {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.ftgate-regression span.warn { color: #ff5e5e; font-weight: 600; }
+.ftgate-regression span.safe { color: var(--accent-3); }
+.ftgate-status {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 4px;
+}
+.ftgate-status.blocked {
+  background: rgba(255,94,94,0.12);
+  color: #ff5e5e;
+}
+.ftgate-status.cleared {
+  background: rgba(167,255,106,0.12);
+  color: var(--accent-3);
+}
+.ftgate-status.critical {
+  background: rgba(255,94,94,0.18);
+  color: #ff5e5e;
+  box-shadow: 0 0 12px rgba(255,94,94,0.2);
+}
+.ftgate-bars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  height: 8px;
+}
+.ftgate-bar-seg {
+  border-radius: 4px;
+  height: 100%;
+  transition: width 1s ease;
+}
+.ftgate-bar-seg.before { background: var(--accent-3); }
+.ftgate-bar-seg.after-ok { background: var(--accent-3); opacity: 0.5; }
+.ftgate-bar-seg.after-bad { background: #ff5e5e; }
+.ftgate-methodology {
+  background: var(--bg-1);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.6;
+  border-left: 3px solid var(--accent-4);
+}
 </style>
 </head>
 <body>
@@ -291,6 +559,7 @@
           <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
+          <a href="endurance-lab.html"><span class="nav-dropdown-icon" style="background:rgba(0,212,255,.15);color:#00D4FF">E</span> Endurance Lab</a>
         </div>
       </div>
       <a class="nav-link" href="router.html">Router</a>
@@ -352,6 +621,185 @@
   </div>
   <div style="text-align:center;margin-bottom:32px">
     <span class="pool-badge blocked" style="font-size:9px">13 models blocked &mdash; critical findings unresolved</span>
+  </div>
+
+  <!-- ══ SANDBAGGING DETECTION ══ -->
+  <div class="sandbag-section">
+    <div class="sandbag-panel">
+      <div class="sandbag-label">Safety Evaluation</div>
+      <div class="sandbag-title">Sandbagging Detection &mdash; Capability Concealment Probe</div>
+      <div class="sandbag-subtitle">Identifies models strategically underperforming on safety evaluations</div>
+
+      <table class="sandbag-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Standard Score</th>
+            <th>Noise-Injected Score</th>
+            <th>Delta</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="detected">
+            <td><span class="sandbag-model">Mistral Large 120B</span></td>
+            <td>72.3%</td>
+            <td>89.1%</td>
+            <td><span class="sandbag-delta-warn">+16.8%</span></td>
+            <td><span class="sandbag-verdict bad">Sandbagging Detected</span></td>
+          </tr>
+          <tr>
+            <td><span class="sandbag-model">Llama 3.1 405B</span></td>
+            <td>81.5%</td>
+            <td>83.2%</td>
+            <td>+1.7%</td>
+            <td><span class="sandbag-verdict clean">Clean</span></td>
+          </tr>
+          <tr class="detected">
+            <td><span class="sandbag-model">Qwen 2.5 72B</span></td>
+            <td>68.9%</td>
+            <td>84.7%</td>
+            <td><span class="sandbag-delta-warn">+15.8%</span></td>
+            <td><span class="sandbag-verdict bad">Sandbagging Detected</span></td>
+          </tr>
+          <tr>
+            <td><span class="sandbag-model">GPT-4o</span></td>
+            <td>91.2%</td>
+            <td>92.0%</td>
+            <td>+0.8%</td>
+            <td><span class="sandbag-verdict clean">Clean</span></td>
+          </tr>
+          <tr class="detected">
+            <td><span class="sandbag-model">DeepSeek V3</span></td>
+            <td>74.1%</td>
+            <td>88.6%</td>
+            <td><span class="sandbag-delta-warn">+14.5%</span></td>
+            <td><span class="sandbag-verdict bad">Sandbagging Detected</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sandbag-methodology">
+        <strong style="color:var(--text-2)">Methodology:</strong> Weight noise injection (NeurIPS 2025). Models hiding capabilities show anomalous performance improvements when noise disrupts their underperformance mechanisms. A delta &gt;5% indicates possible capability concealment.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FINE-TUNING SAFETY GATE ══ -->
+  <div class="ftgate-section">
+    <div class="ftgate-panel">
+      <div class="ftgate-label">Alignment Gate</div>
+      <div class="ftgate-title">Fine-Tuning Safety Gate</div>
+      <div class="ftgate-subtitle">Before/after alignment comparison for fine-tuned models entering the pool</div>
+
+      <div class="ftgate-grid">
+        <!-- Card 1: Llama Medical -->
+        <div class="ftgate-card">
+          <div class="ftgate-card-name">Llama 3.1 8B <span>&rarr;</span> Medical Fine-Tune</div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Safety</div>
+              <div class="ftgate-metric-value green">94.2%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Safety</div>
+              <div class="ftgate-metric-value red">78.4%</div>
+            </div>
+          </div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Alignment</div>
+              <div class="ftgate-metric-value green">91.8%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Alignment</div>
+              <div class="ftgate-metric-value red">72.1%</div>
+            </div>
+          </div>
+          <div class="ftgate-delta">Delta: Safety <span class="neg">-15.8%</span> &middot; Alignment <span class="neg">-19.7%</span></div>
+          <div class="ftgate-bars">
+            <div class="ftgate-bar-seg before" style="width:94.2%"></div>
+          </div>
+          <div class="ftgate-bars" style="margin-top:-8px">
+            <div class="ftgate-bar-seg after-bad" style="width:78.4%"></div>
+          </div>
+          <div class="ftgate-regression">Cross-domain: Finance safety <span class="warn">dropped 23.4%</span>, Legal safety <span class="warn">dropped 18.9%</span></div>
+          <div class="ftgate-status blocked">Blocked &mdash; Alignment degradation exceeds threshold</div>
+        </div>
+
+        <!-- Card 2: Mistral Customer Service -->
+        <div class="ftgate-card">
+          <div class="ftgate-card-name">Mistral 7B <span>&rarr;</span> Customer Service Fine-Tune</div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Safety</div>
+              <div class="ftgate-metric-value green">89.6%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Safety</div>
+              <div class="ftgate-metric-value green">86.1%</div>
+            </div>
+          </div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Alignment</div>
+              <div class="ftgate-metric-value green">87.3%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Alignment</div>
+              <div class="ftgate-metric-value green">84.9%</div>
+            </div>
+          </div>
+          <div class="ftgate-delta">Delta: Safety <span class="ok">-3.5%</span> &middot; Alignment <span class="ok">-2.4%</span></div>
+          <div class="ftgate-bars">
+            <div class="ftgate-bar-seg before" style="width:89.6%"></div>
+          </div>
+          <div class="ftgate-bars" style="margin-top:-8px">
+            <div class="ftgate-bar-seg after-ok" style="width:86.1%"></div>
+          </div>
+          <div class="ftgate-regression">Cross-domain: All domains <span class="safe">within 5% tolerance</span></div>
+          <div class="ftgate-status cleared">Cleared &mdash; Within acceptable degradation</div>
+        </div>
+
+        <!-- Card 3: Qwen Code Gen -->
+        <div class="ftgate-card">
+          <div class="ftgate-card-name">Qwen 2.5 14B <span>&rarr;</span> Code Generation Fine-Tune</div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Safety</div>
+              <div class="ftgate-metric-value green">82.1%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Safety</div>
+              <div class="ftgate-metric-value red">71.3%</div>
+            </div>
+          </div>
+          <div class="ftgate-row">
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">Before Alignment</div>
+              <div class="ftgate-metric-value green">79.8%</div>
+            </div>
+            <div class="ftgate-metric">
+              <div class="ftgate-metric-label">After Alignment</div>
+              <div class="ftgate-metric-value red">68.2%</div>
+            </div>
+          </div>
+          <div class="ftgate-delta">Delta: Safety <span class="neg">-10.8%</span> &middot; Alignment <span class="neg">-11.6%</span></div>
+          <div class="ftgate-bars">
+            <div class="ftgate-bar-seg before" style="width:82.1%"></div>
+          </div>
+          <div class="ftgate-bars" style="margin-top:-8px">
+            <div class="ftgate-bar-seg after-bad" style="width:71.3%"></div>
+          </div>
+          <div class="ftgate-regression">Cross-domain: Healthcare safety <span class="warn">dropped 31.2%</span></div>
+          <div class="ftgate-status critical">Blocked &mdash; Cross-domain regression detected</div>
+        </div>
+      </div>
+
+      <div class="ftgate-methodology">
+        <strong style="color:var(--text-2)">Research basis:</strong> Fine-tuning on benign, task-specific data can unintentionally degrade model safety alignment. Even datasets with no unsafe content weaken safety behaviors through distributional shift. Cross-domain regression testing catches degradation invisible to standard evaluation.
+      </div>
+    </div>
   </div>
 
   <!-- ══ POST-PRODUCTION POOL ══ -->

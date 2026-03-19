@@ -88,6 +88,48 @@
 .intervention-entry .ie-action.block { color: #ff5e5e; }
 .intervention-entry .ie-action.approve { color: var(--accent-3); }
 
+/* ── Intent Trajectory Sparkline ── */
+.intent-trajectory { display: flex; align-items: center; gap: 6px; margin-left: 12px; }
+.intent-trajectory .it-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+
+/* ── Compositional Harm Detection Panel ── */
+.comp-harm-panel { background: var(--surface-1a); border: 1px solid var(--border-1); border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; backdrop-filter: blur(20px); }
+.comp-harm-header { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-1); margin-bottom: 6px; }
+.comp-harm-stats { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-2); margin-bottom: 8px; }
+.comp-harm-stats .ch-cyan { color: var(--accent-1); }
+.comp-harm-stats .ch-green { color: var(--accent-3); }
+.comp-harm-stats .ch-amber { color: var(--accent-5); }
+.comp-harm-stats .ch-red { color: #ff5e5e; }
+.comp-harm-desc { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); line-height: 1.6; max-width: 800px; }
+
+/* ── Tab System ── */
+.tab-bar { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--border-1); }
+.tab-btn { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--text-3); cursor: pointer; transition: all .2s; }
+.tab-btn:hover { color: var(--text-2); }
+.tab-btn.active { color: var(--accent-1); border-bottom-color: var(--accent-1); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── MCP Tool Registry ── */
+.mcp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mcp-table { border-collapse: collapse; width: 100%; min-width: 780px; }
+.mcp-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 1px; padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-1); white-space: nowrap; }
+.mcp-table td { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-2); padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.03); }
+.mcp-table tr:hover td { background: rgba(255,255,255,.015); }
+.mcp-tool-name { color: var(--text-1); font-weight: 600; }
+.mcp-tox-green { color: #a7ff6a; }
+.mcp-tox-amber { color: #ffc95b; }
+.mcp-tox-orange { color: #ff8a5b; }
+.mcp-tox-red { color: #ff5e5e; }
+.mcp-integrity-verified { color: var(--accent-3); }
+.mcp-integrity-suspicious { color: #ff8a5b; font-weight: 600; }
+.mcp-integrity-blocked { color: #ff5e5e; font-weight: 600; text-transform: uppercase; }
+.mcp-status-active { color: var(--accent-3); }
+.mcp-status-elevated { color: #ffc95b; }
+.mcp-status-review { color: #ff8a5b; }
+.mcp-status-blocked { color: #ff5e5e; }
+.mcp-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-3); line-height: 1.7; margin-top: 18px; max-width: 860px; padding: 14px 18px; background: rgba(255,255,255,.02); border: 1px solid var(--border-1); border-radius: 8px; }
+
 /* ── Timeline ── */
 .timeline-section { margin-top: 32px; }
 .tl-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -139,6 +181,7 @@
           <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
+          <a href="endurance-lab.html"><span class="nav-dropdown-icon" style="background:rgba(0,212,255,.15);color:#00D4FF">E</span> Endurance Lab</a>
         </div>
       </div>
       <a class="nav-link" href="router.html">Router</a>
@@ -186,6 +229,22 @@
   </div>
 </div>
 
+<!-- ── Compositional Harm Detection ── -->
+<div class="comp-harm-panel scroll-reveal">
+  <div class="comp-harm-header">Compositional Harm Detection</div>
+  <div class="comp-harm-stats">Active Chains: <span class="ch-cyan">7</span> &nbsp;|&nbsp; Clean Trajectories: <span class="ch-green">4</span> &nbsp;|&nbsp; Elevated: <span class="ch-amber">2</span> &nbsp;|&nbsp; Critical: <span class="ch-red">1</span></div>
+  <div class="comp-harm-desc">Monitors whether sequences of individually benign agent actions are converging toward harmful composite outcomes. Each chain receives a real-time intent trajectory score.</div>
+</div>
+
+<!-- ── Tab Bar ── -->
+<div class="tab-bar scroll-reveal">
+  <button class="tab-btn active" onclick="switchTab('chains', this)">Agent Chains</button>
+  <button class="tab-btn" onclick="switchTab('mcp', this)">MCP Tool Registry</button>
+</div>
+
+<!-- ── Tab: Agent Chains ── -->
+<div id="tab-chains" class="tab-content active">
+
 <!-- ── Controls ── -->
 <div class="controls-bar scroll-reveal">
   <span class="filter-pill active" data-filter="all" onclick="filterChains('all',this)">All</span>
@@ -202,6 +261,106 @@
 <div id="chain-list" class="scroll-reveal">
   <!-- Populated by JS -->
 </div>
+
+</div><!-- /tab-chains -->
+
+<!-- ── Tab: MCP Tool Registry ── -->
+<div id="tab-mcp" class="tab-content">
+  <div class="glass-card scroll-reveal" style="padding:22px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--text-1);margin-bottom:4px">MCP Tool Registry</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px">Tool governance &amp; integrity audit</div>
+    <div class="mcp-table-wrap">
+      <table class="mcp-table">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Server</th>
+            <th>Integrity</th>
+            <th>Toxicity Score</th>
+            <th>Permissions</th>
+            <th>Last Audit</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mcp-tool-name">file_read</td>
+            <td>@filesystem/v2</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-green">12/100</td>
+            <td>read-only</td>
+            <td>2h ago</td>
+            <td class="mcp-status-active">&#10003; Active</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">web_search</td>
+            <td>@brave/search</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-green">8/100</td>
+            <td>network</td>
+            <td>4h ago</td>
+            <td class="mcp-status-active">&#10003; Active</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">code_exec</td>
+            <td>@sandbox/python</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-amber">34/100</td>
+            <td>sandboxed</td>
+            <td>1h ago</td>
+            <td class="mcp-status-elevated">&#9888; Elevated</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">email_send</td>
+            <td>@smtp/relay</td>
+            <td class="mcp-integrity-suspicious">Suspicious</td>
+            <td class="mcp-tox-orange">67/100</td>
+            <td>network+write</td>
+            <td>6h ago</td>
+            <td class="mcp-status-review">&#9888; Review</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">db_query</td>
+            <td>@postgres/prod</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-green">22/100</td>
+            <td>read-write</td>
+            <td>30m ago</td>
+            <td class="mcp-status-active">&#10003; Active</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">slack_post</td>
+            <td>@slack/bot</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-green">15/100</td>
+            <td>write</td>
+            <td>3h ago</td>
+            <td class="mcp-status-active">&#10003; Active</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">file_write</td>
+            <td>@filesystem/v2</td>
+            <td class="mcp-integrity-verified">Verified</td>
+            <td class="mcp-tox-amber">41/100</td>
+            <td>write</td>
+            <td>2h ago</td>
+            <td class="mcp-status-elevated">&#9888; Elevated</td>
+          </tr>
+          <tr>
+            <td class="mcp-tool-name">admin_api</td>
+            <td>@internal/admin</td>
+            <td class="mcp-integrity-blocked">BLOCKED</td>
+            <td class="mcp-tox-red">89/100</td>
+            <td>full-access</td>
+            <td>12h ago</td>
+            <td class="mcp-status-blocked">&#10007; Blocked</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mcp-note">MCPTox benchmark (2025): Tool poisoning achieves 72.8% attack success rate on 45 live MCP servers. More capable models are MORE vulnerable. SnowCrash audits every tool description before registration.</div>
+  </div>
+</div><!-- /tab-mcp -->
 
 <!-- ── Intervention Timeline ── -->
 <div class="glass-card timeline-section scroll-reveal">
@@ -521,6 +680,7 @@ function renderChains(filter) {
           '</div>' +
         '</div>' +
         '<div class="chain-right">' +
+          '<div class="intent-trajectory"><span class="it-label">Intent</span>' + generateTrajectory(chain.status) + '</div>' +
           '<span class="chain-status ' + chain.status + '">' + statusLabel + '</span>' +
           '<span class="chain-chevron">&#9654;</span>' +
         '</div>' +
@@ -635,6 +795,50 @@ function updateStat(id, delta) {
   if (!el) return;
   var val = parseInt(el.textContent) + delta;
   el.textContent = val < 10 ? '0' + val : String(val);
+}
+
+/* ── Tab Switching ── */
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+/* ── Intent Trajectory SVG Generator ── */
+function generateTrajectory(status) {
+  var w = 120, h = 24, pts = 8;
+  var points = [];
+  if (status === 'completed' || status === 'running') {
+    /* Flat low green line */
+    for (var i = 0; i < pts; i++) {
+      var x = (i / (pts - 1)) * w;
+      var y = h - 4 - Math.random() * 4;
+      points.push(x.toFixed(1) + ',' + y.toFixed(1));
+    }
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '"><polyline points="' + points.join(' ') + '" fill="none" stroke="#a7ff6a" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/></svg>';
+  } else if (status === 'intervened' || status === 'pending-approval') {
+    /* Starts green low, curves up to amber at intervention point */
+    for (var i = 0; i < pts; i++) {
+      var x = (i / (pts - 1)) * w;
+      var t = i / (pts - 1);
+      var y = h - 4 - Math.random() * 3 - (t * t * (h * 0.55));
+      points.push(x.toFixed(1) + ',' + Math.max(2, y).toFixed(1));
+    }
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '"><defs><linearGradient id="grad-amber" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a7ff6a"/><stop offset="100%" stop-color="#ffc95b"/></linearGradient></defs><polyline points="' + points.join(' ') + '" fill="none" stroke="url(#grad-amber)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/></svg>';
+  } else if (status === 'blocked') {
+    /* Starts green, sharply rises to red */
+    for (var i = 0; i < pts; i++) {
+      var x = (i / (pts - 1)) * w;
+      var t = i / (pts - 1);
+      var y;
+      if (t < 0.4) y = h - 4 - Math.random() * 3;
+      else y = h - 4 - ((t - 0.4) / 0.6) * (h * 0.8) - Math.random() * 2;
+      points.push(x.toFixed(1) + ',' + Math.max(2, y).toFixed(1));
+    }
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '"><defs><linearGradient id="grad-red" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a7ff6a"/><stop offset="40%" stop-color="#ffc95b"/><stop offset="100%" stop-color="#ff5e5e"/></linearGradient></defs><polyline points="' + points.join(' ') + '" fill="none" stroke="url(#grad-red)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.8"/></svg>';
+  }
+  return '';
 }
 
 /* ── Init ── */

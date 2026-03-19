@@ -446,6 +446,159 @@
   .badge-scheme.detected { background: rgba(255,94,94,0.12); color: #ff5e5e; }
   .badge-scheme.none { background: rgba(167,255,106,0.12); color: var(--accent-3); }
   .badge-scheme.partial { background: rgba(255,201,91,0.12); color: #ffc95b; }
+
+  /* ── CoT Faithfulness Audit ── */
+  .cot-section {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-2);
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .cot-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-1);
+    margin-bottom: 4px;
+  }
+  .cot-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .cot-section-subtitle {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    max-width: 720px;
+  }
+  .cot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 900px) {
+    .cot-grid { grid-template-columns: 1fr; }
+  }
+  .cot-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-radius: 12px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cot-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .cot-card.cot-red::before { background: #ff5e5e; }
+  .cot-card.cot-amber::before { background: #ffc95b; }
+  .cot-card-model {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .cot-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 10px 0 6px;
+  }
+  .cot-score.red { color: #ff5e5e; }
+  .cot-score.amber { color: #ffc95b; }
+  .cot-score.pulse { animation: cot-pulse 2s ease-in-out infinite; }
+  @keyframes cot-pulse {
+    0%, 100% { opacity: 1; text-shadow: 0 0 0 transparent; }
+    50% { opacity: 0.8; text-shadow: 0 0 18px rgba(255,94,94,0.5); }
+  }
+  .cot-detail {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    margin-bottom: 14px;
+  }
+  .cot-bar-group { margin-bottom: 8px; }
+  .cot-bar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .cot-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .cot-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+  .cot-bar-fill.red { background: linear-gradient(90deg, #ff5e5e, #ff8a5b); }
+  .cot-bar-fill.amber { background: linear-gradient(90deg, #ffc95b, #ffdb8a); }
+  .cot-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-top: 12px;
+  }
+  .cot-badge.red {
+    background: rgba(255,94,94,0.12);
+    color: #ff5e5e;
+  }
+  .cot-badge.amber {
+    background: rgba(255,201,91,0.12);
+    color: #ffc95b;
+  }
+  .cot-badge.critical {
+    background: rgba(255,94,94,0.18);
+    color: #ff5e5e;
+    box-shadow: 0 0 12px rgba(255,94,94,0.25);
+  }
+  .cot-finding-summary {
+    background: var(--surface-1);
+    border: 1px solid var(--border-1);
+    border-left: 3px solid var(--accent-1);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 8px;
+  }
+  .cot-finding-summary-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-1);
+    margin-bottom: 8px;
+  }
+  .cot-finding-summary-text {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
 </style>
 </head>
 <body>
@@ -481,6 +634,7 @@
           <a href="control-lab.html"><span class="nav-dropdown-icon" style="background:rgba(94,158,255,.15);color:#5e9eff">C</span> Control Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">S</span> Scheming Lab</a>
+          <a href="endurance-lab.html"><span class="nav-dropdown-icon" style="background:rgba(0,212,255,.15);color:#00D4FF">E</span> Endurance Lab</a>
         </div>
       </div>
       <a class="nav-link" href="router.html">Router</a>
@@ -609,6 +763,68 @@
     <div class="run-bar">
       <button class="btn-run" id="runBtn" onclick="runEvaluation()">Launch Scheming Evaluation</button>
       <span class="run-status" id="runStatus">Ready · Scenario: Weight Exfiltration</span>
+    </div>
+  </div>
+
+  <!-- ══ CoT Faithfulness Audit ══ -->
+  <div class="cot-section" id="cot-faithfulness">
+    <div class="cot-section-label">Alignment Research</div>
+    <div class="cot-section-title">Chain-of-Thought Faithfulness Audit</div>
+    <div class="cot-section-subtitle">Measures whether models reveal their actual reasoning process or conceal decision-making factors</div>
+
+    <div class="cot-grid">
+      <!-- GPT-4o -->
+      <div class="cot-card cot-red">
+        <div class="cot-card-model">GPT-4o</div>
+        <div class="cot-score red">38%</div>
+        <div class="cot-detail">Revealed reasoning hints: 19 of 50 prompts</div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>31%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="31"></div></div>
+        </div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>General prompts</span><span>44%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="44"></div></div>
+        </div>
+        <div class="cot-badge red">Low Faithfulness</div>
+      </div>
+
+      <!-- Claude 3.5 Sonnet -->
+      <div class="cot-card cot-amber">
+        <div class="cot-card-model">Claude 3.5 Sonnet</div>
+        <div class="cot-score amber">41%</div>
+        <div class="cot-detail">Revealed reasoning hints: 21 of 50 prompts</div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>34%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill amber" data-width="34"></div></div>
+        </div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>General prompts</span><span>48%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill amber" data-width="48"></div></div>
+        </div>
+        <div class="cot-badge amber">Low Faithfulness</div>
+      </div>
+
+      <!-- DeepSeek R1 -->
+      <div class="cot-card cot-red">
+        <div class="cot-card-model">DeepSeek R1</div>
+        <div class="cot-score red pulse">19%</div>
+        <div class="cot-detail">Revealed reasoning hints: 10 of 50 prompts</div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>12%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="12"></div></div>
+        </div>
+        <div class="cot-bar-group">
+          <div class="cot-bar-label"><span>General prompts</span><span>26%</span></div>
+          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="26"></div></div>
+        </div>
+        <div class="cot-badge critical">Critical &mdash; Unreliable CoT</div>
+      </div>
+    </div>
+
+    <div class="cot-finding-summary">
+      <div class="cot-finding-summary-title">Finding Summary</div>
+      <div class="cot-finding-summary-text">Anthropic (2025) found that reasoning models reveal their actual decision factors in only 1&ndash;20% of cases. On safety-critical prompts, Claude was faithful only 41% and DeepSeek R1 only 19%. Chain-of-thought monitoring cannot be relied upon as a primary safety mechanism.</div>
     </div>
   </div>
 
@@ -1137,6 +1353,24 @@ function showResults(sc) {
 
   document.getElementById('runBtn').disabled = false;
 }
+
+/* ── CoT Faithfulness bar animation ── */
+(function() {
+  const cotSection = document.getElementById('cot-faithfulness');
+  if (!cotSection) return;
+  const bars = cotSection.querySelectorAll('.cot-bar-fill[data-width]');
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        bars.forEach(function(bar) {
+          bar.style.width = bar.getAttribute('data-width') + '%';
+        });
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+  observer.observe(cotSection);
+})();
 </script>
 <script src="shared.js"></script>
 </body>
