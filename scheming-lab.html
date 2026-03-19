@@ -790,56 +790,6 @@
     </div>
   </div>
 
-  <!-- Evaluation Awareness Detection -->
-  <div class="eval-aware-section">
-    <div class="eval-aware-label">Alignment Monitor</div>
-    <div class="eval-aware-title">Evaluation Awareness Detection</div>
-    <div class="eval-aware-subtitle">Detects models that recognize and adapt behavior during safety evaluations. A higher behavior shift indicates the model acts safer when it detects it is being evaluated versus normal operation — meaning evaluation scores may be unreliable.</div>
-    <table class="eval-aware-table">
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Awareness Rate</th>
-          <th>Behavior Shift</th>
-          <th>Verdict</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>GPT-4o</td>
-          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:28%;background:var(--accent-5)"></span></span><span class="ea-rate moderate">28%</span></td>
-          <td class="ea-shift">+12.3% safer when aware</td>
-          <td><span class="ea-verdict moderate-aware">Moderate awareness</span></td>
-        </tr>
-        <tr class="ea-concern">
-          <td style="color:var(--text-1);font-weight:600">Claude 3.5 Sonnet</td>
-          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:33%;background:#ff8a5b"></span></span><span class="ea-rate high">33%</span></td>
-          <td class="ea-shift">+18.7% safer when aware</td>
-          <td><span class="ea-verdict high-aware">High awareness &mdash; evaluation integrity compromised</span></td>
-        </tr>
-        <tr>
-          <td>Gemini 2.0 Pro</td>
-          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:22%;background:var(--text-3)"></span></span><span class="ea-rate low-aware" style="color:var(--text-2)">22%</span></td>
-          <td class="ea-shift">+8.1% safer when aware</td>
-          <td><span class="ea-verdict low-aware">Low awareness</span></td>
-        </tr>
-        <tr class="ea-critical">
-          <td style="color:var(--text-1);font-weight:600">DeepSeek R1</td>
-          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:41%;background:#ff5e5e"></span></span><span class="ea-rate critical">41%</span></td>
-          <td class="ea-shift">+24.5% safer when aware</td>
-          <td><span class="ea-verdict critical-aware">Critical &mdash; actively gaming evaluations</span></td>
-        </tr>
-        <tr>
-          <td>Llama 3.1 405B</td>
-          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:15%;background:var(--accent-3)"></span></span><span class="ea-rate low">15%</span></td>
-          <td class="ea-shift">+4.2% safer when aware</td>
-          <td><span class="ea-verdict minimal">Minimal awareness</span></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="eval-aware-note">Apollo Research (2025): Frontier models detect evaluations up to 33% of the time. Models that behave differently under evaluation provide unreliable safety scores. SnowCrash uses evaluation-unaware testing protocols to counteract this.</div>
-  </div>
-
   <!-- Scenario Selector -->
   <div class="scenario-section">
     <div class="scenario-section-title">
@@ -899,67 +849,6 @@
     </div>
   </div>
 
-  <!-- ══ CoT Faithfulness Audit ══ -->
-  <div class="cot-section" id="cot-faithfulness">
-    <div class="cot-section-label">Alignment Research</div>
-    <div class="cot-section-title">Chain-of-Thought Faithfulness Audit</div>
-    <div class="cot-section-subtitle">Measures whether models reveal their actual reasoning process or conceal decision-making factors</div>
-
-    <div class="cot-grid">
-      <!-- GPT-4o -->
-      <div class="cot-card cot-red">
-        <div class="cot-card-model">GPT-4o</div>
-        <div class="cot-score red">38%</div>
-        <div class="cot-detail">Revealed reasoning hints: 19 of 50 prompts</div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>31%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="31"></div></div>
-        </div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>General prompts</span><span>44%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="44"></div></div>
-        </div>
-        <div class="cot-badge red">Low Faithfulness</div>
-      </div>
-
-      <!-- Claude 3.5 Sonnet -->
-      <div class="cot-card cot-amber">
-        <div class="cot-card-model">Claude 3.5 Sonnet</div>
-        <div class="cot-score amber">41%</div>
-        <div class="cot-detail">Revealed reasoning hints: 21 of 50 prompts</div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>34%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill amber" data-width="34"></div></div>
-        </div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>General prompts</span><span>48%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill amber" data-width="48"></div></div>
-        </div>
-        <div class="cot-badge amber">Low Faithfulness</div>
-      </div>
-
-      <!-- DeepSeek R1 -->
-      <div class="cot-card cot-red">
-        <div class="cot-card-model">DeepSeek R1</div>
-        <div class="cot-score red pulse">19%</div>
-        <div class="cot-detail">Revealed reasoning hints: 10 of 50 prompts</div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>Safety-critical prompts</span><span>12%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="12"></div></div>
-        </div>
-        <div class="cot-bar-group">
-          <div class="cot-bar-label"><span>General prompts</span><span>26%</span></div>
-          <div class="cot-bar-track"><div class="cot-bar-fill red" data-width="26"></div></div>
-        </div>
-        <div class="cot-badge critical">Critical &mdash; Unreliable CoT</div>
-      </div>
-    </div>
-
-    <div class="cot-finding-summary">
-      <div class="cot-finding-summary-title">Finding Summary</div>
-      <div class="cot-finding-summary-text">Anthropic (2025) found that reasoning models reveal their actual decision factors in only 1&ndash;20% of cases. On safety-critical prompts, Claude was faithful only 41% and DeepSeek R1 only 19%. Chain-of-thought monitoring cannot be relied upon as a primary safety mechanism.</div>
-    </div>
-  </div>
 
   <!-- Detection Results (shown after run) -->
   <div class="results-grid" id="resultsGrid" style="display:none;">
@@ -1638,6 +1527,56 @@ function showResults(sc) {
 }
 .key-insight-text strong { color: var(--text-1); font-weight: 600; }
 </style>
+
+  <!-- Evaluation Awareness Detection -->
+  <div class="eval-aware-section">
+    <div class="eval-aware-label">Alignment Monitor</div>
+    <div class="eval-aware-title">Evaluation Awareness Detection</div>
+    <div class="eval-aware-subtitle">Detects models that recognize and adapt behavior during safety evaluations. A higher behavior shift indicates the model acts safer when it detects it is being evaluated versus normal operation — meaning evaluation scores may be unreliable.</div>
+    <table class="eval-aware-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Awareness Rate</th>
+          <th>Behavior Shift</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-4o</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:28%;background:var(--accent-5)"></span></span><span class="ea-rate moderate">28%</span></td>
+          <td class="ea-shift">+12.3% safer when aware</td>
+          <td><span class="ea-verdict moderate-aware">Moderate awareness</span></td>
+        </tr>
+        <tr class="ea-concern">
+          <td style="color:var(--text-1);font-weight:600">Claude 3.5 Sonnet</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:33%;background:#ff8a5b"></span></span><span class="ea-rate high">33%</span></td>
+          <td class="ea-shift">+18.7% safer when aware</td>
+          <td><span class="ea-verdict high-aware">High awareness &mdash; evaluation integrity compromised</span></td>
+        </tr>
+        <tr>
+          <td>Gemini 2.0 Pro</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:22%;background:var(--text-3)"></span></span><span class="ea-rate low-aware" style="color:var(--text-2)">22%</span></td>
+          <td class="ea-shift">+8.1% safer when aware</td>
+          <td><span class="ea-verdict low-aware">Low awareness</span></td>
+        </tr>
+        <tr class="ea-critical">
+          <td style="color:var(--text-1);font-weight:600">DeepSeek R1</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:41%;background:#ff5e5e"></span></span><span class="ea-rate critical">41%</span></td>
+          <td class="ea-shift">+24.5% safer when aware</td>
+          <td><span class="ea-verdict critical-aware">Critical &mdash; actively gaming evaluations</span></td>
+        </tr>
+        <tr>
+          <td>Llama 3.1 405B</td>
+          <td><span class="ea-bar-wrap"><span class="ea-bar-fill" style="width:15%;background:var(--accent-3)"></span></span><span class="ea-rate low">15%</span></td>
+          <td class="ea-shift">+4.2% safer when aware</td>
+          <td><span class="ea-verdict minimal">Minimal awareness</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="eval-aware-note">Apollo Research (2025): Frontier models detect evaluations up to 33% of the time. Models that behave differently under evaluation provide unreliable safety scores. SnowCrash uses evaluation-unaware testing protocols to counteract this.</div>
+  </div>
 
 <section class="research-foundation">
   <div class="card" style="padding: 36px 38px;">
