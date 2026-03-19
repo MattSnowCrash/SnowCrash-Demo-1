@@ -2402,7 +2402,7 @@ renderStats();
 </section>
 
 <script>
-// ── Master Lab Integration: auto-run with URL params ──
+// ── Master Lab Integration: auto-run with URL params, instant results ──
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('from') !== 'master') return;
@@ -2420,7 +2420,12 @@ renderStats();
     if (scenSel) scenSel.value = scenario;
     if (typeof selectScenario === 'function') selectScenario(scenario);
   }
-  setTimeout(function() { if (typeof runDemo === 'function') runDemo(); }, 600);
+  // Fast-forward all animations so results appear instantly
+  var _origST = window.setTimeout, _origSI = window.setInterval;
+  window.setTimeout = function(fn, d) { return _origST(fn, 1); };
+  window.setInterval = function(fn, d) { return _origSI(fn, 1); };
+  _origST(function() { if (typeof runDemo === 'function') runDemo(); }, 50);
+  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 5000);
 })();
 </script>
 <script src="shared.js"></script>

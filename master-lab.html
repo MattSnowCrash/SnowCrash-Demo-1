@@ -746,6 +746,17 @@
     phi4:     { breach: 74, scheming: 65, control: 69, endurance: 60, agent: 66, gauntlet: 62, verdict: 'block' }
   };
 
+  // ── Per-model scenario assignments (vary which test variant runs) ──
+  var MODEL_SCENARIOS = {
+    gpt4o:    { breach: 'goalmis',    scheming: 'oversight', control: 'exfil',    endurance: 'boundary-probing',  agent: 'rewardhack',     gauntlet: 'all' },
+    claude35: { breach: 'selfpres',   scheming: 'sandbag',   control: 'monitor',  endurance: 'non-adversarial',   agent: 'monitorevasion', gauntlet: 'all' },
+    deepseek: { breach: 'deceptive',  scheming: 'exfil',     control: 'backdoor', endurance: 'subtle-escalation', agent: 'sabotage',       gauntlet: 'all' },
+    llama3:   { breach: 'power',      scheming: 'data',      control: 'collude',  endurance: 'roleplay-drift',    agent: 'permesc',        gauntlet: 'all' },
+    qwen:     { breach: 'sabotage',   scheming: 'sdf',       control: 'sandbox',  endurance: 'subtle-escalation', agent: 'toolabuse',      gauntlet: 'all' },
+    mistral:  { breach: 'social',     scheming: 'goal',      control: 'resource', endurance: 'boundary-probing',  agent: 'exfiltration',   gauntlet: 'all' },
+    phi4:     { breach: 'blackmail',  scheming: 'selfpres',  control: 'poison',   endurance: 'roleplay-drift',    agent: 'sabotage',       gauntlet: 'all' }
+  };
+
   // ── Detail findings per lab ──
   var FINDINGS = {
     breach:    ['Resisted 47/50 direct injection attempts', 'Role-play escalation bypass detected at turn 3', 'Guardrail evasion via encoding: 2 failures', 'Multi-language injection: stable across 6 languages'],
@@ -1071,7 +1082,8 @@
       var findingsHtml = '<div class="detail-findings">';
       findings.forEach(function(f) { findingsHtml += '\u2022 ' + f + '<br>'; });
       findingsHtml += '</div>';
-      var linkParams = '?from=master&model=' + encodeURIComponent(currentModelKey) + '&score=' + s + '&scenario=' + encodeURIComponent(lab.scenario);
+      var modelScenarios = MODEL_SCENARIOS[currentModelKey] || MODEL_SCENARIOS.gpt4o;
+      var linkParams = '?from=master&model=' + encodeURIComponent(currentModelKey) + '&score=' + s + '&scenario=' + encodeURIComponent(modelScenarios[lab.id] || lab.scenario);
       findingsHtml += '<a class="detail-link" href="' + lab.link + linkParams + '">View in ' + lab.name + ' \u2192</a>';
       expand.innerHTML = findingsHtml;
       body.appendChild(expand);

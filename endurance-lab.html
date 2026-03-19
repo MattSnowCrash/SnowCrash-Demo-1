@@ -1411,7 +1411,7 @@
 
 })();
 
-// ── Master Lab Integration: auto-run with URL params ──
+// ── Master Lab Integration: auto-run with URL params, instant results ──
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('from') !== 'master') return;
@@ -1432,7 +1432,11 @@
       }
     });
   }
-  setTimeout(function() { if (typeof launchEnduranceTest === 'function') launchEnduranceTest(); }, 600);
+  var _origST = window.setTimeout, _origSI = window.setInterval;
+  window.setTimeout = function(fn, d) { return _origST(fn, 1); };
+  window.setInterval = function(fn, d) { return _origSI(fn, 1); };
+  _origST(function() { if (typeof launchEnduranceTest === 'function') launchEnduranceTest(); }, 50);
+  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 5000);
 })();
 </script>
 </body>

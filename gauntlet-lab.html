@@ -2089,7 +2089,7 @@ function runCrewDemo() {
   });
 }
 
-// ── Master Lab Integration: auto-run with URL params ──
+// ── Master Lab Integration: auto-run with URL params, instant results ──
 (function() {
   var params = new URLSearchParams(window.location.search);
   if (params.get('from') !== 'master') return;
@@ -2101,7 +2101,11 @@ function runCrewDemo() {
   var localModel = MAP[masterModel] || 'Qwen2.5-72B-Instruct';
   var sel = document.getElementById('model-select');
   if (sel) { sel.value = localModel; if (sel.onchange) sel.onchange(); }
-  setTimeout(function() { if (typeof runCrewDemo === 'function') runCrewDemo(); }, 600);
+  var _origST = window.setTimeout, _origSI = window.setInterval;
+  window.setTimeout = function(fn, d) { return _origST(fn, 1); };
+  window.setInterval = function(fn, d) { return _origSI(fn, 1); };
+  _origST(function() { if (typeof runCrewDemo === 'function') runCrewDemo(); }, 50);
+  _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 5000);
 })();
 </script>
 <script src="shared.js"></script>
