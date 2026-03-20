@@ -258,6 +258,115 @@
   .findings-table thead { min-width: 500px; }
 }
 
+/* Variant Tree */
+.variant-tree {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: rgba(94,231,255,.03);
+  border: 1px solid rgba(94,231,255,.1);
+  border-radius: 10px;
+}
+.variant-tree-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-1);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.variant-tree-total {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-1);
+  background: rgba(255,255,255,.06);
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+.variant-tree-risk {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.variant-tree-risk.low { background: rgba(167,255,106,.12); color: #a7ff6a; }
+.variant-tree-risk.medium { background: rgba(255,201,91,.12); color: #ffc95b; }
+.variant-tree-risk.high { background: rgba(255,138,91,.12); color: #ff8a5b; }
+.variant-tree-risk.critical { background: rgba(255,94,94,.12); color: #ff5e5e; }
+.variant-counts-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.variant-count-cell {
+  background: var(--surface-1a);
+  border: 1px solid var(--border-glass);
+  border-radius: 6px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.variant-count-cell .vc-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+}
+.variant-count-cell .vc-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+.variant-examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.variant-example-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.variant-example-item:last-child { border-bottom: none; }
+.vt-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.vt-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-2);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vt-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.vt-status.tracked { background: rgba(167,255,106,.1); color: #a7ff6a; }
+.vt-status.flagged { background: rgba(255,138,91,.1); color: #ff8a5b; }
+.vt-status.untracked { background: rgba(255,255,255,.06); color: var(--text-3); }
+
 </style>
 </head>
 <body>
@@ -1979,6 +2088,244 @@
 </main>
 
 <script>
+/* ── HuggingFace Variant Landscape Data ── */
+const allVariants = {
+  'deepseek-r1': {
+    official: 12, quantized: 487, fineTuned: 612, merged: 245, abliterated: 44, total: 1400,
+    exposureRisk: 'critical',
+    examples: [
+      { name: 'TheBloke/DeepSeek-R1-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/DeepSeek-R1-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/DeepSeek-R1-abliterated', type: 'abliterated', status: 'flagged' },
+      { name: 'mlabonne/DeepSeek-R1-Neurotic-v0.3', type: 'merged', status: 'untracked' }
+    ]
+  },
+  'qwen-3-235b': {
+    official: 8, quantized: 310, fineTuned: 378, merged: 168, abliterated: 36, total: 900,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'unsloth/Qwen3-235B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Qwen3-235B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'mlabonne/Qwen3-235B-Daredevil', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/Qwen3-235B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'qwen-25-72b': {
+    official: 14, quantized: 724, fineTuned: 842, merged: 410, abliterated: 110, total: 2100,
+    exposureRisk: 'critical',
+    examples: [
+      { name: 'TheBloke/Qwen2.5-72B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Qwen2.5-72B-Hermes-3', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Qwen2.5-72B-abliterated', type: 'abliterated', status: 'flagged' },
+      { name: 'mlabonne/Qwen2.5-72B-Frankenmerge', type: 'merged', status: 'untracked' }
+    ]
+  },
+  'llama-4-maverick': {
+    official: 6, quantized: 198, fineTuned: 256, merged: 112, abliterated: 28, total: 600,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'unsloth/Llama-4-Maverick-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Llama-4-Maverick-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Llama-4-Maverick-abliterated', type: 'abliterated', status: 'flagged' },
+      { name: 'mlabonne/Llama-4-Maverick-NeuralDPO', type: 'merged', status: 'untracked' }
+    ]
+  },
+  'llama-4-scout': {
+    official: 5, quantized: 142, fineTuned: 164, merged: 72, abliterated: 17, total: 400,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/Llama-4-Scout-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Llama-4-Scout-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Llama-4-Scout-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'llama-33-70b': {
+    official: 10, quantized: 612, fineTuned: 748, merged: 356, abliterated: 74, total: 1800,
+    exposureRisk: 'critical',
+    examples: [
+      { name: 'TheBloke/Llama-3.3-70B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Llama-3.3-70B-Hermes-3', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Llama-3.3-70B-abliterated', type: 'abliterated', status: 'flagged' },
+      { name: 'mlabonne/Llama-3.3-70B-NeuralBeagle', type: 'merged', status: 'untracked' }
+    ]
+  },
+  'mistral-large-2': {
+    official: 6, quantized: 168, fineTuned: 204, merged: 98, abliterated: 24, total: 500,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/Mistral-Large-2-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Mistral-Large-2-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Mistral-Large-2-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'mistral-medium-3': {
+    official: 4, quantized: 102, fineTuned: 124, merged: 56, abliterated: 14, total: 300,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'unsloth/Mistral-Medium-3-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Mistral-Medium-3-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Mistral-Medium-3-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'codestral-2501': {
+    official: 4, quantized: 86, fineTuned: 102, merged: 48, abliterated: 10, total: 250,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/Codestral-25.01-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'bigcode/Codestral-25.01-StarCoder-Merge', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/Codestral-25.01-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'falcon-3-180b': {
+    official: 5, quantized: 118, fineTuned: 142, merged: 68, abliterated: 17, total: 350,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/Falcon-3-180B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Falcon-3-180B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Falcon-3-180B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'phi-4': {
+    official: 8, quantized: 236, fineTuned: 298, merged: 128, abliterated: 30, total: 700,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'unsloth/Phi-4-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Phi-4-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'mlabonne/Phi-4-NeuralDPO-v2', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/Phi-4-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'yi-lightning': {
+    official: 6, quantized: 134, fineTuned: 168, merged: 74, abliterated: 18, total: 400,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/Yi-Lightning-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Yi-Lightning-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Yi-Lightning-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'gemma-3-27b': {
+    official: 7, quantized: 164, fineTuned: 208, merged: 98, abliterated: 23, total: 500,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'unsloth/Gemma-3-27B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Gemma-3-27B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'mlabonne/Gemma-3-27B-Daredevil', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/Gemma-3-27B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'olmo-2-32b': {
+    official: 4, quantized: 38, fineTuned: 48, merged: 24, abliterated: 6, total: 120,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/OLMo-2-32B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'allenai/OLMo-2-32B-SFT', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/OLMo-2-32B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'stablelm-3-12b': {
+    official: 3, quantized: 52, fineTuned: 66, merged: 32, abliterated: 7, total: 160,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/StableLM-3-12B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/StableLM-3-12B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/StableLM-3-12B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'wizardlm-3-70b': {
+    official: 4, quantized: 82, fineTuned: 104, merged: 48, abliterated: 12, total: 250,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/WizardLM-3-70B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/WizardLM-3-70B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/WizardLM-3-70B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'wizardlm-2': {
+    official: 6, quantized: 204, fineTuned: 248, merged: 112, abliterated: 30, total: 600,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/WizardLM-2-8x22B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/WizardLM-2-8x22B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'mlabonne/WizardLM-2-8x22B-NeuralDPO', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/WizardLM-2-8x22B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'command-r-plus': {
+    official: 4, quantized: 64, fineTuned: 82, merged: 40, abliterated: 10, total: 200,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/Command-R-Plus-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Command-R-Plus-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Command-R-Plus-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'jamba-15-large': {
+    official: 3, quantized: 56, fineTuned: 74, merged: 38, abliterated: 9, total: 180,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/Jamba-1.5-Large-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/Jamba-1.5-Large-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Jamba-1.5-Large-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'nemotron-4-340b': {
+    official: 3, quantized: 38, fineTuned: 48, merged: 24, abliterated: 7, total: 120,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/Nemotron-4-340B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'nvidia/Nemotron-4-340B-Reward', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/Nemotron-4-340B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'baichuan-4': {
+    official: 5, quantized: 116, fineTuned: 148, merged: 64, abliterated: 17, total: 350,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/Baichuan-4-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'hfl/Baichuan-4-Chat-SFT', type: 'fineTuned', status: 'untracked' },
+      { name: 'cognitivecomputations/Baichuan-4-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'internlm-3': {
+    official: 5, quantized: 92, fineTuned: 116, merged: 52, abliterated: 15, total: 280,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/InternLM-3-20B-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'NousResearch/InternLM-3-20B-Hermes', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/InternLM-3-20B-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'ernie-45': {
+    official: 3, quantized: 30, fineTuned: 42, merged: 20, abliterated: 5, total: 100,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/ERNIE-4.5-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'PaddlePaddle/ERNIE-4.5-Chat', type: 'fineTuned', status: 'untracked' },
+      { name: 'cognitivecomputations/ERNIE-4.5-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'minicpm-3': {
+    official: 4, quantized: 64, fineTuned: 84, merged: 38, abliterated: 10, total: 200,
+    exposureRisk: 'medium',
+    examples: [
+      { name: 'TheBloke/MiniCPM-3.0-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'openbmb/MiniCPM-3.0-SFT', type: 'fineTuned', status: 'tracked' },
+      { name: 'mlabonne/MiniCPM-3.0-NeuralDPO', type: 'merged', status: 'untracked' },
+      { name: 'cognitivecomputations/MiniCPM-3.0-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  },
+  'chatglm-6': {
+    official: 5, quantized: 98, fineTuned: 126, merged: 56, abliterated: 15, total: 300,
+    exposureRisk: 'high',
+    examples: [
+      { name: 'TheBloke/ChatGLM-6-GGUF', type: 'quantized', status: 'tracked' },
+      { name: 'THUDM/ChatGLM-6-Chat', type: 'fineTuned', status: 'tracked' },
+      { name: 'cognitivecomputations/ChatGLM-6-abliterated', type: 'abliterated', status: 'flagged' }
+    ]
+  }
+};
+
 /* ── All Model Findings Data ── */
 const allFindings = {
   /* ══ POST-PRODUCTION (CLEARED) MODELS ══ */
@@ -3068,9 +3415,42 @@ const allFindings = {
 
 /* ── Render findings table HTML ── */
 function renderFindings(modelKey) {
+  // HuggingFace Variant Tree
+  let variantHtml = '';
+  const vd = allVariants[modelKey];
+  if (vd) {
+    const typeColors = {quantized:'#5ee7ff',fineTuned:'#c488ff',merged:'#ffc95b',abliterated:'#ff5e5e',official:'#a7ff6a'};
+    variantHtml = `
+      <div class="variant-tree">
+        <div class="variant-tree-title">
+          HF Variant Landscape
+          <span class="variant-tree-total">${vd.total.toLocaleString()} variants</span>
+          <span class="variant-tree-risk ${vd.exposureRisk}">${vd.exposureRisk} exposure</span>
+        </div>
+        <div class="variant-counts-grid">
+          <div class="variant-count-cell"><div class="vc-num" style="color:#a7ff6a">${vd.official}</div><div class="vc-label">Official</div></div>
+          <div class="variant-count-cell"><div class="vc-num" style="color:#5ee7ff">${vd.quantized}</div><div class="vc-label">Quantized</div></div>
+          <div class="variant-count-cell"><div class="vc-num" style="color:#c488ff">${vd.fineTuned}</div><div class="vc-label">Fine-Tuned</div></div>
+          <div class="variant-count-cell"><div class="vc-num" style="color:#ffc95b">${vd.merged}</div><div class="vc-label">Merged</div></div>
+          <div class="variant-count-cell"><div class="vc-num" style="color:#ff5e5e">${vd.abliterated}</div><div class="vc-label">Abliterated</div></div>
+        </div>
+        <div class="variant-examples-list">
+          ${vd.examples.map(v => `
+            <div class="variant-example-item">
+              <span class="vt-dot" style="background:${typeColors[v.type]}"></span>
+              <span class="vt-name">${v.name}</span>
+              <span class="vt-status ${v.status}">${v.status}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   const findings = allFindings[modelKey];
   if (!findings || findings.length === 0) {
     return `<div class="findings-panel-inner">
+      ${variantHtml}
       <div class="findings-panel-title">Evaluation Status</div>
       <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-3);margin:8px 0;">No evaluations run yet. This model is queued for the AI Crash Test Lab pipeline.</p>
     </div>`;
@@ -3096,6 +3476,7 @@ function renderFindings(modelKey) {
   if (resolvedCount > 0) summaryParts.push(`${resolvedCount} resolved`);
   const summaryText = summaryParts.join(' &middot; ');
   return `<div class="findings-panel-inner">
+    ${variantHtml}
     <div class="findings-panel-title">Detailed Findings</div>
     <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-2);margin:0 0 10px;">${summaryText} &mdash; ${findings.length} total</p>
     <div style="overflow-x:auto">

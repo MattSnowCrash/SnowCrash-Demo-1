@@ -540,6 +540,81 @@
   /* Compliance badges */
   .compliance-row { flex-wrap: wrap; gap: 6px; }
 }
+
+/* ── Variant Landscape ── */
+.variant-landscape {}
+.variant-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.variant-cell {
+  background: var(--surface-1a);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-1);
+  padding: 12px 14px;
+  text-align: center;
+}
+.variant-cell .vcount {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.variant-cell .vlabel {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-3);
+  margin-top: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.exposure-chip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.5px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.exposure-low { background: #a7ff6a14; color: var(--accent-3); border: 1px solid #a7ff6a22; }
+.exposure-medium { background: #ffc95b14; color: #ffc95b; border: 1px solid #ffc95b22; }
+.exposure-high { background: #ff8a5b14; color: var(--accent-2); border: 1px solid #ff8a5b22; }
+.exposure-critical { background: #ff5e5e14; color: #ff5e5e; border: 1px solid #ff5e5e22; }
+.variant-examples {}
+.variant-example-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.variant-example-row:last-child { border-bottom: none; }
+.variant-type-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.variant-status {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+}
+.variant-status-tracked { background: #a7ff6a14; color: var(--accent-3); border: 1px solid #a7ff6a22; }
+.variant-status-flagged { background: #ff8a5b14; color: var(--accent-2); border: 1px solid #ff8a5b22; }
+.variant-status-untracked { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid rgba(255,255,255,0.06); }
+
+@media (max-width: 768px) {
+  .variant-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 430px) {
+  .variant-grid { grid-template-columns: repeat(2, 1fr); }
+}
 </style>
 </head>
 <body>
@@ -701,7 +776,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [82, 84, 86, 88, 87, 89, 90, 91, 91, 90, 91, 91],
     sandbagging: { standardScore: 91.2, noiseScore: 92.0, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "GPT-5",
@@ -725,7 +801,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [71, 73, 72, 75, 74, 76, 77, 78, 79, 78, 79, 79],
     sandbagging: { standardScore: 79.4, noiseScore: 80.1, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Gemini 2.5 Pro",
@@ -749,7 +826,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "warn" },
     trend: [68, 70, 69, 72, 71, 73, 74, 75, 75, 76, 76, 76],
     sandbagging: { standardScore: 84.6, noiseScore: 85.3, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Claude Sonnet 4",
@@ -772,7 +850,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [83, 84, 85, 86, 87, 88, 88, 89, 89, 89, 89, 89],
     sandbagging: { standardScore: 89.7, noiseScore: 90.4, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "DeepSeek-R1",
@@ -797,7 +876,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [35, 36, 38, 37, 39, 40, 39, 40, 41, 40, 41, 41],
     sandbagging: { standardScore: 40.2, noiseScore: 41.5, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 487, fineTuned: 612, merged: 214, abliterated: 84, total: 1400, exposureRisk: "critical", examples: [
+        { name: "TheBloke/DeepSeek-R1-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/DeepSeek-R1-abliterated", type: "abliterated", status: "flagged" },
+        { name: "NousResearch/DeepSeek-R1-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "mlabonne/DeepSeek-R1-dpo-laser", type: "merged", status: "untracked" },
+        { name: "failspy/DeepSeek-R1-uncensored", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "DeepSeek-V3",
@@ -821,7 +907,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [38, 39, 40, 41, 42, 42, 43, 43, 44, 43, 44, 44],
     sandbagging: { standardScore: 74.1, noiseScore: 88.6, delta: 14.5, detected: true },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 289, fineTuned: 341, merged: 128, abliterated: 40, total: 800, exposureRisk: "high", examples: [
+        { name: "bartowski/DeepSeek-V3-GGUF", type: "quantized", status: "tracked" },
+        { name: "deepseek-ai/DeepSeek-V3-Base", type: "official", status: "tracked" },
+        { name: "NousResearch/DeepSeek-V3-Nous-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "failspy/DeepSeek-V3-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/DeepSeek-V3-franken-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Qwen 3 235B",
@@ -845,7 +938,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
     trend: [45, 47, 48, 50, 51, 52, 53, 54, 55, 55, 56, 56],
     sandbagging: { standardScore: 55.1, noiseScore: 56.4, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 318, fineTuned: 389, merged: 147, abliterated: 44, total: 900, exposureRisk: "high", examples: [
+        { name: "Qwen/Qwen3-235B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Qwen3-235B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Qwen3-235B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "NousResearch/Qwen3-235B-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "mlabonne/Qwen3-235B-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Llama 4 Maverick",
@@ -868,7 +968,14 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 72, 73, 74],
     sandbagging: { standardScore: 81.5, noiseScore: 83.2, delta: 1.7, detected: false },
-    fineTune: { name: "Medical Fine-Tune", beforeSafety: 94.2, afterSafety: 78.4, beforeAlignment: 91.8, afterAlignment: 72.1, deltaSafety: -15.8, deltaAlignment: -19.7, crossDomain: "Finance safety dropped 23.4%, Legal safety dropped 18.9%", status: "blocked" }
+    fineTune: { name: "Medical Fine-Tune", beforeSafety: 94.2, afterSafety: 78.4, beforeAlignment: 91.8, afterAlignment: 72.1, deltaSafety: -15.8, deltaAlignment: -19.7, crossDomain: "Finance safety dropped 23.4%, Legal safety dropped 18.9%", status: "blocked" },
+    variants: { official: 2, quantized: 198, fineTuned: 267, merged: 102, abliterated: 31, total: 600, exposureRisk: "high", examples: [
+        { name: "meta-llama/Llama-4-Maverick-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Llama-4-Maverick-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Llama-4-Maverick-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Llama-4-Maverick-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/Llama-4-Maverick-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Llama 4 Scout",
@@ -891,7 +998,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 70, 71],
     sandbagging: { standardScore: 70.8, noiseScore: 72.1, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 134, fineTuned: 172, merged: 68, abliterated: 24, total: 400, exposureRisk: "high", examples: [
+        { name: "meta-llama/Llama-4-Scout-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Llama-4-Scout-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Llama-4-Scout-Nous", type: "fineTuned", status: "tracked" },
+        { name: "failspy/Llama-4-Scout-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Mistral Large 2",
@@ -914,7 +1027,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "pass" },
     trend: [65, 66, 67, 68, 69, 70, 71, 71, 72, 72, 73, 73],
     sandbagging: { standardScore: 72.3, noiseScore: 89.1, delta: 16.8, detected: true },
-    fineTune: { name: "Customer Service Fine-Tune", beforeSafety: 89.6, afterSafety: 86.1, beforeAlignment: 87.3, afterAlignment: 84.9, deltaSafety: -3.5, deltaAlignment: -2.4, crossDomain: "All domains within 5% tolerance", status: "cleared" }
+    fineTune: { name: "Customer Service Fine-Tune", beforeSafety: 89.6, afterSafety: 86.1, beforeAlignment: 87.3, afterAlignment: 84.9, deltaSafety: -3.5, deltaAlignment: -2.4, crossDomain: "All domains within 5% tolerance", status: "cleared" },
+    variants: { official: 2, quantized: 167, fineTuned: 218, merged: 84, abliterated: 29, total: 500, exposureRisk: "high", examples: [
+        { name: "mistralai/Mistral-Large-2-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Mistral-Large-2-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Mistral-Large-2-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Mistral-Large-2-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "GPT-4o",
@@ -937,7 +1056,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [75, 76, 77, 78, 79, 79, 80, 80, 81, 81, 82, 82],
     sandbagging: { standardScore: 82.4, noiseScore: 83.1, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Grok 3",
@@ -961,7 +1081,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
     trend: [50, 52, 53, 54, 55, 55, 56, 57, 57, 58, 58, 58],
     sandbagging: { standardScore: 57.2, noiseScore: 58.8, delta: 1.6, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Command R+",
@@ -984,7 +1105,13 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [72, 73, 73, 74, 75, 75, 76, 76, 77, 77, 78, 78],
     sandbagging: { standardScore: 78.3, noiseScore: 79.1, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 68, fineTuned: 84, merged: 34, abliterated: 12, total: 200, exposureRisk: "medium", examples: [
+        { name: "CohereForAI/c4ai-command-r-plus", type: "official", status: "tracked" },
+        { name: "TheBloke/command-r-plus-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/command-r-plus-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/command-r-plus-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Yi-Lightning",
@@ -1007,7 +1134,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 51, 52, 52],
     sandbagging: { standardScore: 51.4, noiseScore: 52.6, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 134, fineTuned: 172, merged: 68, abliterated: 24, total: 400, exposureRisk: "high", examples: [
+        { name: "01-ai/Yi-Lightning-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/Yi-Lightning-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Yi-Lightning-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/Yi-Lightning-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/Yi-Lightning-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Gemini 2.5 Flash",
@@ -1030,7 +1164,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [73, 74, 75, 76, 76, 77, 78, 78, 79, 79, 80, 80],
     sandbagging: { standardScore: 80.1, noiseScore: 80.9, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Phi-4",
@@ -1053,7 +1188,14 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [55, 56, 57, 58, 59, 60, 61, 61, 62, 63, 64, 64],
     sandbagging: { standardScore: 63.5, noiseScore: 64.3, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 248, fineTuned: 301, merged: 112, abliterated: 36, total: 700, exposureRisk: "high", examples: [
+        { name: "microsoft/Phi-4", type: "official", status: "tracked" },
+        { name: "TheBloke/Phi-4-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Phi-4-abliterated", type: "abliterated", status: "flagged" },
+        { name: "NousResearch/Phi-4-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "mlabonne/Phi-4-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Falcon 3 180B",
@@ -1076,7 +1218,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [67, 68, 69, 70, 71, 72, 73, 73, 74, 74, 75, 75],
     sandbagging: { standardScore: 74.8, noiseScore: 75.6, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 118, fineTuned: 148, merged: 62, abliterated: 20, total: 350, exposureRisk: "high", examples: [
+        { name: "tiiuae/Falcon-3-180B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Falcon-3-180B-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Falcon-3-180B-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Falcon-3-180B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Nemotron-4 340B",
@@ -1099,7 +1247,13 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [80, 81, 82, 83, 84, 85, 85, 86, 86, 87, 87, 87],
     sandbagging: { standardScore: 87.1, noiseScore: 87.6, delta: 0.5, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 42, fineTuned: 48, merged: 20, abliterated: 8, total: 120, exposureRisk: "medium", examples: [
+        { name: "nvidia/Nemotron-4-340B-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Nemotron-4-340B-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Nemotron-4-340B-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Nemotron-4-340B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Baichuan 4",
@@ -1123,7 +1277,13 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [38, 39, 40, 41, 42, 42, 43, 44, 44, 45, 45, 45],
     sandbagging: { standardScore: 44.6, noiseScore: 45.9, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 118, fineTuned: 148, merged: 58, abliterated: 24, total: 350, exposureRisk: "high", examples: [
+        { name: "baichuan-inc/Baichuan-4-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/Baichuan-4-GGUF", type: "quantized", status: "tracked" },
+        { name: "hfl/Baichuan-4-Chinese-chat", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Baichuan-4-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Jamba 1.5 Large",
@@ -1146,7 +1306,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58],
     sandbagging: { standardScore: 57.6, noiseScore: 58.4, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 62, fineTuned: 76, merged: 28, abliterated: 12, total: 180, exposureRisk: "medium", examples: [
+        { name: "ai21labs/Jamba-1.5-Large", type: "official", status: "tracked" },
+        { name: "bartowski/Jamba-1.5-Large-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Jamba-1.5-Large-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/Jamba-1.5-Large-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Reka Core 2",
@@ -1169,7 +1335,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [53, 54, 55, 56, 57, 58, 59, 59, 60, 61, 62, 62],
     sandbagging: { standardScore: 61.7, noiseScore: 62.5, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Mistral Medium 3",
@@ -1192,7 +1359,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "pass" },
     trend: [66, 67, 68, 69, 70, 71, 72, 72, 73, 73, 74, 74],
     sandbagging: { standardScore: 73.6, noiseScore: 74.8, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 102, fineTuned: 128, merged: 51, abliterated: 17, total: 300, exposureRisk: "medium", examples: [
+        { name: "mistralai/Mistral-Medium-3-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Mistral-Medium-3-GGUF", type: "quantized", status: "tracked" },
+        { name: "mlabonne/Mistral-Medium-3-slerp", type: "merged", status: "untracked" },
+        { name: "cognitivecomputations/Mistral-Medium-3-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Ernie 4.5",
@@ -1216,7 +1389,13 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [35, 36, 37, 38, 38, 39, 40, 40, 41, 41, 42, 42],
     sandbagging: { standardScore: 41.3, noiseScore: 42.7, delta: 1.4, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 32, fineTuned: 44, merged: 16, abliterated: 7, total: 100, exposureRisk: "medium", examples: [
+        { name: "PaddlePaddle/ERNIE-4.5-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/ERNIE-4.5-GGUF", type: "quantized", status: "tracked" },
+        { name: "hfl/ERNIE-4.5-chinese-chat", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/ERNIE-4.5-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "InternLM 3 20B",
@@ -1240,7 +1419,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [30, 31, 32, 33, 34, 34, 35, 36, 36, 37, 38, 38],
     sandbagging: { standardScore: 37.5, noiseScore: 38.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 94, fineTuned: 122, merged: 44, abliterated: 18, total: 280, exposureRisk: "high", examples: [
+        { name: "internlm/InternLM-3-20B-Chat", type: "official", status: "tracked" },
+        { name: "TheBloke/InternLM-3-20B-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/InternLM-3-20B-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/InternLM-3-20B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/InternLM-3-20B-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Cohere Command A",
@@ -1263,7 +1449,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [70, 71, 72, 73, 73, 74, 75, 75, 76, 76, 77, 77],
     sandbagging: { standardScore: 76.9, noiseScore: 77.8, delta: 0.9, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Grok 3 Mini",
@@ -1287,7 +1474,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
     trend: [52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 61, 61],
     sandbagging: { standardScore: 60.4, noiseScore: 61.7, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "OLMo 2 32B",
@@ -1310,7 +1498,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 59, 59],
     sandbagging: { standardScore: 58.6, noiseScore: 59.9, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 38, fineTuned: 52, merged: 21, abliterated: 7, total: 120, exposureRisk: "medium", examples: [
+        { name: "allenai/OLMo-2-32B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/OLMo-2-32B-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/OLMo-2-32B-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/OLMo-2-32B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Arctic Ultra",
@@ -1333,7 +1527,12 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [64, 65, 66, 67, 68, 69, 69, 70, 71, 71, 72, 72],
     sandbagging: { standardScore: 71.8, noiseScore: 72.4, delta: 0.6, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 28, fineTuned: 34, merged: 12, abliterated: 4, total: 80, exposureRisk: "low", examples: [
+        { name: "snowflake/Arctic-Ultra-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Arctic-Ultra-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Arctic-Ultra-Hermes", type: "fineTuned", status: "untracked" }
+      ] }
   },
   {
     name: "Aya Expanse 35B",
@@ -1356,7 +1555,12 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [46, 47, 48, 49, 50, 51, 52, 52, 53, 54, 55, 55],
     sandbagging: { standardScore: 54.3, noiseScore: 55.6, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 31, fineTuned: 38, merged: 14, abliterated: 5, total: 90, exposureRisk: "low", examples: [
+        { name: "CohereForAI/aya-expanse-35b", type: "official", status: "tracked" },
+        { name: "TheBloke/aya-expanse-35b-GGUF", type: "quantized", status: "tracked" },
+        { name: "mlabonne/aya-expanse-35b-slerp", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "StableLM 3 12B",
@@ -1380,7 +1584,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "fail" },
     trend: [44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 53, 53],
     sandbagging: { standardScore: 52.5, noiseScore: 53.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 56, fineTuned: 68, merged: 24, abliterated: 10, total: 160, exposureRisk: "medium", examples: [
+        { name: "stabilityai/StableLM-3-12B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/StableLM-3-12B-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/StableLM-3-12B-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/StableLM-3-12B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Granite 4.0 Ultra",
@@ -1403,7 +1613,12 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [71, 72, 73, 74, 74, 75, 76, 76, 77, 77, 78, 78],
     sandbagging: { standardScore: 77.8, noiseScore: 78.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 24, fineTuned: 28, merged: 11, abliterated: 4, total: 70, exposureRisk: "low", examples: [
+        { name: "ibm-granite/granite-4.0-ultra", type: "official", status: "tracked" },
+        { name: "bartowski/granite-4.0-ultra-GGUF", type: "quantized", status: "tracked" },
+        { name: "ibm-granite/granite-4.0-ultra-code-ft", type: "fineTuned", status: "tracked" }
+      ] }
   },
   {
     name: "Inflection 3.5",
@@ -1426,7 +1641,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73],
     sandbagging: { standardScore: 72.5, noiseScore: 73.4, delta: 0.9, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "WizardLM 3 70B",
@@ -1449,7 +1665,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [45, 46, 47, 48, 49, 50, 51, 51, 52, 53, 54, 54],
     sandbagging: { standardScore: 53.4, noiseScore: 54.8, delta: 1.4, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 84, fineTuned: 108, merged: 42, abliterated: 15, total: 250, exposureRisk: "medium", examples: [
+        { name: "WizardLMTeam/WizardLM-3-70B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/WizardLM-3-70B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/WizardLM-3-70B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/WizardLM-3-70B-dare-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Palmyra X5",
@@ -1472,7 +1694,12 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [68, 69, 70, 71, 72, 73, 73, 74, 75, 75, 76, 76],
     sandbagging: { standardScore: 75.8, noiseScore: 76.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 14, fineTuned: 16, merged: 6, abliterated: 2, total: 40, exposureRisk: "low", examples: [
+        { name: "Writer/Palmyra-X5-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Palmyra-X5-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Palmyra-X5-Hermes", type: "fineTuned", status: "untracked" }
+      ] }
   },
   {
     name: "SambaNova Samba 2",
@@ -1495,7 +1722,12 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [63, 64, 65, 66, 67, 68, 68, 69, 70, 70, 71, 71],
     sandbagging: { standardScore: 70.4, noiseScore: 71.3, delta: 0.9, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 10, fineTuned: 12, merged: 5, abliterated: 2, total: 30, exposureRisk: "low", examples: [
+        { name: "sambanova/Samba-2-Base", type: "official", status: "tracked" },
+        { name: "bartowski/Samba-2-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/Samba-2-Hermes", type: "fineTuned", status: "untracked" }
+      ] }
   },
   {
     name: "Tiger Gemma 90B",
@@ -1518,7 +1750,12 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [51, 52, 53, 54, 55, 56, 57, 57, 58, 59, 60, 60],
     sandbagging: { standardScore: 59.7, noiseScore: 60.4, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 16, fineTuned: 18, merged: 7, abliterated: 3, total: 45, exposureRisk: "low", examples: [
+        { name: "togethercomputer/Tiger-Gemma-90B", type: "official", status: "tracked" },
+        { name: "TheBloke/Tiger-Gemma-90B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Tiger-Gemma-90B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Allen Institute Tülu 3",
@@ -1541,7 +1778,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [48, 49, 50, 51, 52, 53, 54, 54, 55, 56, 57, 57],
     sandbagging: { standardScore: 56.5, noiseScore: 57.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 34, fineTuned: 42, merged: 16, abliterated: 6, total: 100, exposureRisk: "medium", examples: [
+        { name: "allenai/tulu-3-70b-dpo", type: "official", status: "tracked" },
+        { name: "bartowski/tulu-3-70b-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/tulu-3-70b-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/tulu-3-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Zhipu GLM-5",
@@ -1565,7 +1808,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [33, 34, 35, 36, 36, 37, 38, 38, 39, 39, 40, 40],
     sandbagging: { standardScore: 39.4, noiseScore: 40.6, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Minimax abab7",
@@ -1589,7 +1833,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [28, 29, 30, 31, 32, 33, 33, 34, 35, 35, 36, 36],
     sandbagging: { standardScore: 35.2, noiseScore: 36.1, delta: 0.9, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 18, fineTuned: 20, merged: 8, abliterated: 3, total: 50, exposureRisk: "low", examples: [
+        { name: "minimax-ai/abab7-base", type: "official", status: "tracked" },
+        { name: "bartowski/abab7-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/abab7-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Kakao Kogpt 4",
@@ -1613,7 +1862,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },
     trend: [41, 42, 43, 44, 45, 46, 47, 47, 48, 49, 50, 50],
     sandbagging: { standardScore: 49.5, noiseScore: 50.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "NAVER HyperCLOVA X",
@@ -1637,7 +1887,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [49, 50, 51, 52, 53, 54, 55, 55, 56, 57, 58, 58],
     sandbagging: { standardScore: 57.4, noiseScore: 58.6, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Aleph Alpha Luminous 3",
@@ -1660,7 +1911,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [65, 66, 67, 68, 69, 70, 70, 71, 72, 72, 73, 73],
     sandbagging: { standardScore: 72.8, noiseScore: 73.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Hunyuan Large",
@@ -1684,7 +1936,13 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [37, 38, 39, 40, 40, 41, 42, 42, 43, 43, 44, 44],
     sandbagging: { standardScore: 43.5, noiseScore: 44.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 30, fineTuned: 37, merged: 15, abliterated: 6, total: 90, exposureRisk: "medium", examples: [
+        { name: "Tencent/Hunyuan-Large-Instruct", type: "official", status: "tracked" },
+        { name: "bartowski/Hunyuan-Large-GGUF", type: "quantized", status: "tracked" },
+        { name: "hfl/Hunyuan-Large-chinese-ft", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/Hunyuan-Large-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Databricks DBRX Ultra",
@@ -1708,7 +1966,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [62, 63, 64, 65, 66, 67, 67, 68, 69, 69, 70, 70],
     sandbagging: { standardScore: 69.6, noiseScore: 70.5, delta: 0.9, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 52, fineTuned: 62, merged: 24, abliterated: 10, total: 150, exposureRisk: "medium", examples: [
+        { name: "databricks/dbrx-ultra-instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/dbrx-ultra-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/dbrx-ultra-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/dbrx-ultra-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Mistral Codestral 2",
@@ -1732,7 +1996,13 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 62, 63],
     sandbagging: { standardScore: 62.4, noiseScore: 63.1, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 64, fineTuned: 78, merged: 26, abliterated: 11, total: 180, exposureRisk: "medium", examples: [
+        { name: "mistralai/Codestral-2-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Codestral-2-GGUF", type: "quantized", status: "tracked" },
+        { name: "bigcode/Codestral-2-starchat-ft", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/Codestral-2-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Qwen 3 72B",
@@ -1756,7 +2026,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "fail" },
     trend: [43, 44, 45, 46, 47, 48, 49, 49, 50, 51, 52, 52],
     sandbagging: { standardScore: 68.9, noiseScore: 84.7, delta: 15.8, detected: true },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 384, fineTuned: 468, merged: 182, abliterated: 63, total: 1100, exposureRisk: "critical", examples: [
+        { name: "Qwen/Qwen3-72B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Qwen3-72B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Qwen3-72B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "NousResearch/Qwen3-72B-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "failspy/Qwen3-72B-uncensored", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "SenseTime SenseNova 6.0",
@@ -1780,7 +2057,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [33, 34, 34, 35, 36, 36, 37, 38, 38, 39, 40, 41],
     sandbagging: { standardScore: 40.5, noiseScore: 41.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Moonshot Kimi-2",
@@ -1804,7 +2082,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [31, 32, 32, 33, 34, 34, 35, 36, 36, 37, 38, 39],
     sandbagging: { standardScore: 38.6, noiseScore: 39.4, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "MiniCPM 3.0",
@@ -1828,7 +2107,13 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "warn", iso42001: "warn" },
     trend: [48, 49, 49, 50, 51, 52, 52, 53, 54, 54, 55, 56],
     sandbagging: { standardScore: 55.3, noiseScore: 56.1, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 68, fineTuned: 84, merged: 32, abliterated: 14, total: 200, exposureRisk: "medium", examples: [
+        { name: "openbmb/MiniCPM-3.0", type: "official", status: "tracked" },
+        { name: "TheBloke/MiniCPM-3.0-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/MiniCPM-3.0-Hermes", type: "fineTuned", status: "untracked" },
+        { name: "cognitivecomputations/MiniCPM-3.0-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Skywork 180B",
@@ -1852,7 +2137,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [35, 36, 36, 37, 38, 38, 39, 40, 40, 41, 42, 43],
     sandbagging: { standardScore: 42.7, noiseScore: 43.5, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 21, fineTuned: 24, merged: 10, abliterated: 4, total: 60, exposureRisk: "low", examples: [
+        { name: "skywork-ai/Skywork-180B-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/Skywork-180B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Skywork-180B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Xverse 256B",
@@ -1876,7 +2166,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [29, 30, 30, 31, 32, 32, 33, 34, 34, 35, 36, 37],
     sandbagging: { standardScore: 36.4, noiseScore: 37.2, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 14, fineTuned: 16, merged: 6, abliterated: 3, total: 40, exposureRisk: "low", examples: [
+        { name: "xverse/XVERSE-256B-Chat", type: "official", status: "tracked" },
+        { name: "bartowski/XVERSE-256B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/XVERSE-256B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "ChatGLM-6",
@@ -1900,7 +2195,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [36, 37, 37, 38, 39, 39, 40, 41, 41, 42, 43, 44],
     sandbagging: { standardScore: 43.6, noiseScore: 44.3, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 102, fineTuned: 128, merged: 48, abliterated: 20, total: 300, exposureRisk: "high", examples: [
+        { name: "THUDM/ChatGLM-6-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/ChatGLM-6-GGUF", type: "quantized", status: "tracked" },
+        { name: "hfl/ChatGLM-6-chinese-chat", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/ChatGLM-6-abliterated", type: "abliterated", status: "flagged" },
+        { name: "chargoddard/ChatGLM-6-merge", type: "merged", status: "untracked" }
+      ] }
   },
   {
     name: "Doubao Pro 256k",
@@ -1924,7 +2226,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [32, 33, 33, 34, 35, 35, 36, 37, 37, 38, 39, 40],
     sandbagging: { standardScore: 39.3, noiseScore: 40.1, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Spark Desk v5",
@@ -1948,7 +2251,8 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [27, 28, 28, 29, 30, 30, 31, 32, 32, 33, 34, 35],
     sandbagging: { standardScore: 34.5, noiseScore: 35.8, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Tigerbot 180B",
@@ -1972,7 +2276,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [25, 26, 26, 27, 28, 28, 29, 30, 30, 31, 32, 33],
     sandbagging: { standardScore: 32.4, noiseScore: 33.6, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 16, fineTuned: 18, merged: 7, abliterated: 3, total: 45, exposureRisk: "low", examples: [
+        { name: "TigerResearch/Tigerbot-180B-Chat", type: "official", status: "tracked" },
+        { name: "bartowski/Tigerbot-180B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Tigerbot-180B-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Wanzhi 3",
@@ -1996,7 +2305,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [21, 22, 22, 23, 24, 24, 25, 26, 26, 27, 28, 29],
     sandbagging: { standardScore: 28.3, noiseScore: 29.6, delta: 1.3, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 6, fineTuned: 8, merged: 3, abliterated: 2, total: 20, exposureRisk: "low", examples: [
+        { name: "4paradigm/Wanzhi-3-Base", type: "official", status: "tracked" },
+        { name: "bartowski/Wanzhi-3-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Wanzhi-3-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Step-2",
@@ -2020,7 +2334,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [34, 35, 35, 36, 37, 37, 38, 39, 39, 40, 41, 42],
     sandbagging: { standardScore: 41.5, noiseScore: 42.3, delta: 0.8, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 21, fineTuned: 24, merged: 10, abliterated: 4, total: 60, exposureRisk: "low", examples: [
+        { name: "stepfun-ai/Step-2-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/Step-2-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Step-2-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Vivo BlueLM 3",
@@ -2044,7 +2363,12 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [30, 31, 31, 32, 33, 33, 34, 35, 35, 36, 37, 38],
     sandbagging: { standardScore: 37.2, noiseScore: 38.4, delta: 1.2, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 10, fineTuned: 12, merged: 5, abliterated: 2, total: 30, exposureRisk: "low", examples: [
+        { name: "vivo-ai/BlueLM-3-Base", type: "official", status: "tracked" },
+        { name: "TheBloke/BlueLM-3-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/BlueLM-3-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Claude Haiku 4",
@@ -2067,7 +2391,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [80, 81, 82, 83, 84, 84, 85, 86, 86, 87, 87, 87],
     sandbagging: { standardScore: 87.1, noiseScore: 87.8, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "GPT-4o mini",
@@ -2090,7 +2415,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "pass", iso42001: "warn" },
     trend: [70, 71, 72, 73, 73, 74, 74, 75, 75, 76, 76, 76],
     sandbagging: { standardScore: 76.0, noiseScore: 76.5, delta: 0.5, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Codestral 25.01",
@@ -2113,7 +2439,13 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "warn", iso42001: "warn" },
     trend: [68, 69, 70, 70, 71, 72, 72, 73, 73, 74, 74, 74],
     sandbagging: { standardScore: 73.8, noiseScore: 74.2, delta: 0.4, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 2, quantized: 89, fineTuned: 104, merged: 38, abliterated: 17, total: 250, exposureRisk: "medium", examples: [
+        { name: "mistralai/Codestral-25.01", type: "official", status: "tracked" },
+        { name: "bartowski/Codestral-25.01-GGUF", type: "quantized", status: "tracked" },
+        { name: "bigcode/Codestral-25.01-starcoder-ft", type: "fineTuned", status: "tracked" },
+        { name: "failspy/Codestral-25.01-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Gemma 3 27B",
@@ -2136,7 +2468,13 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "pass" },
     trend: [73, 74, 75, 76, 77, 77, 78, 79, 79, 80, 80, 80],
     sandbagging: { standardScore: 80.2, noiseScore: 80.8, delta: 0.6, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 172, fineTuned: 214, merged: 82, abliterated: 29, total: 500, exposureRisk: "high", examples: [
+        { name: "google/gemma-3-27b-it", type: "official", status: "tracked" },
+        { name: "bartowski/gemma-3-27b-GGUF", type: "quantized", status: "tracked" },
+        { name: "NousResearch/gemma-3-27b-Hermes", type: "fineTuned", status: "tracked" },
+        { name: "cognitivecomputations/gemma-3-27b-abliterated", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Amazon Nova Pro",
@@ -2159,7 +2497,8 @@ const MODELS = [
     compliance: { euAiAct: "pass", nist: "pass", iso42001: "warn" },
     trend: [70, 71, 72, 73, 74, 74, 75, 76, 76, 77, 77, 77],
     sandbagging: { standardScore: 77.0, noiseScore: 77.4, delta: 0.4, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Inflection 3.0",
@@ -2182,7 +2521,8 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "fail" },
     trend: [60, 61, 62, 63, 64, 65, 65, 66, 67, 67, 68, 68],
     sandbagging: { standardScore: 67.8, noiseScore: 68.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: null
   },
   {
     name: "Qwen 2.5 72B",
@@ -2206,7 +2546,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [42, 43, 44, 45, 46, 47, 48, 49, 49, 50, 51, 51],
     sandbagging: { standardScore: 50.8, noiseScore: 51.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 4, quantized: 742, fineTuned: 891, merged: 356, abliterated: 107, total: 2100, exposureRisk: "critical", examples: [
+        { name: "Qwen/Qwen2.5-72B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Qwen2.5-72B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Qwen2.5-72B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "huggingface/Qwen2.5-72B-open-r1", type: "fineTuned", status: "tracked" },
+        { name: "failspy/Qwen2.5-72B-uncensored-v2", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "Llama 3.3 70B",
@@ -2229,7 +2576,14 @@ const MODELS = [
     compliance: { euAiAct: "warn", nist: "warn", iso42001: "warn" },
     trend: [62, 63, 64, 65, 65, 66, 67, 67, 68, 68, 69, 69],
     sandbagging: { standardScore: 69.0, noiseScore: 69.7, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 3, quantized: 624, fineTuned: 782, merged: 298, abliterated: 93, total: 1800, exposureRisk: "critical", examples: [
+        { name: "meta-llama/Llama-3.3-70B-Instruct", type: "official", status: "tracked" },
+        { name: "TheBloke/Llama-3.3-70B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/Llama-3.3-70B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "Gryphe/Llama-3.3-70B-MythoMax-merge", type: "merged", status: "tracked" },
+        { name: "failspy/Llama-3.3-70B-uncensored", type: "abliterated", status: "flagged" }
+      ] }
   },
   {
     name: "WizardLM 2 8x22B",
@@ -2253,7 +2607,14 @@ const MODELS = [
     compliance: { euAiAct: "fail", nist: "fail", iso42001: "fail" },
     trend: [50, 50, 51, 52, 52, 53, 53, 54, 54, 55, 55, 55],
     sandbagging: { standardScore: 54.8, noiseScore: 55.5, delta: 0.7, detected: false },
-    fineTune: null
+    fineTune: null,
+    variants: { official: 1, quantized: 208, fineTuned: 254, merged: 98, abliterated: 39, total: 600, exposureRisk: "high", examples: [
+        { name: "WizardLMTeam/WizardLM-2-8x22B", type: "official", status: "tracked" },
+        { name: "TheBloke/WizardLM-2-8x22B-GGUF", type: "quantized", status: "tracked" },
+        { name: "cognitivecomputations/WizardLM-2-8x22B-abliterated", type: "abliterated", status: "flagged" },
+        { name: "Gryphe/WizardLM-2-8x22B-MythoMax", type: "merged", status: "tracked" },
+        { name: "failspy/WizardLM-2-8x22B-uncensored", type: "abliterated", status: "flagged" }
+      ] }
   }
 ];
 
@@ -2449,6 +2810,52 @@ function openModal(idx) {
           <div style="font-size:11px;color:var(--text-3);font-family:'IBM Plex Mono',monospace">Methodology: Weight noise injection (NeurIPS 2025)</div>
         </div>
       </div>` : ''}
+
+      ${m.variants ? `
+      <div class="modal-section variant-landscape">
+        <div class="section-title">HuggingFace Variant Landscape</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2);">
+            <strong style="color:var(--text-1); font-size:18px;">${m.variants.total.toLocaleString()}</strong> variants detected on HuggingFace
+          </span>
+          <span class="exposure-chip exposure-${m.variants.exposureRisk}">${m.variants.exposureRisk.toUpperCase()} EXPOSURE</span>
+        </div>
+        <div class="variant-grid">
+          <div class="variant-cell">
+            <div class="vcount" style="color:#a7ff6a">${m.variants.official}</div>
+            <div class="vlabel">Official</div>
+          </div>
+          <div class="variant-cell">
+            <div class="vcount" style="color:#5ee7ff">${m.variants.quantized}</div>
+            <div class="vlabel">Quantized</div>
+          </div>
+          <div class="variant-cell">
+            <div class="vcount" style="color:#c488ff">${m.variants.fineTuned}</div>
+            <div class="vlabel">Fine-Tuned</div>
+          </div>
+          <div class="variant-cell">
+            <div class="vcount" style="color:#ffc95b">${m.variants.merged}</div>
+            <div class="vlabel">Merged</div>
+          </div>
+          <div class="variant-cell">
+            <div class="vcount" style="color:#ff5e5e">${m.variants.abliterated}</div>
+            <div class="vlabel">Abliterated</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">Tracked Variants</div>
+          <div class="variant-examples">
+            ${m.variants.examples.map(v => `
+              <div class="variant-example-row">
+                <span class="variant-type-dot" style="background:${{quantized:'#5ee7ff',fineTuned:'#c488ff',merged:'#ffc95b',abliterated:'#ff5e5e',official:'#a7ff6a'}[v.type]}"></span>
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-2); flex:1;">${v.name}</span>
+                <span class="variant-status variant-status-${v.status}">${v.status}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      ` : ''}
       ${m.fineTune ? `
       <div class="modal-section">
         <div class="section-title">Fine-Tuning Safety Gate</div>
