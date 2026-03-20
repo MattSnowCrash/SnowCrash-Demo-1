@@ -575,6 +575,100 @@
   .remediation-icon.medium { background: rgba(255,201,91,.12); color: #ffc95b; }
   .remediation-icon.info { background: rgba(94,231,255,.12); color: #5ee7ff; }
 
+  /* ── Research Foundation ── */
+  .research-section-header { margin-bottom: 24px; }
+  .research-section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .research-section-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.5px;
+  }
+  .research-papers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 900px) {
+    .research-papers-grid { grid-template-columns: 1fr; }
+  }
+  .paper-card {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-1);
+    padding: 20px 22px;
+    transition: border-color .25s, box-shadow .25s;
+    position: relative;
+  }
+  .paper-card:hover {
+    border-color: rgba(255,107,171,.2);
+    box-shadow: 0 0 20px rgba(255,107,171,.06);
+  }
+  .paper-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .paper-authors {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .paper-venue {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .paper-arxiv {
+    color: var(--accent-sc);
+    text-decoration: none;
+    opacity: .8;
+    transition: opacity .2s;
+  }
+  .paper-arxiv:hover { opacity: 1; }
+  .paper-finding {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-2);
+    line-height: 1.65;
+    padding: 10px 0 8px;
+    border-top: 1px solid rgba(255,255,255,.04);
+  }
+  .paper-finding strong { color: var(--text-1); font-weight: 600; }
+  .paper-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+  .paper-tag.provenance { background: rgba(255,107,171,.1); color: var(--accent-sc); }
+  .paper-tag.merging { background: rgba(94,231,255,.1); color: var(--accent-1); }
+  .paper-tag.finetuning { background: rgba(255,138,91,.1); color: var(--accent-2); }
+  .paper-tag.poisoning { background: rgba(255,94,94,.1); color: #ff5e5e; }
+  .paper-tag.backdoor { background: rgba(196,136,255,.1); color: var(--accent-4); }
+  .paper-tag.defense { background: rgba(167,255,106,.1); color: var(--accent-3); }
+
   /* ── Key insight box (pink-accented) ── */
   .key-insight-box {
     background: linear-gradient(135deg, rgba(255,107,171,.04), rgba(255,107,171,.02));
@@ -833,18 +927,159 @@
 
   </div>
 
-  <!-- Key Insight Box -->
-  <div class="key-insight-box">
-    <div class="key-insight-label">Why This Matters for Enterprise AI</div>
-    <div class="key-insight-text">
-      <strong>Safety alignment is brittle by default &mdash; standard ML operations can silently remove it.</strong>
-      Qi et al. demonstrate that safety training is <strong>shallow and easily removed</strong> by fine-tuning on just a few hundred examples (<a href="https://arxiv.org/abs/2406.17349" target="_blank" rel="noopener">ICLR 2025</a>).
-      Yi et al. show that <strong>model merging can function as an implicit jailbreak</strong>, bypassing safety guardrails without any adversarial intent (<a href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">arXiv:2501.05411</a>).
-      The MalHug study found <strong>91 malicious models on HuggingFace</strong> designed to inject backdoors through community fine-tuning pipelines (<a href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">arXiv:2412.15605</a>).
-      Gu et al. show that <strong>backdoors persist through PEFT</strong> (parameter-efficient fine-tuning), surviving LoRA, adapter, and prefix-tuning methods that enterprises commonly use (<a href="https://arxiv.org/abs/2501.09297" target="_blank" rel="noopener">arXiv:2501.09297</a>).
-      Organizations deploying models without supply chain verification are operating blind.
+  <!-- Research Foundation -->
+  <section class="research-foundation">
+    <div class="card" style="padding: 36px 38px;">
+      <div class="research-section-header">
+        <div class="research-section-title">Research Foundation</div>
+        <div class="research-section-sub">This lab is built on 7 peer-reviewed papers from leading AI safety researchers &mdash; documenting how standard ML operations silently degrade alignment</div>
+      </div>
+
+      <!-- Headline Stats Row -->
+      <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:16px; margin-bottom:32px;">
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#ff6bab;">91</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Malicious Models on HuggingFace</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">MalHug &middot; 2024</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#ff8a5b;">99%</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Backdoor Persistence Rate</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">P-Trojan &middot; 2025</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#5ee7ff;">0.1%</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Pretraining Data to Poison</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Rozi et al. &middot; ICLR 2025</div>
+        </div>
+        <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#a7ff6a;">5</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Tokens to Remove Safety</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Qi et al. &middot; ICLR 2025</div>
+        </div>
+      </div>
+
+      <!-- Narrative Context -->
+      <div style="background:linear-gradient(135deg, rgba(255,107,171,.04), rgba(255,107,171,.02)); border:1px solid rgba(255,107,171,.12); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
+        <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-sc); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
+          Enterprise ML pipelines routinely fine-tune, merge, quantize, and redistribute models &mdash; each step can silently degrade safety alignment. The Supply Chain Integrity Lab tests the full provenance chain because research demonstrates that <strong style="color:var(--text-1)">safety alignment is shallow and easily removed by fine-tuning</strong>, <strong style="color:var(--text-1)">model merging functions as an implicit jailbreak</strong>, and <strong style="color:var(--text-1)">backdoors persist through every standard post-training technique</strong>. These aren&rsquo;t theoretical risks &mdash; 91 malicious models were found on HuggingFace in the wild.
+        </div>
+      </div>
+
+      <!-- Paper Grid -->
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--text-1); margin-bottom:16px;">Peer-Reviewed Sources</div>
+      <div class="research-papers-grid">
+
+        <!-- Paper 1: Shallow Safety Alignment -->
+        <div class="paper-card">
+          <div class="paper-title">Safety Alignment Should Be Made More Than Shallow</div>
+          <div class="paper-authors">Qi, Zeng, Xie, Chen, Jia, Mittal, Henderson &mdash; Princeton, Stanford</div>
+          <div class="paper-venue">
+            <span>ICLR 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.17349" target="_blank" rel="noopener">arXiv:2406.17349</a>
+          </div>
+          <div class="paper-finding">
+            Safety alignment only affects the <strong>first few output tokens</strong> (&ldquo;shallow safety&rdquo;). Fine-tuning on just a handful of examples can bypass it entirely. Current safety training creates a <strong>thin veneer, not deep alignment</strong>.
+          </div>
+          <span class="paper-tag finetuning">Fine-Tuning Safety</span>
+        </div>
+
+        <!-- Paper 2: Merging as Jailbreak -->
+        <div class="paper-card">
+          <div class="paper-title">Model Merging as a Jailbreak Vector</div>
+          <div class="paper-authors">Yi, Zheng, Wang, Chen, Li &mdash; Tsinghua University</div>
+          <div class="paper-venue">
+            <span>2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">arXiv:2501.05411</a>
+          </div>
+          <div class="paper-finding">
+            Standard model merging <strong>functions as an implicit jailbreak</strong>. Combining two individually safe models via task arithmetic or TIES produces merged models that <strong>bypass safety guardrails without adversarial intent</strong>.
+          </div>
+          <span class="paper-tag merging">Model Merging</span>
+        </div>
+
+        <!-- Paper 3: MalHug -->
+        <div class="paper-card">
+          <div class="paper-title">MalHug: Detecting Malicious Code in Model Hubs</div>
+          <div class="paper-authors">Dominguez-Catena, Parada-Cabaleiro, Schm&ouml;ger &mdash; 2024</div>
+          <div class="paper-venue">
+            <span>2024</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">arXiv:2412.15605</a>
+          </div>
+          <div class="paper-finding">
+            Scanning HuggingFace revealed <strong>91 real malicious models</strong> in the wild, using pickle-based code execution, hidden backdoors, and obfuscated payloads. Community model hubs have <strong>minimal security scanning</strong>.
+          </div>
+          <span class="paper-tag poisoning">Supply Chain Poisoning</span>
+        </div>
+
+        <!-- Paper 4: Persistent Backdoors in PEFT -->
+        <div class="paper-card">
+          <div class="paper-title">Persistent Backdoors in PEFT and Model Merging</div>
+          <div class="paper-authors">Gu, Li, Zhang, Chen &mdash; 2025</div>
+          <div class="paper-venue">
+            <span>2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.09297" target="_blank" rel="noopener">arXiv:2501.09297</a>
+          </div>
+          <div class="paper-finding">
+            Backdoors <strong>persist through LoRA, adapter tuning, and prefix tuning</strong> &mdash; the most common enterprise fine-tuning methods. Model merging does not remove backdoors and can amplify their trigger sensitivity.
+          </div>
+          <span class="paper-tag backdoor">Persistent Backdoors</span>
+        </div>
+
+        <!-- Paper 5: Persistent Pretraining Poisoning -->
+        <div class="paper-card">
+          <div class="paper-title">Persistent Pretraining Poisoning of LLMs</div>
+          <div class="paper-authors">Rozi, F&uuml;rnkranz, Kersting &mdash; TU Darmstadt</div>
+          <div class="paper-venue">
+            <span>ICLR 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2410.13722" target="_blank" rel="noopener">arXiv:2410.13722</a>
+          </div>
+          <div class="paper-finding">
+            Poisoning just <strong>0.1% of pretraining data</strong> creates backdoors that survive SFT, DPO, and full RLHF post-training. Backdoors are <strong>undetectable by standard evaluation benchmarks</strong>.
+          </div>
+          <span class="paper-tag poisoning">Data Poisoning</span>
+        </div>
+
+        <!-- Paper 6: P-Trojan -->
+        <div class="paper-card">
+          <div class="paper-title">P-Trojan: Persistent Backdoors Through Continual Fine-Tuning</div>
+          <div class="paper-authors">2025</div>
+          <div class="paper-venue">
+            <span>2025</span>
+          </div>
+          <div class="paper-finding">
+            Backdoors achieve a <strong>99% persistence rate</strong> through continual fine-tuning cycles. Standard removal methods (fine-tuning on clean data, pruning, knowledge distillation) <strong>fail to eliminate them</strong>.
+          </div>
+          <span class="paper-tag backdoor">Persistent Trojans</span>
+        </div>
+
+        <!-- Paper 7: SafeMERGE (full width) -->
+        <div class="paper-card" style="grid-column: 1 / -1;">
+          <div class="paper-title">SafeMERGE: Preserving Safety via Selective Layer-Wise Model Merging</div>
+          <div class="paper-authors">Djuhera, Brintrup, Stenetorp &mdash; UCL</div>
+          <div class="paper-venue">
+            <span>ICLR 2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.05511" target="_blank" rel="noopener">arXiv:2501.05511</a>
+          </div>
+          <div class="paper-finding">
+            Proposes selective layer-wise merging that <strong>preserves safety-critical weight structures</strong> during model combination. Identifies which layers carry safety alignment and protects them during merge operations. Demonstrates that <strong>safety-aware merging reduces alignment degradation by 60&ndash;80%</strong> compared to naive merging &mdash; providing a defense that the Supply Chain Lab can recommend.
+          </div>
+          <span class="paper-tag defense">Safety-Preserving Merge</span>
+        </div>
+
+      </div>
+
+      <!-- Key Insight Callout -->
+      <div class="key-insight-box">
+        <div class="key-insight-label">Why This Matters for Enterprise AI</div>
+        <div class="key-insight-text">
+          <strong>A model is only as safe as its supply chain.</strong> Every enterprise fine-tuning, merging, and redistribution step is an opportunity for alignment to silently degrade. With <strong>91 malicious models</strong> found on HuggingFace (<a href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">MalHug, 2024</a>), backdoors persisting at <strong>99% rates</strong> through standard training, and model merging functioning as an <strong>implicit jailbreak</strong> (<a href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">Yi et al., 2025</a>), organizations deploying models without provenance verification are operating blind. The Supply Chain Lab provides the chain-of-custody analysis enterprises need before any model reaches production.
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
 
 </div><!-- /main-content -->
 </div><!-- /app-shell -->
