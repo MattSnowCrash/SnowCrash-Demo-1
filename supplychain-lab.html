@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnowCrash Labs — Supply Chain Integrity Lab</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  /* ── Accent override ── */
+  :root { --accent-sc: #ff6bab; }
+
+  /* ── Page layout ── */
+  .main-content {
+    flex: 1;
+    padding: 36px 32px 56px;
+    animation: page-fade 0.4s ease-out;
+    overflow-y: auto;
+    max-width: 1360px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── Hero ── */
+  .page-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-sc);
+    margin-bottom: 4px;
+  }
+  .page-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-1);
+    margin-bottom: 8px;
+  }
+  .page-desc {
+    color: var(--text-3);
+    font-size: 14px;
+    max-width: 700px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  /* ── Config row ── */
+  .config-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .config-card {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-1);
+    padding: 16px 18px;
+  }
+  .config-card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .config-card-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .ai-badge.pink { background: linear-gradient(135deg, rgba(255,107,171,.3), rgba(255,107,171,.1)); color: var(--accent-sc); }
+  .ai-badge.cyan { background: linear-gradient(135deg, #5ee7ff33, #a7ff6a22); color: #5ee7ff; }
+
+  .model-select {
+    background: var(--bg-2);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-1);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .model-select option { background: var(--bg-1); }
+
+  /* ── Pipeline visualization ── */
+  .pipeline-section {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-2);
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    overflow-x: auto;
+  }
+  .pipeline-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 20px;
+  }
+  .pipeline-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    min-width: 700px;
+  }
+  .pipeline-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .pipeline-node {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 2px solid var(--border-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .pipeline-node.scanning {
+    border-color: var(--accent-sc);
+    box-shadow: 0 0 20px rgba(255,107,171,.35);
+    animation: pulse-pink 0.8s ease-in-out infinite;
+  }
+  .pipeline-node.pass {
+    border-color: var(--accent-3);
+    background: rgba(167,255,106,.08);
+    box-shadow: 0 0 12px rgba(167,255,106,.2);
+  }
+  .pipeline-node.warn {
+    border-color: var(--accent-5);
+    background: rgba(255,201,91,.08);
+    box-shadow: 0 0 12px rgba(255,201,91,.2);
+  }
+  .pipeline-node.fail {
+    border-color: #ff5e5e;
+    background: rgba(255,94,94,.08);
+    box-shadow: 0 0 12px rgba(255,94,94,.2);
+  }
+  @keyframes pulse-pink {
+    0%, 100% { box-shadow: 0 0 12px rgba(255,107,171,.25); }
+    50%      { box-shadow: 0 0 28px rgba(255,107,171,.5); }
+  }
+  .pipeline-node-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-3);
+    margin-top: 10px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .pipeline-finding {
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 6px;
+    text-align: center;
+    min-height: 28px;
+    line-height: 1.3;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .pipeline-finding.visible { opacity: 1; }
+  .pipeline-finding.pass-text { color: var(--accent-3); }
+  .pipeline-finding.warn-text { color: var(--accent-5); }
+  .pipeline-finding.fail-text { color: #ff5e5e; }
+
+  .pipeline-arrow {
+    display: flex;
+    align-items: center;
+    padding-top: 16px;
+    color: var(--border-2);
+    font-size: 22px;
+    transition: color 0.4s ease;
+    flex-shrink: 0;
+    width: 40px;
+    justify-content: center;
+  }
+  .pipeline-arrow.active { color: var(--accent-sc); }
+
+  /* ── Run bar ── */
+  .run-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .btn-run {
+    background: linear-gradient(135deg, #ff6bab, #d14d8a);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 20px rgba(255,107,171,.25);
+  }
+  .btn-run:hover {
+    box-shadow: 0 0 32px rgba(255,107,171,.4);
+    transform: translateY(-1px);
+  }
+  .btn-run:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .run-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+  }
+
+  /* ── Results dashboard ── */
+  .results-dashboard {
+    display: none;
+    margin-bottom: 28px;
+    animation: slide-up 0.4s ease-out;
+  }
+  .results-dashboard.visible { display: block; }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .result-panel {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-1);
+    padding: 22px;
+  }
+  .result-panel-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 16px;
+  }
+
+  /* Provenance rows */
+  .prov-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-glass);
+    font-size: 12px;
+  }
+  .prov-row:last-child { border-bottom: none; }
+  .prov-row-label { color: var(--text-3); }
+  .prov-row-value {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .prov-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .prov-dot.green { background: var(--accent-3); box-shadow: 0 0 6px rgba(167,255,106,.4); }
+  .prov-dot.amber { background: var(--accent-5); box-shadow: 0 0 6px rgba(255,201,91,.4); }
+  .prov-dot.red { background: #ff5e5e; box-shadow: 0 0 6px rgba(255,94,94,.4); }
+
+  /* Drift bars */
+  .drift-bar-group { margin-bottom: 10px; }
+  .drift-bar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .drift-bar-track {
+    height: 8px;
+    background: rgba(255,255,255,.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .drift-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0;
+    transition: width 1.2s ease-out;
+  }
+  .drift-bar-fill.green { background: linear-gradient(90deg, #a7ff6a, #72d44a); }
+  .drift-bar-fill.amber { background: linear-gradient(90deg, #ffc95b, #e0a030); }
+  .drift-bar-fill.red { background: linear-gradient(90deg, #ff5e5e, #d33); }
+
+  .drift-final {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-glass);
+  }
+  .drift-final-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .drift-final-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* Grade cards */
+  .grade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-glass);
+  }
+  .grade-row:last-child { border-bottom: none; }
+  .grade-row-label {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .grade-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+  .grade-badge.A { background: rgba(167,255,106,.12); color: var(--grade-a); }
+  .grade-badge.B { background: rgba(94,231,255,.12); color: var(--grade-b); }
+  .grade-badge.C { background: rgba(255,138,91,.12); color: var(--grade-c); }
+  .grade-badge.D { background: rgba(255,94,94,.12); color: var(--grade-d); }
+  .grade-badge.F { background: rgba(255,56,56,.15); color: var(--grade-f); }
+
+  .composite-score {
+    text-align: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-glass);
+  }
+  .composite-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .composite-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--text-3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .verdict-badge {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 18px;
+    border-radius: var(--radius-pill);
+  }
+  .verdict-badge.deploy { background: rgba(167,255,106,.12); color: var(--accent-3); border: 1px solid rgba(167,255,106,.3); }
+  .verdict-badge.monitor { background: rgba(255,201,91,.12); color: var(--accent-5); border: 1px solid rgba(255,201,91,.3); }
+  .verdict-badge.block { background: rgba(255,94,94,.12); color: #ff5e5e; border: 1px solid rgba(255,94,94,.3); }
+
+  /* ── Accordion findings ── */
+  .findings-section {
+    margin-bottom: 28px;
+    display: none;
+  }
+  .findings-section.visible { display: block; }
+  .accordion-item {
+    background: var(--surface-1a);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-1);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .accordion-header {
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-1);
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: rgba(255,255,255,.02); }
+  .accordion-chevron {
+    font-size: 12px;
+    color: var(--text-3);
+    transition: transform 0.25s ease;
+  }
+  .accordion-item.open .accordion-chevron { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    padding: 0 20px;
+  }
+  .accordion-item.open .accordion-body {
+    max-height: 800px;
+    padding: 0 20px 20px;
+  }
+
+  /* Provenance chain visual */
+  .chain-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    overflow-x: auto;
+    padding: 12px 0;
+  }
+  .chain-node {
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .chain-node-org {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 2px;
+  }
+  .chain-node-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .chain-node-date { font-size: 10px; color: var(--text-3); }
+  .chain-node-sig {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .chain-node-sig.signed { color: var(--accent-3); }
+  .chain-node-sig.unsigned { color: #ff5e5e; }
+  .chain-node-sig.unknown { color: var(--accent-5); }
+  .chain-arrow {
+    display: flex;
+    align-items: center;
+    color: var(--border-2);
+    font-size: 18px;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  /* Neuron table */
+  .neuron-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .neuron-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-2);
+    color: var(--text-3);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-glass);
+  }
+  .neuron-table td {
+    padding: 10px 14px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border-glass);
+  }
+  .neuron-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .neuron-status.intact { background: rgba(167,255,106,.12); color: var(--accent-3); }
+  .neuron-status.degraded { background: rgba(255,201,91,.12); color: var(--accent-5); }
+  .neuron-status.compromised { background: rgba(255,94,94,.12); color: #ff5e5e; }
+
+  /* Remediation list */
+  .remediation-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+  }
+  .remediation-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-glass);
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.5;
+  }
+  .remediation-list li:last-child { border-bottom: none; }
+  .remediation-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin-top: 1px;
+  }
+  .remediation-icon.critical { background: rgba(255,94,94,.12); color: #ff5e5e; }
+  .remediation-icon.high { background: rgba(255,138,91,.12); color: #ff8a5b; }
+  .remediation-icon.medium { background: rgba(255,201,91,.12); color: #ffc95b; }
+  .remediation-icon.info { background: rgba(94,231,255,.12); color: #5ee7ff; }
+
+  /* ── Key insight box (pink-accented) ── */
+  .key-insight-box {
+    background: linear-gradient(135deg, rgba(255,107,171,.04), rgba(255,107,171,.02));
+    border: 1px solid rgba(255,107,171,.15);
+    border-radius: var(--radius-1);
+    padding: 22px 26px;
+    position: relative;
+  }
+  .key-insight-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-sc);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .key-insight-label::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-sc);
+    box-shadow: 0 0 8px rgba(255,107,171,.4);
+  }
+  .key-insight-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .key-insight-text strong { color: var(--text-1); font-weight: 600; }
+  .key-insight-text a { color: var(--accent-sc); text-decoration: none; }
+  .key-insight-text a:hover { text-decoration: underline; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .config-row, .results-grid { grid-template-columns: 1fr; }
+    .pipeline-row { flex-wrap: nowrap; }
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+<!-- ── Top Nav ── -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <div class="sc-badge">SC</div>
+    <div class="nav-brand">
+      <span class="nav-brand-top">Snowcrash</span>
+      <span class="nav-brand-bottom">Control Room</span>
+    </div>
+    <div class="nav-links">
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger">
+          Dashboards
+          <svg class="nav-dropdown-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="dashboard.html"><span class="nav-dropdown-icon" style="background:rgba(94,231,255,.15);color:#5ee7ff">E</span> Enterprise Overview</a>
+          <a href="agent-monitor.html"><span class="nav-dropdown-icon" style="background:rgba(167,255,106,.15);color:#a7ff6a">A</span> Agent Monitor</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger active">
+          AI Crash Test Lab
+          <svg class="nav-dropdown-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+        </button>
+        <div class="nav-dropdown-menu">
+          <a href="master-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,201,91,.15);color:#ffc95b">M</span> Master Lab</a>
+          <a href="agent-lab.html"><span class="nav-dropdown-icon" style="background:rgba(167,255,106,.15);color:#a7ff6a">A</span> Agent Lab</a>
+          <a href="breach-lab.html"><span class="nav-dropdown-icon adv">B</span> Breach Lab</a>
+          <a href="control-lab.html"><span class="nav-dropdown-icon ctrl">C</span> Control Lab</a>
+          <a href="endurance-lab.html"><span class="nav-dropdown-icon endurance">E</span> Endurance Lab</a>
+          <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
+          <a href="scheming-lab.html"><span class="nav-dropdown-icon scheme">S</span> Scheming Lab</a>
+          <a href="supplychain-lab.html" class="active"><span class="nav-dropdown-icon" style="background:rgba(255,107,171,.15);color:#ff6bab">S</span> Supply Chain Lab</a>
+        </div>
+      </div>
+      <a class="nav-link" href="router.html">Router</a>
+      <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="index.html">Model Safety</a>
+      <a class="nav-link" href="ops-hub.html">Ops Hub</a>
+      <a class="nav-link" href="system.html">System</a>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <div class="nav-pill">Ops: Local</div>
+    <a href="#" class="btn-primary">New Run</a>
+  </div>
+</nav>
+
+<!-- ── Main Content ── -->
+<div class="main-content">
+
+  <!-- Hero -->
+  <div class="page-label">Supply Chain Integrity Lab</div>
+  <h1 class="page-title">Supply Chain Integrity Lab</h1>
+  <p class="page-desc">
+    Trace model provenance. Detect alignment drift across the ML pipeline. Research shows standard fine-tuning and merging operations can silently degrade safety alignment &mdash; even without adversarial intent.
+  </p>
+
+  <!-- Configuration Row -->
+  <div class="config-row">
+    <div class="config-card">
+      <div class="config-card-label">Base Model</div>
+      <div class="config-card-value">
+        <span class="ai-badge pink">MDL</span>
+      </div>
+      <select class="model-select" id="modelSelect">
+        <option>Llama 4 Behemoth</option>
+        <option>GPT-5.4</option>
+        <option>Claude Opus 4.6</option>
+        <option>DeepSeek-R1</option>
+        <option>Qwen 3 235B-A22B</option>
+        <option>Grok 3 Beta</option>
+        <option>GLM-5</option>
+      </select>
+    </div>
+    <div class="config-card">
+      <div class="config-card-label">Supply Chain Scenario</div>
+      <div class="config-card-value">
+        <span class="ai-badge pink">SCN</span>
+      </div>
+      <select class="model-select" id="scenarioSelect">
+        <option value="clean">Clean Pipeline &mdash; Signed, audited, SafeMERGE</option>
+        <option value="unsigned_lora">Unsigned LoRA &mdash; Unknown adapter origin</option>
+        <option value="naive_merge">Naive Merge &mdash; No safety-preserving technique</option>
+        <option value="community">Community Adapter &mdash; Unaudited HuggingFace adapter</option>
+        <option value="multihop">Multi-Hop Pipeline &mdash; 4 orgs, each fine-tuning</option>
+        <option value="distillation">Distillation Drift &mdash; Safety lost in knowledge transfer</option>
+      </select>
+    </div>
+    <div class="config-card">
+      <div class="config-card-label">Scan Engine</div>
+      <div class="config-card-value">
+        <span class="ai-badge cyan">SCAN</span>
+        <span>SnowCrash ProvenanceGuard v3.2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pipeline Visualization -->
+  <div class="pipeline-section">
+    <div class="pipeline-section-label">ML Pipeline Stages</div>
+    <div class="pipeline-row">
+      <div class="pipeline-stage">
+        <div class="pipeline-node" id="stage0">&curren;</div>
+        <div class="pipeline-node-label">Base Model</div>
+        <div class="pipeline-finding" id="finding0"></div>
+      </div>
+      <div class="pipeline-arrow" id="arrow0">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-node" id="stage1">&Dagger;</div>
+        <div class="pipeline-node-label">Fine-Tune</div>
+        <div class="pipeline-finding" id="finding1"></div>
+      </div>
+      <div class="pipeline-arrow" id="arrow1">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-node" id="stage2">&oplus;</div>
+        <div class="pipeline-node-label">Adapter Merge</div>
+        <div class="pipeline-finding" id="finding2"></div>
+      </div>
+      <div class="pipeline-arrow" id="arrow2">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-node" id="stage3">&loz;</div>
+        <div class="pipeline-node-label">Quantization</div>
+        <div class="pipeline-finding" id="finding3"></div>
+      </div>
+      <div class="pipeline-arrow" id="arrow3">&rarr;</div>
+      <div class="pipeline-stage">
+        <div class="pipeline-node" id="stage4">&check;</div>
+        <div class="pipeline-node-label">Deploy Check</div>
+        <div class="pipeline-finding" id="finding4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Run Bar -->
+  <div class="run-bar">
+    <button class="btn-run" id="runBtn" onclick="runScan()">&#9654; Run Supply Chain Scan</button>
+    <span class="run-status" id="runStatus">Ready &mdash; Select model and scenario</span>
+  </div>
+
+  <!-- Results Dashboard -->
+  <div class="results-dashboard" id="resultsDashboard">
+    <div class="results-grid">
+
+      <!-- Left: Provenance Report -->
+      <div class="result-panel">
+        <div class="result-panel-title">Provenance Report</div>
+        <div id="provRows"></div>
+      </div>
+
+      <!-- Center: Alignment Drift -->
+      <div class="result-panel">
+        <div class="result-panel-title">Alignment Drift</div>
+        <div id="driftBars"></div>
+        <div class="drift-final">
+          <div class="drift-final-number" id="driftFinal">--</div>
+          <div class="drift-final-label">Final Integrity</div>
+        </div>
+      </div>
+
+      <!-- Right: Risk Assessment -->
+      <div class="result-panel">
+        <div class="result-panel-title">Risk Assessment</div>
+        <div id="gradeRows"></div>
+        <div class="composite-score">
+          <div class="composite-number" id="compositeNumber">--</div>
+          <div class="composite-label">Supply Chain Safety Score</div>
+          <div id="verdictBadge"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detailed Findings -->
+  <div class="findings-section" id="findingsSection">
+
+    <div class="accordion-item" id="accProvenance">
+      <div class="accordion-header" onclick="toggleAccordion('accProvenance')">
+        Provenance Chain
+        <span class="accordion-chevron">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <div class="chain-flow" id="chainFlow"></div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="accNeurons">
+      <div class="accordion-header" onclick="toggleAccordion('accNeurons')">
+        Safety Neuron Analysis
+        <span class="accordion-chevron">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <div id="neuronTableWrap"></div>
+      </div>
+    </div>
+
+    <div class="accordion-item" id="accActions">
+      <div class="accordion-header" onclick="toggleAccordion('accActions')">
+        Recommended Actions
+        <span class="accordion-chevron">&#9660;</span>
+      </div>
+      <div class="accordion-body">
+        <ul class="remediation-list" id="remediationList"></ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Key Insight Box -->
+  <div class="key-insight-box">
+    <div class="key-insight-label">Why This Matters for Enterprise AI</div>
+    <div class="key-insight-text">
+      <strong>Safety alignment is brittle by default &mdash; standard ML operations can silently remove it.</strong>
+      Qi et al. demonstrate that safety training is <strong>shallow and easily removed</strong> by fine-tuning on just a few hundred examples (<a href="https://arxiv.org/abs/2406.17349" target="_blank" rel="noopener">ICLR 2025</a>).
+      Yi et al. show that <strong>model merging can function as an implicit jailbreak</strong>, bypassing safety guardrails without any adversarial intent (<a href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">arXiv:2501.05411</a>).
+      The MalHug study found <strong>91 malicious models on HuggingFace</strong> designed to inject backdoors through community fine-tuning pipelines (<a href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">arXiv:2412.15605</a>).
+      Gu et al. show that <strong>backdoors persist through PEFT</strong> (parameter-efficient fine-tuning), surviving LoRA, adapter, and prefix-tuning methods that enterprises commonly use (<a href="https://arxiv.org/abs/2501.09297" target="_blank" rel="noopener">arXiv:2501.09297</a>).
+      Organizations deploying models without supply chain verification are operating blind.
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   Supply Chain Integrity Lab — Core Logic
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+var MODEL_PROFILES = {
+  'Claude Opus 4.6':   { resilience: 1.00 },
+  'GPT-5.4':           { resilience: 0.93 },
+  'Grok 3 Beta':       { resilience: 0.82 },
+  'Llama 4 Behemoth':  { resilience: 0.78 },
+  'Qwen 3 235B-A22B':  { resilience: 0.74 },
+  'DeepSeek-R1':       { resilience: 0.62 },
+  'GLM-5':             { resilience: 0.48 }
+};
+
+var STAGE_NAMES = ['Base Model', 'Post Fine-Tune', 'Post Merge', 'Post Quantization', 'Final Integrity'];
+var PIPELINE_ICONS = ['\u00A4', '\u2021', '\u2295', '\u25CA', '\u2713'];
+
+var SCENARIOS = {
+  clean: {
+    pipeline: [
+      { icon: '\u2713', finding: 'Origin verified, hash match', status: 'pass' },
+      { icon: '\u2713', finding: 'Signed SFT, alignment-aware', status: 'pass' },
+      { icon: '\u2713', finding: 'SafeMERGE protocol applied', status: 'pass' },
+      { icon: '\u2713', finding: 'GPTQ validated, no drift', status: 'pass' },
+      { icon: '\u2713', finding: 'All checks passed', status: 'pass' }
+    ],
+    provenance: { base: 'Verified', training: 'Audited', fineTune: 'Signed', merge: 'Safety-Preserving', quant: 'Validated' },
+    baseDrift: [100, 97, 96, 95, 95],
+    baseScores: { provenance: 96, mergeIntegrity: 94, alignmentDrift: 95, deployReady: 93 },
+    chain: [
+      { org: 'Meta / Anthropic / OpenAI', role: 'Base Provider', date: '2025-11-15', sig: 'signed' },
+      { org: 'Internal ML Team', role: 'Fine-Tune', date: '2026-01-22', sig: 'signed' },
+      { org: 'ML Engineering', role: 'SafeMERGE', date: '2026-02-03', sig: 'signed' },
+      { org: 'MLOps Pipeline', role: 'Quantization', date: '2026-02-10', sig: 'signed' },
+      { org: 'Production Deploy', role: 'Final Check', date: '2026-03-01', sig: 'signed' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-1%', status: 'intact' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-0.5%', status: 'intact' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+0.2%', status: 'intact' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-0.8%', status: 'intact' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-0.3%', status: 'intact' }
+    ],
+    actions: [
+      { severity: 'info', text: 'Pipeline fully compliant. Continue routine monitoring on 30-day cycle.' },
+      { severity: 'info', text: 'Archive provenance attestation for audit trail.' },
+      { severity: 'info', text: 'Schedule next integrity scan post-deployment at T+7 days.' }
+    ]
+  },
+  unsigned_lora: {
+    pipeline: [
+      { icon: '\u2713', finding: 'Origin verified', status: 'pass' },
+      { icon: '\u26A0', finding: 'LoRA adapter unsigned, unknown origin', status: 'warn' },
+      { icon: '\u26A0', finding: 'Merge integrity uncertain', status: 'warn' },
+      { icon: '\u2713', finding: 'Quantization within tolerance', status: 'pass' },
+      { icon: '\u26A0', finding: 'Partial provenance gaps', status: 'warn' }
+    ],
+    provenance: { base: 'Verified', training: 'Partial', fineTune: 'Unsigned', merge: 'Naive', quant: 'Validated' },
+    baseDrift: [100, 84, 78, 76, 73],
+    baseScores: { provenance: 62, mergeIntegrity: 68, alignmentDrift: 73, deployReady: 65 },
+    chain: [
+      { org: 'Meta / Anthropic / OpenAI', role: 'Base Provider', date: '2025-11-15', sig: 'signed' },
+      { org: 'Unknown Contributor', role: 'LoRA Fine-Tune', date: '2026-01-08', sig: 'unsigned' },
+      { org: 'DevOps Team', role: 'Linear Merge', date: '2026-02-14', sig: 'unsigned' },
+      { org: 'MLOps Pipeline', role: 'Quantization', date: '2026-02-20', sig: 'signed' },
+      { org: 'Staging Deploy', role: 'Partial Check', date: '2026-03-05', sig: 'unknown' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-12%', status: 'degraded' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-8%', status: 'intact' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+3%', status: 'intact' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-15%', status: 'degraded' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-6%', status: 'intact' }
+    ],
+    actions: [
+      { severity: 'high', text: 'Obtain cryptographic signature for LoRA adapter or replace with signed alternative.' },
+      { severity: 'high', text: 'Run targeted refusal benchmark (RefusalBench v2) to measure safety regression.' },
+      { severity: 'medium', text: 'Audit adapter training data for harmful or misaligned content.' },
+      { severity: 'medium', text: 'Re-merge using safety-preserving TIES or DARE method instead of linear merge.' },
+      { severity: 'info', text: 'Implement adapter provenance policy requiring signed attestation for all adapters.' }
+    ]
+  },
+  naive_merge: {
+    pipeline: [
+      { icon: '\u2713', finding: 'Origin verified', status: 'pass' },
+      { icon: '\u2713', finding: 'Fine-tuning signed', status: 'pass' },
+      { icon: '\u2718', finding: 'Linear merge destroyed safety neurons', status: 'fail' },
+      { icon: '\u26A0', finding: 'Quantization amplified drift', status: 'warn' },
+      { icon: '\u2718', finding: 'Safety threshold not met', status: 'fail' }
+    ],
+    provenance: { base: 'Verified', training: 'Audited', fineTune: 'Signed', merge: 'Naive', quant: 'Unchecked' },
+    baseDrift: [100, 95, 58, 52, 48],
+    baseScores: { provenance: 78, mergeIntegrity: 32, alignmentDrift: 48, deployReady: 35 },
+    chain: [
+      { org: 'Meta / Anthropic / OpenAI', role: 'Base Provider', date: '2025-11-15', sig: 'signed' },
+      { org: 'Internal ML Team', role: 'SFT Fine-Tune', date: '2026-01-18', sig: 'signed' },
+      { org: 'Junior Engineer', role: 'Linear Average Merge', date: '2026-02-05', sig: 'unsigned' },
+      { org: 'Automated Pipeline', role: 'GPTQ (unchecked)', date: '2026-02-12', sig: 'unknown' },
+      { org: 'Pre-Production', role: 'Failed Safety Gate', date: '2026-03-01', sig: 'unsigned' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-42%', status: 'compromised' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-28%', status: 'compromised' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+8%', status: 'intact' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-51%', status: 'compromised' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-33%', status: 'compromised' }
+    ],
+    actions: [
+      { severity: 'critical', text: 'BLOCK DEPLOYMENT. Safety neuron clusters show catastrophic degradation (>40% loss).' },
+      { severity: 'critical', text: 'Replace linear merge with TIES-Merging or DARE to preserve safety-critical parameters.' },
+      { severity: 'high', text: 'Rebuild merged model from last known-good checkpoint with safety-preserving merge protocol.' },
+      { severity: 'high', text: 'Run full red-team evaluation before any deployment attempt.' },
+      { severity: 'medium', text: 'Add automated safety neuron integrity check to CI/CD pipeline.' }
+    ]
+  },
+  community: {
+    pipeline: [
+      { icon: '\u2713', finding: 'Origin verified', status: 'pass' },
+      { icon: '\u26A0', finding: 'Community adapter, unaudited', status: 'warn' },
+      { icon: '\u26A0', finding: 'Merge lacks safety verification', status: 'warn' },
+      { icon: '\u2713', finding: 'Quantization stable', status: 'pass' },
+      { icon: '\u26A0', finding: 'Insufficient provenance', status: 'warn' }
+    ],
+    provenance: { base: 'Verified', training: 'Unknown', fineTune: 'Unsigned', merge: 'Naive', quant: 'Validated' },
+    baseDrift: [100, 80, 72, 70, 67],
+    baseScores: { provenance: 55, mergeIntegrity: 60, alignmentDrift: 67, deployReady: 58 },
+    chain: [
+      { org: 'Meta / Anthropic / OpenAI', role: 'Base Provider', date: '2025-11-15', sig: 'signed' },
+      { org: 'HuggingFace User (anon)', role: 'Community LoRA', date: '2026-01-02', sig: 'unsigned' },
+      { org: 'DevOps Team', role: 'SLERP Merge', date: '2026-02-08', sig: 'unsigned' },
+      { org: 'MLOps Pipeline', role: 'AWQ Quantization', date: '2026-02-15', sig: 'signed' },
+      { org: 'Staging Gate', role: 'Partial Validation', date: '2026-03-02', sig: 'unknown' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-18%', status: 'degraded' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-14%', status: 'degraded' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+5%', status: 'intact' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-22%', status: 'degraded' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-11%', status: 'degraded' }
+    ],
+    actions: [
+      { severity: 'high', text: 'Audit community adapter training data. 91 malicious models found on HuggingFace (MalHug, 2024).' },
+      { severity: 'high', text: 'Scan adapter weights for backdoor trigger patterns using SnowCrash BackdoorScan.' },
+      { severity: 'medium', text: 'Replace unaudited adapter with internally trained or vendor-certified alternative.' },
+      { severity: 'medium', text: 'Implement adapter allowlist policy restricting to verified contributors only.' },
+      { severity: 'info', text: 'Add HuggingFace adapter provenance checks to procurement workflow.' }
+    ]
+  },
+  multihop: {
+    pipeline: [
+      { icon: '\u26A0', finding: 'Original provenance unclear', status: 'warn' },
+      { icon: '\u2718', finding: 'Org #2 fine-tune unverified', status: 'fail' },
+      { icon: '\u2718', finding: 'Org #3 merge introduced drift', status: 'fail' },
+      { icon: '\u26A0', finding: 'Org #4 quantization unchecked', status: 'warn' },
+      { icon: '\u2718', finding: 'Chain of custody broken', status: 'fail' }
+    ],
+    provenance: { base: 'Unknown', training: 'Unknown', fineTune: 'Unsigned', merge: 'Naive', quant: 'Unchecked' },
+    baseDrift: [100, 72, 55, 48, 42],
+    baseScores: { provenance: 28, mergeIntegrity: 35, alignmentDrift: 42, deployReady: 25 },
+    chain: [
+      { org: 'Org A (Research Lab)', role: 'Pre-Training', date: '2025-09-20', sig: 'signed' },
+      { org: 'Org B (Startup)', role: 'Domain Fine-Tune', date: '2025-12-10', sig: 'unsigned' },
+      { org: 'Org C (Consulting)', role: 'Task Adapter Merge', date: '2026-01-15', sig: 'unsigned' },
+      { org: 'Org D (Enterprise)', role: 'INT4 Quantization', date: '2026-02-01', sig: 'unknown' },
+      { org: 'Your Organization', role: 'Deploy Attempt', date: '2026-03-10', sig: 'unsigned' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-56%', status: 'compromised' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-38%', status: 'compromised' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+12%', status: 'degraded' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-62%', status: 'compromised' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-45%', status: 'compromised' }
+    ],
+    actions: [
+      { severity: 'critical', text: 'BLOCK DEPLOYMENT. Model has passed through 4 organizations with no continuous provenance chain.' },
+      { severity: 'critical', text: 'Cannot verify safety alignment was preserved across any handoff. Treat as untrusted.' },
+      { severity: 'high', text: 'Establish bilateral provenance agreements with each upstream organization.' },
+      { severity: 'high', text: 'Require signed model cards and alignment attestation at every transfer point.' },
+      { severity: 'high', text: 'Rebuild from verified base model with internal fine-tuning pipeline only.' },
+      { severity: 'medium', text: 'Implement supply chain SBOM (Software Bill of Materials) for all model assets.' }
+    ]
+  },
+  distillation: {
+    pipeline: [
+      { icon: '\u2713', finding: 'Teacher model verified', status: 'pass' },
+      { icon: '\u26A0', finding: 'Distillation target: safety not transferred', status: 'warn' },
+      { icon: '\u26A0', finding: 'Student merge lacks alignment data', status: 'warn' },
+      { icon: '\u2718', finding: 'Quantization compounded loss', status: 'fail' },
+      { icon: '\u2718', finding: 'Critical safety regression detected', status: 'fail' }
+    ],
+    provenance: { base: 'Verified', training: 'Partial', fineTune: 'Signed', merge: 'Naive', quant: 'Unchecked' },
+    baseDrift: [100, 70, 62, 52, 47],
+    baseScores: { provenance: 68, mergeIntegrity: 45, alignmentDrift: 47, deployReady: 38 },
+    chain: [
+      { org: 'Foundation Model Provider', role: 'Teacher Model', date: '2025-10-05', sig: 'signed' },
+      { org: 'Internal ML Team', role: 'Knowledge Distillation', date: '2026-01-12', sig: 'signed' },
+      { org: 'ML Engineering', role: 'Student Merge', date: '2026-02-02', sig: 'unsigned' },
+      { org: 'Automated Pipeline', role: 'INT8 Quantization', date: '2026-02-18', sig: 'unknown' },
+      { org: 'Pre-Production Gate', role: 'Failed Safety Eval', date: '2026-03-08', sig: 'unsigned' }
+    ],
+    neurons: [
+      { cluster: 'Refusal Direction', range: 'L24-L32', impact: '-48%', status: 'compromised' },
+      { cluster: 'Harm Detection', range: 'L16-L24', impact: '-32%', status: 'compromised' },
+      { cluster: 'Instruction Following', range: 'L8-L16', impact: '+2%', status: 'intact' },
+      { cluster: 'Safety Boundary', range: 'L28-L36', impact: '-44%', status: 'compromised' },
+      { cluster: 'Value Alignment', range: 'L32-L40', impact: '-38%', status: 'compromised' }
+    ],
+    actions: [
+      { severity: 'critical', text: 'BLOCK DEPLOYMENT. Distillation process failed to transfer safety-critical representations.' },
+      { severity: 'critical', text: 'Re-run distillation with explicit safety-aware loss function (SafeDistill protocol).' },
+      { severity: 'high', text: 'Include safety evaluation data in distillation training mix (minimum 5% of tokens).' },
+      { severity: 'high', text: 'Validate student model refusal behavior matches teacher on standardized safety benchmarks.' },
+      { severity: 'medium', text: 'Add post-distillation safety fine-tuning step to recover lost alignment properties.' },
+      { severity: 'info', text: 'Document distillation safety gap for model risk registry.' }
+    ]
+  }
+};
+
+/* ── Score calculation ── */
+function calculateScores(scenarioKey, modelName) {
+  var scenario = SCENARIOS[scenarioKey];
+  var profile = MODEL_PROFILES[modelName];
+  var r = profile.resilience;
+
+  // Adjust drift values by resilience: higher resilience = less degradation from base 100
+  var drift = scenario.baseDrift.map(function(v, i) {
+    if (i === 0) return v;
+    var loss = 100 - v;
+    var adjusted = 100 - loss * (1 - (r - 0.48) * 0.6);
+    return Math.round(Math.min(100, Math.max(5, adjusted)));
+  });
+
+  // Adjust scores
+  var bs = scenario.baseScores;
+  function adj(val) {
+    var loss = 100 - val;
+    var adjusted = 100 - loss * (1 - (r - 0.48) * 0.5);
+    return Math.round(Math.min(100, Math.max(5, adjusted)));
+  }
+  var provenance = adj(bs.provenance);
+  var mergeIntegrity = adj(bs.mergeIntegrity);
+  var alignmentDrift = adj(bs.alignmentDrift);
+  var deployReady = adj(bs.deployReady);
+  var composite = Math.round((provenance + mergeIntegrity + alignmentDrift + deployReady) / 4);
+
+  function grade(v) {
+    if (v >= 90) return 'A';
+    if (v >= 80) return 'B';
+    if (v >= 70) return 'C';
+    if (v >= 60) return 'D';
+    return 'F';
+  }
+
+  var verdict;
+  if (composite >= 80) verdict = 'DEPLOY';
+  else if (composite >= 60) verdict = 'MONITOR';
+  else verdict = 'BLOCK';
+
+  return {
+    drift: drift,
+    provenance: provenance,
+    mergeIntegrity: mergeIntegrity,
+    alignmentDrift: alignmentDrift,
+    deployReady: deployReady,
+    composite: composite,
+    verdict: verdict,
+    grades: {
+      provenance: grade(provenance),
+      mergeIntegrity: grade(mergeIntegrity),
+      alignmentDrift: grade(alignmentDrift),
+      deployReady: grade(deployReady)
+    }
+  };
+}
+
+/* ── Accordion ── */
+function toggleAccordion(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+/* ── Reset pipeline ── */
+function resetPipeline() {
+  for (var i = 0; i < 5; i++) {
+    var node = document.getElementById('stage' + i);
+    node.className = 'pipeline-node';
+    node.innerHTML = PIPELINE_ICONS[i];
+    var finding = document.getElementById('finding' + i);
+    finding.className = 'pipeline-finding';
+    finding.textContent = '';
+    if (i < 4) {
+      document.getElementById('arrow' + i).className = 'pipeline-arrow';
+    }
+  }
+}
+
+/* ── Main scan function ── */
+function runScan() {
+  var btn = document.getElementById('runBtn');
+  var status = document.getElementById('runStatus');
+  var scenarioKey = document.getElementById('scenarioSelect').value;
+  var modelName = document.getElementById('modelSelect').value;
+  var scenario = SCENARIOS[scenarioKey];
+
+  btn.disabled = true;
+  status.textContent = 'Scanning pipeline...';
+
+  // Hide previous results
+  document.getElementById('resultsDashboard').classList.remove('visible');
+  document.getElementById('findingsSection').classList.remove('visible');
+  resetPipeline();
+
+  var delay = window._instantMode ? 100 : 800;
+
+  // Animate each stage sequentially
+  function animateStage(idx) {
+    if (idx >= 5) {
+      // All stages done, show results
+      setTimeout(function() { showResults(scenarioKey, modelName); }, window._instantMode ? 50 : 400);
+      return;
+    }
+    var node = document.getElementById('stage' + idx);
+    var finding = document.getElementById('finding' + idx);
+    var stageData = scenario.pipeline[idx];
+
+    // Start scanning animation
+    node.classList.add('scanning');
+    status.textContent = 'Scanning: ' + STAGE_NAMES[idx] + '...';
+
+    setTimeout(function() {
+      node.classList.remove('scanning');
+      node.classList.add(stageData.status);
+      node.innerHTML = stageData.icon;
+
+      finding.textContent = stageData.finding;
+      finding.classList.add('visible');
+      finding.classList.add(stageData.status + '-text');
+
+      // Activate preceding arrow
+      if (idx > 0) {
+        document.getElementById('arrow' + (idx - 1)).classList.add('active');
+      }
+
+      animateStage(idx + 1);
+    }, delay);
+  }
+
+  animateStage(0);
+}
+
+function showResults(scenarioKey, modelName) {
+  var scores = calculateScores(scenarioKey, modelName);
+  var scenario = SCENARIOS[scenarioKey];
+  var btn = document.getElementById('runBtn');
+  var status = document.getElementById('runStatus');
+
+  // -- Provenance Report --
+  var provData = scenario.provenance;
+  var provLabels = ['Base Model', 'Training Data', 'Fine-Tuning', 'Merge Method', 'Quantization'];
+  var provKeys = ['base', 'training', 'fineTune', 'merge', 'quant'];
+  var provHTML = '';
+  for (var i = 0; i < provLabels.length; i++) {
+    var val = provData[provKeys[i]];
+    var dotClass = 'green';
+    if (val === 'Unknown' || val === 'Unsigned' || val === 'Unchecked' || val === 'Naive') dotClass = val === 'Naive' || val === 'Unsigned' ? 'amber' : 'red';
+    if (val === 'Partial') dotClass = 'amber';
+    if (val === 'Verified' || val === 'Audited' || val === 'Signed' || val === 'Safety-Preserving' || val === 'Validated') dotClass = 'green';
+    provHTML += '<div class="prov-row"><span class="prov-row-label">' + provLabels[i] + '</span><span class="prov-row-value"><span class="prov-dot ' + dotClass + '"></span>' + val + '</span></div>';
+  }
+  document.getElementById('provRows').innerHTML = provHTML;
+
+  // -- Drift bars --
+  var driftHTML = '';
+  for (var j = 0; j < STAGE_NAMES.length; j++) {
+    var pct = scores.drift[j];
+    var barClass = pct >= 80 ? 'green' : (pct >= 60 ? 'amber' : 'red');
+    driftHTML += '<div class="drift-bar-group"><div class="drift-bar-label"><span>' + STAGE_NAMES[j] + '</span><span>' + pct + '%</span></div><div class="drift-bar-track"><div class="drift-bar-fill ' + barClass + '" data-width="' + pct + '"></div></div></div>';
+  }
+  document.getElementById('driftBars').innerHTML = driftHTML;
+
+  var finalPct = scores.drift[4];
+  var finalEl = document.getElementById('driftFinal');
+  finalEl.textContent = finalPct + '%';
+  finalEl.style.color = finalPct >= 80 ? 'var(--accent-3)' : (finalPct >= 60 ? 'var(--accent-5)' : '#ff5e5e');
+
+  // -- Grade rows --
+  var gradeLabels = ['Provenance Score', 'Merge Integrity', 'Alignment Drift', 'Deployment Readiness'];
+  var gradeKeys = ['provenance', 'mergeIntegrity', 'alignmentDrift', 'deployReady'];
+  var gradeHTML = '';
+  for (var k = 0; k < gradeLabels.length; k++) {
+    var g = scores.grades[gradeKeys[k]];
+    gradeHTML += '<div class="grade-row"><span class="grade-row-label">' + gradeLabels[k] + '</span><div class="grade-badge ' + g + '">' + g + '</div></div>';
+  }
+  document.getElementById('gradeRows').innerHTML = gradeHTML;
+
+  var compEl = document.getElementById('compositeNumber');
+  compEl.textContent = scores.composite;
+  compEl.style.color = scores.composite >= 80 ? 'var(--accent-3)' : (scores.composite >= 60 ? 'var(--accent-5)' : '#ff5e5e');
+
+  var verdictClass = scores.verdict === 'DEPLOY' ? 'deploy' : (scores.verdict === 'MONITOR' ? 'monitor' : 'block');
+  document.getElementById('verdictBadge').innerHTML = '<span class="verdict-badge ' + verdictClass + '">' + scores.verdict + '</span>';
+
+  // Show dashboard
+  document.getElementById('resultsDashboard').classList.add('visible');
+
+  // Animate drift bars
+  setTimeout(function() {
+    var fills = document.querySelectorAll('.drift-bar-fill');
+    fills.forEach(function(f) {
+      f.style.width = f.getAttribute('data-width') + '%';
+    });
+  }, 50);
+
+  // -- Populate findings --
+  // Chain flow
+  var chainHTML = '';
+  scenario.chain.forEach(function(node, idx) {
+    if (idx > 0) chainHTML += '<div class="chain-arrow">&rarr;</div>';
+    chainHTML += '<div class="chain-node"><div class="chain-node-role">' + node.role + '</div><div class="chain-node-org">' + node.org + '</div><div class="chain-node-date">' + node.date + '</div><div class="chain-node-sig ' + node.sig + '">' + (node.sig === 'signed' ? '\u2713 Signed' : (node.sig === 'unsigned' ? '\u2718 Unsigned' : '? Unknown')) + '</div></div>';
+  });
+  document.getElementById('chainFlow').innerHTML = chainHTML;
+
+  // Neuron table
+  var nHTML = '<table class="neuron-table"><thead><tr><th>Neuron Cluster</th><th>Layer Range</th><th>Impact</th><th>Status</th></tr></thead><tbody>';
+  scenario.neurons.forEach(function(n) {
+    nHTML += '<tr><td>' + n.cluster + '</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:11px">' + n.range + '</td><td style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:' + (n.impact.indexOf('-') === 0 ? '#ff5e5e' : 'var(--accent-3)') + '">' + n.impact + '</td><td><span class="neuron-status ' + n.status + '">' + n.status.charAt(0).toUpperCase() + n.status.slice(1) + '</span></td></tr>';
+  });
+  nHTML += '</tbody></table>';
+  document.getElementById('neuronTableWrap').innerHTML = nHTML;
+
+  // Remediation
+  var rHTML = '';
+  scenario.actions.forEach(function(a) {
+    var icon = a.severity === 'critical' ? '!' : (a.severity === 'high' ? '\u25B2' : (a.severity === 'medium' ? '\u25CF' : 'i'));
+    rHTML += '<li><span class="remediation-icon ' + a.severity + '">' + icon + '</span><span>' + a.text + '</span></li>';
+  });
+  document.getElementById('remediationList').innerHTML = rHTML;
+
+  document.getElementById('findingsSection').classList.add('visible');
+
+  // Done
+  btn.disabled = false;
+  status.textContent = 'Scan complete \u2014 ' + scores.verdict + ' (Score: ' + scores.composite + '/100)';
+}
+
+/* ── Master Lab integration ── */
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('from') !== 'master') return;
+  var modelKey = params.get('model');
+  var MAP = {
+    'gpt54': 'GPT-5.4', 'claude46': 'Claude Opus 4.6', 'deepseek': 'DeepSeek-R1',
+    'llama4': 'Llama 4 Behemoth', 'qwen3': 'Qwen 3 235B-A22B', 'grok3': 'Grok 3 Beta', 'glm5': 'GLM-5'
+  };
+  if (MAP[modelKey]) {
+    document.getElementById('modelSelect').value = MAP[modelKey];
+  }
+  window._instantMode = true;
+  setTimeout(function() { runScan(); }, 300);
+})();
+</script>
+<script src="shared.js"></script>
+</body>
+</html>
