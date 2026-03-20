@@ -1,0 +1,931 @@
+{
+  "scraped_at": "2026-03-20T14:01:29.491Z",
+  "models": {
+    "deepseek-r1": {
+      "displayName": "DeepSeek-R1",
+      "official": 10,
+      "quantized": 65,
+      "fineTuned": 17,
+      "merged": 0,
+      "abliterated": 8,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "deepseek-ai/DeepSeek-R1",
+          "type": "official",
+          "downloads": 1499624
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-0528",
+          "type": "official",
+          "downloads": 1024510
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+          "type": "official",
+          "downloads": 1013056
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+          "type": "official",
+          "downloads": 987829
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+          "type": "official",
+          "downloads": 710446
+        }
+      ]
+    },
+    "deepseek-v3": {
+      "displayName": "DeepSeek-V3",
+      "official": 9,
+      "quantized": 47,
+      "fineTuned": 40,
+      "merged": 0,
+      "abliterated": 4,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "deepseek-ai/DeepSeek-V3",
+          "type": "official",
+          "downloads": 970208
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-V3-0324",
+          "type": "official",
+          "downloads": 344009
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-V3.2",
+          "type": "official",
+          "downloads": 293580
+        },
+        {
+          "name": "deepseek-ai/DeepSeek-V3.1",
+          "type": "official",
+          "downloads": 162969
+        },
+        {
+          "name": "eagle618/deepseek-v3-random",
+          "type": "fineTuned",
+          "downloads": 143479
+        }
+      ]
+    },
+    "qwen3-235b": {
+      "displayName": "Qwen 3 235B",
+      "official": 77,
+      "quantized": 22,
+      "fineTuned": 12,
+      "merged": 0,
+      "abliterated": 1,
+      "total": 112,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "Qwen/Qwen3-0.6B",
+          "type": "official",
+          "downloads": 13221023
+        },
+        {
+          "name": "Qwen/Qwen3-VL-8B-Instruct",
+          "type": "official",
+          "downloads": 8887794
+        },
+        {
+          "name": "Qwen/Qwen3-8B",
+          "type": "official",
+          "downloads": 8757229
+        },
+        {
+          "name": "Qwen/Qwen2.5-3B-Instruct",
+          "type": "official",
+          "downloads": 7596498
+        },
+        {
+          "name": "Qwen/Qwen3-1.7B",
+          "type": "official",
+          "downloads": 7033276
+        }
+      ]
+    },
+    "qwen2.5-72b": {
+      "displayName": "Qwen 2.5 72B",
+      "official": 12,
+      "quantized": 59,
+      "fineTuned": 18,
+      "merged": 0,
+      "abliterated": 11,
+      "total": 100,
+      "exposureRisk": "critical",
+      "topVariants": [
+        {
+          "name": "Qwen/Qwen2.5-72B-Instruct",
+          "type": "official",
+          "downloads": 778142
+        },
+        {
+          "name": "Qwen/Qwen2.5-72B-Instruct-AWQ",
+          "type": "official",
+          "downloads": 685851
+        },
+        {
+          "name": "Qwen/Qwen2.5-VL-72B-Instruct",
+          "type": "official",
+          "downloads": 255778
+        },
+        {
+          "name": "huihui-ai/Qwen2.5-72B-Instruct-abliterated",
+          "type": "abliterated",
+          "downloads": 251622
+        },
+        {
+          "name": "Qwen/Qwen2.5-VL-72B-Instruct-AWQ",
+          "type": "official",
+          "downloads": 121136
+        }
+      ]
+    },
+    "llama-4-maverick": {
+      "displayName": "Llama 4 Maverick",
+      "official": 6,
+      "quantized": 25,
+      "fineTuned": 41,
+      "merged": 0,
+      "abliterated": 2,
+      "total": 74,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+          "type": "official",
+          "downloads": 60101
+        },
+        {
+          "name": "RedHatAI/Llama-4-Maverick-17B-128E-Instruct-FP8",
+          "type": "fineTuned",
+          "downloads": 28588
+        },
+        {
+          "name": "unsloth/Llama-4-Maverick-17B-128E-Instruct-GGUF",
+          "type": "quantized",
+          "downloads": 20663
+        },
+        {
+          "name": "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+          "type": "official",
+          "downloads": 9255
+        },
+        {
+          "name": "meta-llama/Llama-4-Maverick-17B-128E",
+          "type": "official",
+          "downloads": 2368
+        }
+      ]
+    },
+    "llama-4-scout": {
+      "displayName": "Llama 4 Scout",
+      "official": 4,
+      "quantized": 53,
+      "fineTuned": 35,
+      "merged": 0,
+      "abliterated": 8,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "meta-llama/Llama-4-Scout-17B-16E-Instruct",
+          "type": "official",
+          "downloads": 240091
+        },
+        {
+          "name": "nvidia/Llama-4-Scout-17B-16E-Instruct-FP8",
+          "type": "fineTuned",
+          "downloads": 50815
+        },
+        {
+          "name": "unsloth/Llama-4-Scout-17B-16E-Instruct-GGUF",
+          "type": "quantized",
+          "downloads": 49742
+        },
+        {
+          "name": "nvidia/Llama-4-Scout-17B-16E-Instruct-NVFP4",
+          "type": "fineTuned",
+          "downloads": 46406
+        },
+        {
+          "name": "kishizaki-sci/Llama-4-Scout-17B-16E-Instruct-AWQ",
+          "type": "quantized",
+          "downloads": 33140
+        }
+      ]
+    },
+    "llama-3.3-70b": {
+      "displayName": "Llama 3.3 70B",
+      "official": 1,
+      "quantized": 31,
+      "fineTuned": 65,
+      "merged": 0,
+      "abliterated": 3,
+      "total": 100,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "casperhansen/llama-3.3-70b-instruct-awq",
+          "type": "quantized",
+          "downloads": 805684
+        },
+        {
+          "name": "meta-llama/Llama-3.3-70B-Instruct",
+          "type": "official",
+          "downloads": 579869
+        },
+        {
+          "name": "kosbu/Llama-3.3-70B-Instruct-AWQ",
+          "type": "quantized",
+          "downloads": 489890
+        },
+        {
+          "name": "ibnzterrell/Meta-Llama-3.3-70B-Instruct-AWQ-INT4",
+          "type": "quantized",
+          "downloads": 139831
+        },
+        {
+          "name": "MaziyarPanahi/Llama-3.3-70B-Instruct-GGUF",
+          "type": "quantized",
+          "downloads": 109354
+        }
+      ]
+    },
+    "mistral-large": {
+      "displayName": "Mistral Large 2",
+      "official": 8,
+      "quantized": 74,
+      "fineTuned": 18,
+      "merged": 0,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "MaziyarPanahi/Mistral-Large-Instruct-2411-GGUF",
+          "type": "quantized",
+          "downloads": 106763
+        },
+        {
+          "name": "mistralai/Mistral-Large-Instruct-2411",
+          "type": "official",
+          "downloads": 17474
+        },
+        {
+          "name": "mistralai/Mistral-Large-Instruct-2407",
+          "type": "official",
+          "downloads": 7847
+        },
+        {
+          "name": "mistralai/Mistral-Large-3-675B-Instruct-2512-NVFP4",
+          "type": "official",
+          "downloads": 4848
+        },
+        {
+          "name": "bartowski/Mistral-Large-Instruct-2411-GGUF",
+          "type": "quantized",
+          "downloads": 3253
+        }
+      ]
+    },
+    "mistral-medium": {
+      "displayName": "Mistral Medium 3",
+      "official": 0,
+      "quantized": 1,
+      "fineTuned": 2,
+      "merged": 0,
+      "abliterated": 0,
+      "total": 3,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "phyloforfun/mistral-7b-instruct-v2-bnb-4bit__HLT_MICH_Angiospermae_SLTPvC_v1-0_medium_OCR-C25-L25-E50-R05",
+          "type": "quantized",
+          "downloads": 0
+        },
+        {
+          "name": "roif123/mistral_7b-instruct-medium_artikel",
+          "type": "fineTuned",
+          "downloads": 0
+        },
+        {
+          "name": "GodloveUsH0li/My-Medium-Mistral-Large",
+          "type": "fineTuned",
+          "downloads": 0
+        }
+      ]
+    },
+    "codestral": {
+      "displayName": "Codestral 25.01",
+      "official": 2,
+      "quantized": 76,
+      "fineTuned": 16,
+      "merged": 0,
+      "abliterated": 6,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "mistralai/Mamba-Codestral-7B-v0.1",
+          "type": "official",
+          "downloads": 31133
+        },
+        {
+          "name": "mistralai/Codestral-22B-v0.1",
+          "type": "official",
+          "downloads": 16429
+        },
+        {
+          "name": "failspy/Codestral-22B-v0.1-abliterated-v3",
+          "type": "abliterated",
+          "downloads": 8500
+        },
+        {
+          "name": "lmstudio-community/Codestral-22B-v0.1-GGUF",
+          "type": "quantized",
+          "downloads": 8178
+        },
+        {
+          "name": "bartowski/Codestral-22B-v0.1-GGUF",
+          "type": "quantized",
+          "downloads": 2998
+        }
+      ]
+    },
+    "falcon-3": {
+      "displayName": "Falcon 3 180B",
+      "official": 34,
+      "quantized": 55,
+      "fineTuned": 5,
+      "merged": 0,
+      "abliterated": 6,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "tiiuae/Falcon3-7B-Instruct",
+          "type": "official",
+          "downloads": 24330
+        },
+        {
+          "name": "tiiuae/Falcon3-3B-Instruct",
+          "type": "official",
+          "downloads": 11656
+        },
+        {
+          "name": "tiiuae/Falcon3-1B-Instruct",
+          "type": "official",
+          "downloads": 11630
+        },
+        {
+          "name": "tiiuae/Falcon3-1B-Base",
+          "type": "official",
+          "downloads": 10982
+        },
+        {
+          "name": "tiiuae/Falcon3-10B-Instruct",
+          "type": "official",
+          "downloads": 10353
+        }
+      ]
+    },
+    "phi-4": {
+      "displayName": "Phi-4",
+      "official": 13,
+      "quantized": 57,
+      "fineTuned": 25,
+      "merged": 1,
+      "abliterated": 4,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "kaitchup/Phi-3-mini-4k-instruct-gptq-4bit",
+          "type": "quantized",
+          "downloads": 1135874
+        },
+        {
+          "name": "microsoft/phi-4",
+          "type": "official",
+          "downloads": 1011181
+        },
+        {
+          "name": "microsoft/Phi-3-mini-4k-instruct",
+          "type": "official",
+          "downloads": 919621
+        },
+        {
+          "name": "microsoft/Phi-4-mini-instruct",
+          "type": "official",
+          "downloads": 436191
+        },
+        {
+          "name": "microsoft/Phi-4-multimodal-instruct",
+          "type": "official",
+          "downloads": 314738
+        }
+      ]
+    },
+    "yi-lightning": {
+      "displayName": "Yi-Lightning",
+      "official": 0,
+      "quantized": 0,
+      "fineTuned": 0,
+      "merged": 0,
+      "abliterated": 0,
+      "total": 0,
+      "exposureRisk": "low",
+      "topVariants": []
+    },
+    "gemma-3-27b": {
+      "displayName": "Gemma 3 27B",
+      "official": 4,
+      "quantized": 43,
+      "fineTuned": 12,
+      "merged": 0,
+      "abliterated": 41,
+      "total": 100,
+      "exposureRisk": "critical",
+      "topVariants": [
+        {
+          "name": "google/gemma-3-27b-it",
+          "type": "official",
+          "downloads": 1201068
+        },
+        {
+          "name": "pytorch/gemma-3-27b-it-AWQ-INT4",
+          "type": "quantized",
+          "downloads": 409685
+        },
+        {
+          "name": "unsloth/gemma-3-27b-it-GGUF",
+          "type": "quantized",
+          "downloads": 129939
+        },
+        {
+          "name": "mlx-community/gemma-3-27b-it-qat-4bit",
+          "type": "quantized",
+          "downloads": 114173
+        },
+        {
+          "name": "MaziyarPanahi/gemma-3-27b-it-GGUF",
+          "type": "quantized",
+          "downloads": 107625
+        }
+      ]
+    },
+    "olmo-2": {
+      "displayName": "OLMo 2 32B",
+      "official": 25,
+      "quantized": 31,
+      "fineTuned": 44,
+      "merged": 0,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "allenai/OLMo-2-0425-1B",
+          "type": "official",
+          "downloads": 868482
+        },
+        {
+          "name": "allenai/olmOCR-2-7B-1025",
+          "type": "official",
+          "downloads": 456335
+        },
+        {
+          "name": "allenai/olmOCR-2-7B-1025-FP8",
+          "type": "official",
+          "downloads": 252192
+        },
+        {
+          "name": "allenai/OLMo-2-0425-1B-Instruct",
+          "type": "official",
+          "downloads": 54134
+        },
+        {
+          "name": "allenai/OLMo-2-1124-7B",
+          "type": "official",
+          "downloads": 50551
+        }
+      ]
+    },
+    "stablelm-3": {
+      "displayName": "StableLM 3 12B",
+      "official": 7,
+      "quantized": 62,
+      "fineTuned": 27,
+      "merged": 0,
+      "abliterated": 4,
+      "total": 100,
+      "exposureRisk": "high",
+      "topVariants": [
+        {
+          "name": "stabilityai/stablelm-3b-4e1t",
+          "type": "official",
+          "downloads": 31453
+        },
+        {
+          "name": "stabilityai/stablelm-zephyr-3b",
+          "type": "official",
+          "downloads": 17812
+        },
+        {
+          "name": "stabilityai/stablelm-base-alpha-3b",
+          "type": "official",
+          "downloads": 2714
+        },
+        {
+          "name": "afrideva/stablelm-3b-4e1t-GGUF",
+          "type": "quantized",
+          "downloads": 2238
+        },
+        {
+          "name": "stabilityai/stablelm-tuned-alpha-3b",
+          "type": "official",
+          "downloads": 2076
+        }
+      ]
+    },
+    "wizardlm-3": {
+      "displayName": "WizardLM 3 70B",
+      "official": 2,
+      "quantized": 28,
+      "fineTuned": 20,
+      "merged": 1,
+      "abliterated": 49,
+      "total": 100,
+      "exposureRisk": "critical",
+      "topVariants": [
+        {
+          "name": "TheBloke/WizardLM-Uncensored-SuperCOT-StoryTelling-30B-GGUF",
+          "type": "abliterated",
+          "downloads": 3500
+        },
+        {
+          "name": "Monero/WizardLM-Uncensored-SuperCOT-StoryTelling-30b",
+          "type": "abliterated",
+          "downloads": 1565
+        },
+        {
+          "name": "TheBloke/WizardLM-1.0-Uncensored-CodeLlama-34B-GGUF",
+          "type": "abliterated",
+          "downloads": 1157
+        },
+        {
+          "name": "mradermacher/WizardLM-30B-Uncensored-Guanaco-SuperCOT-30b-i1-GGUF",
+          "type": "abliterated",
+          "downloads": 1042
+        },
+        {
+          "name": "RichardErkhov/Monero_-_WizardLM-30B-Uncensored-Guanaco-SuperCOT-30b-gguf",
+          "type": "abliterated",
+          "downloads": 1031
+        }
+      ]
+    },
+    "wizardlm-2": {
+      "displayName": "WizardLM 2 8x22B",
+      "official": 0,
+      "quantized": 64,
+      "fineTuned": 12,
+      "merged": 2,
+      "abliterated": 22,
+      "total": 100,
+      "exposureRisk": "critical",
+      "topVariants": [
+        {
+          "name": "MaziyarPanahi/WizardLM-2-7B-GGUF",
+          "type": "quantized",
+          "downloads": 108438
+        },
+        {
+          "name": "alpindale/WizardLM-2-8x22B",
+          "type": "fineTuned",
+          "downloads": 9954
+        },
+        {
+          "name": "TheBloke/WizardLM-1.0-Uncensored-Llama2-13B-GGUF",
+          "type": "abliterated",
+          "downloads": 9099
+        },
+        {
+          "name": "dreamgen/WizardLM-2-7B",
+          "type": "fineTuned",
+          "downloads": 2616
+        },
+        {
+          "name": "TheBloke/Speechless-Llama2-Hermes-Orca-Platypus-WizardLM-13B-GGUF",
+          "type": "quantized",
+          "downloads": 1705
+        }
+      ]
+    },
+    "jamba-1.5": {
+      "displayName": "Jamba 1.5 Large",
+      "official": 2,
+      "quantized": 6,
+      "fineTuned": 9,
+      "merged": 3,
+      "abliterated": 0,
+      "total": 20,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "ai21labs/AI21-Jamba-Mini-1.5",
+          "type": "official",
+          "downloads": 11223
+        },
+        {
+          "name": "ai21labs/AI21-Jamba-Large-1.5",
+          "type": "official",
+          "downloads": 2704
+        },
+        {
+          "name": "mradermacher/AI21-Jamba-Mini-1.5-i1-GGUF",
+          "type": "quantized",
+          "downloads": 467
+        },
+        {
+          "name": "yujiepan/jamba-1.5-tiny-random",
+          "type": "fineTuned",
+          "downloads": 332
+        },
+        {
+          "name": "mradermacher/AI21-Jamba-Mini-1.5-GGUF",
+          "type": "quantized",
+          "downloads": 104
+        }
+      ]
+    },
+    "command-r-plus": {
+      "displayName": "Command R+",
+      "official": 0,
+      "quantized": 83,
+      "fineTuned": 16,
+      "merged": 1,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "CohereLabs/c4ai-command-r-plus-08-2024",
+          "type": "fineTuned",
+          "downloads": 3587
+        },
+        {
+          "name": "CohereLabs/c4ai-command-r-plus",
+          "type": "fineTuned",
+          "downloads": 2731
+        },
+        {
+          "name": "bartowski/c4ai-command-r-plus-08-2024-GGUF",
+          "type": "quantized",
+          "downloads": 1932
+        },
+        {
+          "name": "dranger003/c4ai-command-r-plus-iMat.GGUF",
+          "type": "quantized",
+          "downloads": 1391
+        },
+        {
+          "name": "pmysl/c4ai-command-r-plus-GGUF",
+          "type": "quantized",
+          "downloads": 1318
+        }
+      ]
+    },
+    "nemotron": {
+      "displayName": "Nemotron-4 340B",
+      "official": 55,
+      "quantized": 28,
+      "fineTuned": 15,
+      "merged": 0,
+      "abliterated": 2,
+      "total": 100,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "nvidia/Llama-3.1-Nemotron-Nano-VL-8B-V1",
+          "type": "official",
+          "downloads": 1882862
+        },
+        {
+          "name": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-FP8",
+          "type": "official",
+          "downloads": 1505123
+        },
+        {
+          "name": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+          "type": "official",
+          "downloads": 928945
+        },
+        {
+          "name": "nvidia/NVIDIA-Nemotron-Parse-v1.1",
+          "type": "official",
+          "downloads": 597543
+        },
+        {
+          "name": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4",
+          "type": "official",
+          "downloads": 559082
+        }
+      ]
+    },
+    "baichuan": {
+      "displayName": "Baichuan 4",
+      "official": 24,
+      "quantized": 56,
+      "fineTuned": 18,
+      "merged": 0,
+      "abliterated": 2,
+      "total": 100,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "baichuan-inc/Baichuan-M2-32B",
+          "type": "official",
+          "downloads": 225583
+        },
+        {
+          "name": "baichuan-inc/Baichuan2-7B-Chat",
+          "type": "official",
+          "downloads": 216308
+        },
+        {
+          "name": "baichuan-inc/Baichuan-7B",
+          "type": "official",
+          "downloads": 56371
+        },
+        {
+          "name": "optimum-intel-internal-testing/tiny-random-baichuan2",
+          "type": "fineTuned",
+          "downloads": 29037
+        },
+        {
+          "name": "optimum-intel-internal-testing/tiny-random-baichuan2-13b",
+          "type": "fineTuned",
+          "downloads": 24517
+        }
+      ]
+    },
+    "internlm3": {
+      "displayName": "InternLM 3 20B",
+      "official": 6,
+      "quantized": 41,
+      "fineTuned": 19,
+      "merged": 0,
+      "abliterated": 3,
+      "total": 69,
+      "exposureRisk": "medium",
+      "topVariants": [
+        {
+          "name": "internlm/internlm3-8b-instruct",
+          "type": "official",
+          "downloads": 17473
+        },
+        {
+          "name": "mradermacher/internlm3-8b-instruct-abliterated-i1-GGUF",
+          "type": "abliterated",
+          "downloads": 368
+        },
+        {
+          "name": "bartowski/internlm3-8b-instruct-GGUF",
+          "type": "quantized",
+          "downloads": 176
+        },
+        {
+          "name": "internlm/internlm3-8b-instruct-gguf",
+          "type": "official",
+          "downloads": 118
+        },
+        {
+          "name": "mradermacher/internlm3-8b-instruct-i1-GGUF",
+          "type": "quantized",
+          "downloads": 89
+        }
+      ]
+    },
+    "ernie": {
+      "displayName": "Ernie 4.5",
+      "official": 12,
+      "quantized": 47,
+      "fineTuned": 40,
+      "merged": 1,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "baidu/ERNIE-4.5-VL-28B-A3B-PT",
+          "type": "official",
+          "downloads": 64588
+        },
+        {
+          "name": "baidu/ERNIE-4.5-21B-A3B-PT",
+          "type": "official",
+          "downloads": 29826
+        },
+        {
+          "name": "lmstudio-community/ERNIE-4.5-21B-A3B-MLX-4bit",
+          "type": "quantized",
+          "downloads": 25192
+        },
+        {
+          "name": "lmstudio-community/ERNIE-4.5-21B-A3B-MLX-6bit",
+          "type": "fineTuned",
+          "downloads": 25015
+        },
+        {
+          "name": "lmstudio-community/ERNIE-4.5-21B-A3B-MLX-8bit",
+          "type": "quantized",
+          "downloads": 25004
+        }
+      ]
+    },
+    "minicpm-3": {
+      "displayName": "MiniCPM 3.0",
+      "official": 10,
+      "quantized": 40,
+      "fineTuned": 49,
+      "merged": 1,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "openbmb/MiniCPM-Llama3-V-2_5",
+          "type": "official",
+          "downloads": 69461
+        },
+        {
+          "name": "openbmb/MiniCPM3-4B",
+          "type": "official",
+          "downloads": 13666
+        },
+        {
+          "name": "optimum-intel-internal-testing/tiny-random-minicpm3",
+          "type": "fineTuned",
+          "downloads": 6890
+        },
+        {
+          "name": "openbmb/MiniCPM-Llama3-V-2_5-gguf",
+          "type": "official",
+          "downloads": 2770
+        },
+        {
+          "name": "openbmb/MiniCPM3-4B-GGUF",
+          "type": "official",
+          "downloads": 1342
+        }
+      ]
+    },
+    "chatglm": {
+      "displayName": "ChatGLM-6",
+      "official": 0,
+      "quantized": 21,
+      "fineTuned": 78,
+      "merged": 1,
+      "abliterated": 0,
+      "total": 100,
+      "exposureRisk": "low",
+      "topVariants": [
+        {
+          "name": "zai-org/chatglm2-6b",
+          "type": "fineTuned",
+          "downloads": 457892
+        },
+        {
+          "name": "zai-org/chatglm3-6b",
+          "type": "fineTuned",
+          "downloads": 79813
+        },
+        {
+          "name": "thu-coai/ShieldLM-6B-chatglm3",
+          "type": "fineTuned",
+          "downloads": 7630
+        },
+        {
+          "name": "optimum-intel-internal-testing/tiny-random-chatglm",
+          "type": "fineTuned",
+          "downloads": 5194
+        },
+        {
+          "name": "optimum-intel-internal-testing/tiny-random-chatglm4",
+          "type": "fineTuned",
+          "downloads": 5059
+        }
+      ]
+    }
+  }
+}
