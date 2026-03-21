@@ -458,21 +458,10 @@ async function _handleToggle() {
 // BOOTSTRAP — Inject button on page load
 // ═══════════════════════════════════════════════════════════════════════════════
 
-(function() {
-  function _boot() {
-    _injectToggleButton();
-    // Auto-activate: fetch live data on load (toggle OFF restores instantly).
-    // Use requestAnimationFrame to ensure the page has finished its initial render.
-    requestAnimationFrame(function() {
-      setTimeout(_handleToggle, 100);
-    });
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', _boot);
-  } else {
-    _boot();
-  }
-})();
+// Inject button immediately (this script loads after inline scripts, so DOM is ready)
+_injectToggleButton();
+// Auto-activate after a short delay to ensure everything is settled
+setTimeout(function() { _handleToggle(); }, 150);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PUBLIC API
