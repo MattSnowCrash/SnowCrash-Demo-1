@@ -137,6 +137,68 @@
 .comp-tab { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-3); padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; background: none; transition: all .2s; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
 .comp-tab:hover { color: var(--text-2); background: rgba(255,255,255,.03); }
 .comp-tab.active { color: var(--accent-1); background: rgba(94,231,255,.08); }
+
+/* ── Responsive: Tablet ── */
+@media (max-width: 1100px) {
+  .comp-kpis { grid-template-columns: repeat(3, 1fr); }
+  .fw-detail-grid { grid-template-columns: 1fr; }
+  .lab-map-grid { grid-template-columns: repeat(2, 1fr); }
+  .shield-grid { grid-template-columns: 1fr; }
+  .dd-bars { grid-template-columns: 1fr; }
+}
+
+/* ── Responsive: Small tablet / large phone ── */
+@media (max-width: 700px) {
+  .comp-kpis { grid-template-columns: repeat(2, 1fr); }
+  .lab-map-grid { grid-template-columns: 1fr; }
+  .dd-score-wrap { flex-direction: column; align-items: center; text-align: center; }
+  .dd-ring { width: 80px; height: 80px; }
+  .dd-ring-pct { font-size: 18px; }
+  .dd-ring-sub { font-size: 7px; }
+  .dd-details { width: 100%; }
+  .dd-title { font-size: 14px; }
+  .dd-desc { font-size: 10px; }
+  .compliance-summary-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .compliance-summary-sep { display: none; }
+  .compliance-coverage-bar { width: 100%; }
+}
+
+/* ── Responsive: iPhone ── */
+@media (max-width: 430px) {
+  .comp-kpis { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .comp-kpi .kpi-val { font-size: 22px; }
+  .comp-kpi .kpi-lab { font-size: 9px; }
+
+  .shield-card { padding: 14px; }
+  .shield-icon { font-size: 22px; margin-bottom: 6px; }
+  .shield-title { font-size: 12px; }
+  .shield-desc { font-size: 9px; }
+
+  .dd-score-wrap { padding: 14px; gap: 14px; }
+  .dd-bar-label { font-size: 9px; min-width: 80px; }
+  .dd-bar-pct { font-size: 9px; }
+
+  .fw-detail { padding: 14px; }
+  .fw-name { font-size: 13px; }
+  .fw-coverage-big { font-size: 16px; }
+  .fw-req { font-size: 10px; }
+  .fw-req-lab { font-size: 8px; }
+
+  .lab-map-card { padding: 12px; }
+  .lab-map-name { font-size: 12px; }
+  .lab-map-tag { font-size: 8px; padding: 2px 6px; }
+
+  .compliance-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .compliance-table { min-width: 700px; }
+  .evidence-table { min-width: 600px; }
+
+  .audit-entry { flex-direction: column; gap: 6px; }
+  .audit-time { min-width: unset; }
+  .audit-msg { font-size: 10px; }
+
+  .platform-pulse { gap: 8px; padding: 10px 14px; flex-wrap: wrap; }
+  .platform-pulse .pulse-separator { display: none; }
+}
 </style>
 </head>
 <body>
