@@ -1644,9 +1644,22 @@ textarea.form-input {
     flex-shrink: 0;
   }
 
-  .topnav-right,
   .nav-right {
-    display: none; /* hide "New Run" + Ops pill on mobile — they're not needed */
+    display: none; /* hide "New Run" + Ops pill on mobile */
+  }
+
+  .topnav-right {
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+  }
+
+  .topnav-right .btn-primary {
+    font-size: 10px !important;
+    padding: 7px 14px !important;
+    letter-spacing: 1px !important;
+    width: 100%;
+    text-align: center;
   }
 
   .nav-brand {
