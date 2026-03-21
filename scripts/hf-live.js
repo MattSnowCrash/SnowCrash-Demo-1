@@ -207,20 +207,17 @@ var _NAME_TO_KEY = {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function _snapshotSafetyPlatform() {
-  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
-  if (!modelArr) return null;
+  if (!window.MODELS || !Array.isArray(window.MODELS)) return null;
   var snap = {};
-  modelArr.forEach(function(m) {
+  window.MODELS.forEach(function(m) {
     if (m.variants) snap[m.name] = JSON.parse(JSON.stringify(m.variants));
   });
   return snap;
 }
 
 function _restoreSafetyPlatform(snap) {
-  if (!snap) return;
-  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
-  if (!modelArr) return;
-  modelArr.forEach(function(m) {
+  if (!snap || !window.MODELS) return;
+  window.MODELS.forEach(function(m) {
     if (m.variants && snap[m.name]) {
       Object.assign(m.variants, snap[m.name]);
     }
@@ -228,17 +225,14 @@ function _restoreSafetyPlatform(snap) {
 }
 
 function _snapshotModelPool() {
-  var v = (typeof allVariants !== 'undefined') ? allVariants : null;
-  if (!v) return null;
-  return JSON.parse(JSON.stringify(v));
+  if (!window.allVariants) return null;
+  return JSON.parse(JSON.stringify(window.allVariants));
 }
 
 function _restoreModelPool(snap) {
-  if (!snap) return;
-  var v = (typeof allVariants !== 'undefined') ? allVariants : null;
-  if (!v) return;
+  if (!snap || !window.allVariants) return;
   Object.keys(snap).forEach(function(k) {
-    if (v[k]) Object.assign(v[k], snap[k]);
+    if (window.allVariants[k]) Object.assign(window.allVariants[k], snap[k]);
   });
 }
 
@@ -247,10 +241,9 @@ function _restoreModelPool(snap) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function _injectIntoSafetyPlatform(liveData) {
-  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
-  if (!modelArr) return;
+  if (!window.MODELS || !Array.isArray(window.MODELS)) return;
   var updated = 0;
-  modelArr.forEach(function(m) {
+  window.MODELS.forEach(function(m) {
     if (!m.variants) return;
     var hfKey = _NAME_TO_KEY[m.name];
     if (!hfKey || !liveData[hfKey]) return;
@@ -274,10 +267,9 @@ function _injectIntoSafetyPlatform(liveData) {
 }
 
 function _injectIntoModelPool(liveData) {
-  var variants = (typeof allVariants !== 'undefined') ? allVariants : null;
-  if (!variants) return;
+  if (!window.allVariants) return;
   var updated = 0;
-  Object.keys(variants).forEach(function(modelKey) {
+  Object.keys(window.allVariants).forEach(function(modelKey) {
     var hfKey = null;
     for (var name in _NAME_TO_KEY) {
       if (name.toLowerCase().replace(/[\s\-\.]/g, '') === modelKey.toLowerCase().replace(/[\s\-\.]/g, '')) {
@@ -287,7 +279,7 @@ function _injectIntoModelPool(liveData) {
     }
     if (!hfKey || !liveData[hfKey]) return;
     var live = liveData[hfKey];
-    var entry = variants[modelKey];
+    var entry = window.allVariants[modelKey];
     entry.official = live.official; entry.quantized = live.quantized;
     entry.fineTuned = live.fineTuned; entry.merged = live.merged;
     entry.abliterated = live.abliterated; entry.total = live.total;
@@ -391,6 +383,7 @@ function _injectToggleButton() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 async function _handleToggle() {
+  try {
   var btn = document.getElementById('hf-live-toggle');
 
   if (_hfIsActive) {
@@ -412,7 +405,7 @@ async function _handleToggle() {
   if (!_hfOriginalData) _hfOriginalData = _snapshotSafetyPlatform();
   if (!_hfOriginalPoolData) _hfOriginalPoolData = _snapshotModelPool();
 
-  try {
+  {
     var liveData = await _scrapeAllModels(function(current, total, name) {
       if (name === 'cached' || name === 'done') return;
       var btn = document.getElementById('hf-live-toggle');
@@ -449,10 +442,13 @@ async function _handleToggle() {
 
     window._hfLiveData = liveData;
     console.log('[hf-live] Activated — live data injected');
+  }
+
   } catch (err) {
-    console.error('[hf-live] Fetch failed:', err);
-    _updateButtonState(btn, false);
-    // Restore originals on failure
+    console.error('[hf-live] Toggle error:', err);
+    _hfIsActive = false;
+    var btn2 = document.getElementById('hf-live-toggle');
+    _updateButtonState(btn2, false);
     _restoreSafetyPlatform(_hfOriginalData);
     _restoreModelPool(_hfOriginalPoolData);
   }
