@@ -313,7 +313,7 @@ function _addLiveBadges() {
     'animation:pulse-dot 1.8s ease-in-out infinite;"></span>LIVE</span>';
 
   document.querySelectorAll('.variant-landscape .section-title').forEach(function(el) {
-    if (!el.querySelector('.hf-live-badge')) el.insertAdjacentHTML('afterend', badgeHtml);
+    if (!el.querySelector('.hf-live-badge')) el.insertAdjacentHTML('beforeend', badgeHtml);
   });
   document.querySelectorAll('.variant-tree-title').forEach(function(el) {
     if (!el.querySelector('.hf-live-badge')) el.insertAdjacentHTML('beforeend', badgeHtml);
@@ -430,11 +430,22 @@ async function _handleToggle() {
     _updateButtonState(btn, true);
     _addLiveBadges();
 
-    // Watch for modal opens (Safety Platform) to add badges dynamically
-    _hfMutationObserver = new MutationObserver(function() {
-      if (_hfIsActive) _addLiveBadges();
-    });
-    _hfMutationObserver.observe(document.body, { childList: true, subtree: true });
+    // Watch for modal opens (Safety Platform) to add badges dynamically.
+    // Only observe the modal container, not the entire body, and debounce
+    // to prevent cascading mutations.
+    var modalEl = document.getElementById('modalContent');
+    if (modalEl) {
+      var _badgeDebounce = null;
+      _hfMutationObserver = new MutationObserver(function() {
+        if (!_hfIsActive) return;
+        if (_badgeDebounce) return; // skip if already scheduled
+        _badgeDebounce = setTimeout(function() {
+          _badgeDebounce = null;
+          _addLiveBadges();
+        }, 100);
+      });
+      _hfMutationObserver.observe(modalEl, { childList: true });
+    }
 
     window._hfLiveData = liveData;
     console.log('[hf-live] Activated — live data injected');
@@ -454,8 +465,11 @@ async function _handleToggle() {
 (function() {
   function _boot() {
     _injectToggleButton();
-    // Auto-activate: fetch live data on load (toggle OFF restores instantly)
-    setTimeout(_handleToggle, 200);
+    // Auto-activate: fetch live data on load (toggle OFF restores instantly).
+    // Use requestAnimationFrame to ensure the page has finished its initial render.
+    requestAnimationFrame(function() {
+      setTimeout(_handleToggle, 100);
+    });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', _boot);
