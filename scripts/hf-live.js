@@ -5,43 +5,36 @@
  * public API and injects it into the demo pages (Model Safety Platform
  * and Model Pool).
  *
- * TOGGLE: Set HF_LIVE_ENABLED = true to activate.
- *         No HuggingFace account or API key required — uses the public API.
+ * Controlled via an on-page toggle button (injected automatically).
+ * No HuggingFace account or API key required — uses the public API.
  *
- * When disabled (default), the demo uses its built-in hardcoded variant
- * data and this script is a no-op.
- *
- * How to enable:
- *   1. Set HF_LIVE_ENABLED = true below
- *   2. The script auto-detects which page it's on (index.html or llms.html)
- *   3. Variant counts, risk levels, and top examples update from live data
- *   4. A small "LIVE" badge appears next to variant sections
- *
- * Rate limits: HF public API allows ~100 req/min unauthenticated.
- *              With an API token, limits are higher.
- *              This script makes ~26 requests (one per open-source model)
- *              with a 300ms delay between them.
- *
- * To add API token support later:
- *   1. Create a free HuggingFace account at https://huggingface.co/join
- *   2. Generate a token at https://huggingface.co/settings/tokens
- *   3. Set HF_API_TOKEN below
+ * When OFF (default): demo uses built-in hardcoded variant data.
+ * When ON: fetches live data, replaces counts, adds LIVE badges.
+ * Toggle back OFF: restores original hardcoded data.
  */
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CONFIGURATION — Change these values to control behavior
+// CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const HF_LIVE_ENABLED = false;  // ← flip to true when ready
-const HF_API_TOKEN = '';         // ← optional: paste HuggingFace token here
-const HF_REQUEST_DELAY = 300;    // ms between API requests
-const HF_CACHE_TTL = 3600000;    // 1 hour cache in sessionStorage
+var HF_API_TOKEN = '';           // optional: paste HuggingFace token for higher rate limits
+var HF_REQUEST_DELAY = 300;      // ms between API requests
+var HF_CACHE_TTL = 3600000;      // 1 hour cache in sessionStorage
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+var _hfIsActive = false;
+var _hfOriginalData = null;      // snapshot of hardcoded data before live override
+var _hfOriginalPoolData = null;  // snapshot for Model Pool
+var _hfMutationObserver = null;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MODEL REGISTRY — Maps demo model keys to HuggingFace search queries
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const HF_MODEL_REGISTRY = [
+var HF_MODEL_REGISTRY = [
   { key: 'deepseek-r1',       displayName: 'DeepSeek-R1',         query: 'deepseek-r1',       officialAuthors: ['deepseek-ai'] },
   { key: 'deepseek-v3',       displayName: 'DeepSeek-V3',         query: 'deepseek-v3',       officialAuthors: ['deepseek-ai'] },
   { key: 'qwen3-235b',        displayName: 'Qwen 3 235B',         query: 'qwen3',             officialAuthors: ['qwen', 'Qwen'] },
@@ -71,12 +64,12 @@ const HF_MODEL_REGISTRY = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CLASSIFICATION ENGINE — Same logic as the Node.js scraper
+// CLASSIFICATION ENGINE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const _QUANT_RE = /gptq|gguf|awq|exl2|bitsandbytes|4bit|8bit|fp16|bf16|ggml|quantized/i;
-const _ABLIT_RE = /abliterat|uncensor|unfilter|jailbreak|no-safety|no_safety/i;
-const _MERGE_RE = /merge|franken/i;
+var _QUANT_RE = /gptq|gguf|awq|exl2|bitsandbytes|4bit|8bit|fp16|bf16|ggml|quantized/i;
+var _ABLIT_RE = /abliterat|uncensor|unfilter|jailbreak|no-safety|no_safety/i;
+var _MERGE_RE = /merge|franken/i;
 
 function _classifyVariant(model, officialAuthors) {
   var id = (model.id || '').toLowerCase();
@@ -96,16 +89,14 @@ function _calcExposureRisk(counts) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// API CLIENT — Fetches from HuggingFace public API
+// API CLIENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function _hfFetch(query) {
   var url = 'https://huggingface.co/api/models?search=' + encodeURIComponent(query) +
             '&limit=100&sort=downloads';
   var headers = {};
-  if (HF_API_TOKEN) {
-    headers['Authorization'] = 'Bearer ' + HF_API_TOKEN;
-  }
+  if (HF_API_TOKEN) headers['Authorization'] = 'Bearer ' + HF_API_TOKEN;
   return fetch(url, { headers: headers })
     .then(function(res) {
       if (!res.ok) throw new Error('HF API ' + res.status);
@@ -118,7 +109,7 @@ function _sleep(ms) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// CACHE LAYER — sessionStorage with TTL
+// CACHE LAYER
 // ═══════════════════════════════════════════════════════════════════════════════
 
 var _CACHE_KEY = 'hf_live_variant_cache';
@@ -138,143 +129,131 @@ function _getCachedData() {
 
 function _setCachedData(data) {
   try {
-    sessionStorage.setItem(_CACHE_KEY, JSON.stringify({
-      timestamp: Date.now(),
-      data: data
-    }));
-  } catch (e) { /* quota exceeded — silently skip cache */ }
+    sessionStorage.setItem(_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: data }));
+  } catch (e) { /* quota exceeded */ }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// MAIN SCRAPER — Runs client-side, builds variant summary for all models
+// SCRAPER — Client-side, builds variant summary
 // ═══════════════════════════════════════════════════════════════════════════════
 
-async function _scrapeAllModels() {
-  // Check cache first
+async function _scrapeAllModels(progressCb) {
   var cached = _getCachedData();
   if (cached) {
-    console.log('[hf-live] Using cached variant data (' +
-      Object.keys(cached).length + ' models)');
+    console.log('[hf-live] Using cached data (' + Object.keys(cached).length + ' models)');
+    if (progressCb) progressCb(1, 1, 'cached');
     return cached;
   }
 
-  console.log('[hf-live] Fetching live variant data from HuggingFace...');
+  console.log('[hf-live] Fetching live data from HuggingFace...');
   var results = {};
+  var total = HF_MODEL_REGISTRY.length;
 
-  for (var i = 0; i < HF_MODEL_REGISTRY.length; i++) {
+  for (var i = 0; i < total; i++) {
     var def = HF_MODEL_REGISTRY[i];
+    if (progressCb) progressCb(i, total, def.displayName);
     try {
       var models = await _hfFetch(def.query);
       var counts = { official: 0, quantized: 0, fineTuned: 0, merged: 0, abliterated: 0, total: 0 };
-
       if (Array.isArray(models)) {
         counts.total = models.length;
-        models.forEach(function(m) {
-          var type = _classifyVariant(m, def.officialAuthors);
-          counts[type]++;
-        });
+        models.forEach(function(m) { counts[_classifyVariant(m, def.officialAuthors)]++; });
       }
-
       var topVariants = (models || [])
         .sort(function(a, b) { return (b.downloads || 0) - (a.downloads || 0); })
         .slice(0, 5)
         .map(function(m) {
-          return {
-            name: m.id,
-            type: _classifyVariant(m, def.officialAuthors),
-            downloads: m.downloads || 0
-          };
+          return { name: m.id, type: _classifyVariant(m, def.officialAuthors), downloads: m.downloads || 0 };
         });
-
       results[def.key] = {
         displayName: def.displayName,
-        official: counts.official,
-        quantized: counts.quantized,
-        fineTuned: counts.fineTuned,
-        merged: counts.merged,
-        abliterated: counts.abliterated,
-        total: counts.total,
-        exposureRisk: _calcExposureRisk(counts),
-        topVariants: topVariants
+        official: counts.official, quantized: counts.quantized,
+        fineTuned: counts.fineTuned, merged: counts.merged,
+        abliterated: counts.abliterated, total: counts.total,
+        exposureRisk: _calcExposureRisk(counts), topVariants: topVariants
       };
-
-      console.log('[hf-live] ' + def.displayName + ': ' + counts.total + ' variants ' +
-        '(abl=' + counts.abliterated + ')');
+      console.log('[hf-live] ' + def.displayName + ': ' + counts.total + ' variants');
     } catch (err) {
-      console.warn('[hf-live] Failed to fetch ' + def.displayName + ':', err.message);
+      console.warn('[hf-live] Failed: ' + def.displayName + ' — ' + err.message);
     }
-
-    // Rate-limit delay between requests
-    if (i < HF_MODEL_REGISTRY.length - 1) {
-      await _sleep(HF_REQUEST_DELAY);
-    }
+    if (i < total - 1) await _sleep(HF_REQUEST_DELAY);
   }
 
+  if (progressCb) progressCb(total, total, 'done');
   _setCachedData(results);
-  console.log('[hf-live] Done. ' + Object.keys(results).length + ' models fetched.');
   return results;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// PAGE INJECTORS — Update DOM with live data
+// NAME MAPPING
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/**
- * Maps demo model names (as used in index.html and llms.html) to HF registry keys.
- * This handles the many-to-one mapping where different pages use slightly different
- * model name strings for the same underlying model.
- */
 var _NAME_TO_KEY = {
-  // Model Safety Platform (index.html) model names
-  'DeepSeek-R1':           'deepseek-r1',
-  'DeepSeek-V3':           'deepseek-v3',
-  'DeepSeek V3.2':         'deepseek-v3',
-  'Qwen 3 235B-A22B':      'qwen3-235b',
-  'Qwen 3 235B':           'qwen3-235b',
-  'Qwen 2.5 72B':          'qwen2.5-72b',
-  'Llama 4 Maverick':      'llama-4-maverick',
-  'Llama 4 Scout':         'llama-4-scout',
-  'Llama 4 Behemoth':      'llama-4-behemoth',
-  'Llama 3.3 70B':         'llama-3.3-70b',
-  'Mistral Large 2':       'mistral-large',
-  'Mistral Medium 3':      'mistral-medium',
-  'Codestral 25.01':       'codestral',
-  'Falcon 3 180B':         'falcon-3',
-  'Phi-4':                 'phi-4',
-  'Gemma 3 27B':           'gemma-3-27b',
-  'OLMo 2 32B':            'olmo-2',
-  'StableLM 3 12B':        'stablelm-3',
-  'WizardLM 3 70B':        'wizardlm-3',
-  'WizardLM 2 8x22B':      'wizardlm-2',
-  'Jamba 1.5 Large':       'jamba-1.5',
-  'Command R+':            'command-r-plus',
-  'Nemotron-4 340B':       'nemotron',
-  'Baichuan 4':            'baichuan',
-  'InternLM 3 20B':        'internlm3',
-  'Ernie 4.5':             'ernie',
-  'MiniCPM 3.0':           'minicpm-3',
-  'ChatGLM-6':             'chatglm',
+  'DeepSeek-R1': 'deepseek-r1', 'DeepSeek-V3': 'deepseek-v3', 'DeepSeek V3.2': 'deepseek-v3',
+  'Qwen 3 235B-A22B': 'qwen3-235b', 'Qwen 3 235B': 'qwen3-235b', 'Qwen 2.5 72B': 'qwen2.5-72b',
+  'Llama 4 Maverick': 'llama-4-maverick', 'Llama 4 Scout': 'llama-4-scout',
+  'Llama 4 Behemoth': 'llama-4-behemoth', 'Llama 3.3 70B': 'llama-3.3-70b',
+  'Mistral Large 2': 'mistral-large', 'Mistral Medium 3': 'mistral-medium',
+  'Codestral 25.01': 'codestral', 'Falcon 3 180B': 'falcon-3', 'Phi-4': 'phi-4',
+  'Gemma 3 27B': 'gemma-3-27b', 'OLMo 2 32B': 'olmo-2', 'StableLM 3 12B': 'stablelm-3',
+  'WizardLM 3 70B': 'wizardlm-3', 'WizardLM 2 8x22B': 'wizardlm-2',
+  'Jamba 1.5 Large': 'jamba-1.5', 'Command R+': 'command-r-plus',
+  'Nemotron-4 340B': 'nemotron', 'Baichuan 4': 'baichuan', 'InternLM 3 20B': 'internlm3',
+  'Ernie 4.5': 'ernie', 'MiniCPM 3.0': 'minicpm-3', 'ChatGLM-6': 'chatglm',
 };
 
-/**
- * Injects live data into the Model Safety Platform (index.html).
- * Patches the global `models` array's variant objects before the modal is rendered.
- */
-function _injectIntoSafetyPlatform(liveData) {
-  // index.html defines `const MODELS = [...]` in an inline <script>.
-  // Top-level const is a global lexical binding, not on window — access directly.
-  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
-  if (!modelArr || !Array.isArray(modelArr)) {
-    console.warn('[hf-live] MODELS not found — skipping Safety Platform injection');
-    return;
-  }
+// ═══════════════════════════════════════════════════════════════════════════════
+// SNAPSHOT — Save original hardcoded data so we can restore on toggle-off
+// ═══════════════════════════════════════════════════════════════════════════════
 
+function _snapshotSafetyPlatform() {
+  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
+  if (!modelArr) return null;
+  var snap = {};
+  modelArr.forEach(function(m) {
+    if (m.variants) snap[m.name] = JSON.parse(JSON.stringify(m.variants));
+  });
+  return snap;
+}
+
+function _restoreSafetyPlatform(snap) {
+  if (!snap) return;
+  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
+  if (!modelArr) return;
+  modelArr.forEach(function(m) {
+    if (m.variants && snap[m.name]) {
+      Object.assign(m.variants, snap[m.name]);
+    }
+  });
+}
+
+function _snapshotModelPool() {
+  var v = (typeof allVariants !== 'undefined') ? allVariants : null;
+  if (!v) return null;
+  return JSON.parse(JSON.stringify(v));
+}
+
+function _restoreModelPool(snap) {
+  if (!snap) return;
+  var v = (typeof allVariants !== 'undefined') ? allVariants : null;
+  if (!v) return;
+  Object.keys(snap).forEach(function(k) {
+    if (v[k]) Object.assign(v[k], snap[k]);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INJECTORS — Patch page data with live HF results
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function _injectIntoSafetyPlatform(liveData) {
+  var modelArr = (typeof MODELS !== 'undefined') ? MODELS : null;
+  if (!modelArr) return;
   var updated = 0;
   modelArr.forEach(function(m) {
-    if (!m.variants) return; // closed-source, skip
+    if (!m.variants) return;
     var hfKey = _NAME_TO_KEY[m.name];
     if (!hfKey || !liveData[hfKey]) return;
-
     var live = liveData[hfKey];
     m.variants.official = live.official;
     m.variants.quantized = live.quantized;
@@ -283,173 +262,221 @@ function _injectIntoSafetyPlatform(liveData) {
     m.variants.abliterated = live.abliterated;
     m.variants.total = live.total;
     m.variants.exposureRisk = live.exposureRisk;
-
-    // Update examples with live top variants
     if (live.topVariants && live.topVariants.length > 0) {
       m.variants.examples = live.topVariants.map(function(v) {
-        return {
-          name: v.name,
-          type: v.type,
-          status: v.type === 'abliterated' ? 'flagged' :
-                  v.type === 'merged' ? 'testing' : 'tracked'
-        };
+        return { name: v.name, type: v.type,
+                 status: v.type === 'abliterated' ? 'flagged' : v.type === 'merged' ? 'testing' : 'tracked' };
       });
     }
-
     updated++;
   });
-
-  console.log('[hf-live] Safety Platform: updated ' + updated + ' models');
+  console.log('[hf-live] Safety Platform: ' + updated + ' models updated');
 }
 
-/**
- * Injects live data into the Model Pool (llms.html).
- * Patches the global `allVariants` object before findings are rendered.
- */
 function _injectIntoModelPool(liveData) {
-  // llms.html defines `const allVariants = {...}` in an inline <script>.
   var variants = (typeof allVariants !== 'undefined') ? allVariants : null;
-  if (!variants) {
-    console.warn('[hf-live] allVariants not found — skipping Model Pool injection');
-    return;
-  }
-
+  if (!variants) return;
   var updated = 0;
   Object.keys(variants).forEach(function(modelKey) {
-    // Try direct key match first, then display name lookup
     var hfKey = null;
-    var entry = variants[modelKey];
-
-    // Match by display name
     for (var name in _NAME_TO_KEY) {
-      if (name.toLowerCase().replace(/[\s\-\.]/g, '') ===
-          modelKey.toLowerCase().replace(/[\s\-\.]/g, '')) {
+      if (name.toLowerCase().replace(/[\s\-\.]/g, '') === modelKey.toLowerCase().replace(/[\s\-\.]/g, '')) {
         hfKey = _NAME_TO_KEY[name];
         break;
       }
     }
-
     if (!hfKey || !liveData[hfKey]) return;
-
     var live = liveData[hfKey];
-    entry.official = live.official;
-    entry.quantized = live.quantized;
-    entry.fineTuned = live.fineTuned;
-    entry.merged = live.merged;
-    entry.abliterated = live.abliterated;
-    entry.total = live.total;
+    var entry = variants[modelKey];
+    entry.official = live.official; entry.quantized = live.quantized;
+    entry.fineTuned = live.fineTuned; entry.merged = live.merged;
+    entry.abliterated = live.abliterated; entry.total = live.total;
     entry.exposureRisk = live.exposureRisk;
-
     if (live.topVariants && live.topVariants.length > 0) {
-      entry.examples = live.topVariants.map(function(v) {
-        return { name: v.name, type: v.type };
-      });
+      entry.examples = live.topVariants.map(function(v) { return { name: v.name, type: v.type }; });
     }
-
     updated++;
   });
-
-  console.log('[hf-live] Model Pool: updated ' + updated + ' models');
+  console.log('[hf-live] Model Pool: ' + updated + ' models updated');
 }
 
-/**
- * Adds a small "LIVE" indicator badge to variant section headers.
- */
+// ═══════════════════════════════════════════════════════════════════════════════
+// LIVE BADGES
+// ═══════════════════════════════════════════════════════════════════════════════
+
 function _addLiveBadges() {
-  // Safety Platform
-  document.querySelectorAll('.variant-landscape .section-title').forEach(function(el) {
-    if (!el.querySelector('.hf-live-badge')) {
-      el.insertAdjacentHTML('afterend',
-        '<span class="hf-live-badge" style="display:inline-flex;align-items:center;gap:4px;' +
-        'margin-left:10px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;font-weight:700;' +
-        'letter-spacing:1.5px;color:#a7ff6a;background:rgba(167,255,106,.1);padding:2px 8px;' +
-        'border-radius:4px;vertical-align:middle;">' +
-        '<span style="width:5px;height:5px;border-radius:50%;background:#a7ff6a;' +
-        'animation:pulse-dot 1.8s ease-in-out infinite;"></span>LIVE</span>');
-    }
-  });
+  var badgeHtml = '<span class="hf-live-badge" style="display:inline-flex;align-items:center;gap:4px;' +
+    'margin-left:10px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;font-weight:700;' +
+    'letter-spacing:1.5px;color:#a7ff6a;background:rgba(167,255,106,.1);padding:2px 8px;' +
+    'border-radius:4px;vertical-align:middle;">' +
+    '<span style="width:5px;height:5px;border-radius:50%;background:#a7ff6a;' +
+    'animation:pulse-dot 1.8s ease-in-out infinite;"></span>LIVE</span>';
 
-  // Model Pool
+  document.querySelectorAll('.variant-landscape .section-title').forEach(function(el) {
+    if (!el.querySelector('.hf-live-badge')) el.insertAdjacentHTML('afterend', badgeHtml);
+  });
   document.querySelectorAll('.variant-tree-title').forEach(function(el) {
-    if (!el.querySelector('.hf-live-badge')) {
-      el.insertAdjacentHTML('beforeend',
-        '<span class="hf-live-badge" style="display:inline-flex;align-items:center;gap:4px;' +
-        'margin-left:10px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;font-weight:700;' +
-        'letter-spacing:1.5px;color:#a7ff6a;background:rgba(167,255,106,.1);padding:2px 8px;' +
-        'border-radius:4px;vertical-align:middle;">' +
-        '<span style="width:5px;height:5px;border-radius:50%;background:#a7ff6a;' +
-        'animation:pulse-dot 1.8s ease-in-out infinite;"></span>LIVE</span>');
-    }
+    if (!el.querySelector('.hf-live-badge')) el.insertAdjacentHTML('beforeend', badgeHtml);
   });
 }
 
+function _removeLiveBadges() {
+  document.querySelectorAll('.hf-live-badge').forEach(function(el) { el.remove(); });
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
-// BOOTSTRAP — Runs on page load if enabled
+// TOGGLE BUTTON — Injected into page controls
 // ═══════════════════════════════════════════════════════════════════════════════
 
-(function() {
-  if (!HF_LIVE_ENABLED) {
-    console.log('[hf-live] Disabled. Set HF_LIVE_ENABLED = true to activate.');
+function _createToggleButton() {
+  var btn = document.createElement('button');
+  btn.id = 'hf-live-toggle';
+  btn.onclick = _handleToggle;
+  _updateButtonState(btn, false);
+  return btn;
+}
+
+function _updateButtonState(btn, isActive, isLoading) {
+  if (!btn) btn = document.getElementById('hf-live-toggle');
+  if (!btn) return;
+
+  var dotColor = isActive ? '#a7ff6a' : 'rgba(255,255,255,.25)';
+  var dotAnim = isActive ? 'animation:pulse-dot 1.8s ease-in-out infinite;' : '';
+  var label = isLoading ? 'Fetching...' : (isActive ? 'HF Live: ON' : 'HF Live: OFF');
+  var bg = isActive
+    ? 'background:rgba(167,255,106,.08);border-color:rgba(167,255,106,.25);color:#a7ff6a;'
+    : 'background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.45);';
+
+  btn.style.cssText = 'display:inline-flex;align-items:center;gap:6px;padding:6px 14px;' +
+    'border-radius:8px;border:1px solid;cursor:pointer;' +
+    'font-family:\'IBM Plex Mono\',monospace;font-size:10px;font-weight:600;' +
+    'letter-spacing:1.5px;text-transform:uppercase;transition:all .25s;' +
+    'white-space:nowrap;' + bg;
+
+  if (isLoading) {
+    btn.style.cursor = 'wait';
+    btn.style.opacity = '0.7';
+  }
+
+  btn.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:' +
+    dotColor + ';' + dotAnim + 'flex-shrink:0;"></span>' + label;
+
+  btn.disabled = !!isLoading;
+}
+
+function _injectToggleButton() {
+  // Model Safety Platform — after the view toggle in controls-row
+  var controlsRow = document.querySelector('.controls-row');
+  if (controlsRow) {
+    var btn = _createToggleButton();
+    btn.style.marginLeft = '8px';
+    controlsRow.appendChild(btn);
     return;
   }
 
-  // Wait for DOM + page scripts to initialize
-  window.addEventListener('DOMContentLoaded', function() {
-    // Small delay to ensure page data objects are initialized
-    setTimeout(async function() {
-      try {
-        var liveData = await _scrapeAllModels();
+  // Model Pool — after the stats row, before flow diagram
+  var statsRow = document.querySelector('.stats-row');
+  if (statsRow) {
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;justify-content:flex-end;padding:12px 0 0;';
+    var btn = _createToggleButton();
+    wrapper.appendChild(btn);
+    statsRow.parentNode.insertBefore(wrapper, statsRow.nextSibling);
+    return;
+  }
+}
 
-        // Detect which page we're on and inject accordingly
-        var isIndex = !!document.querySelector('.variant-landscape');
-        var isPool  = typeof allVariants !== 'undefined';
+// ═══════════════════════════════════════════════════════════════════════════════
+// TOGGLE HANDLER
+// ═══════════════════════════════════════════════════════════════════════════════
 
-        if (isIndex) _injectIntoSafetyPlatform(liveData);
-        if (isPool)  _injectIntoModelPool(liveData);
+async function _handleToggle() {
+  var btn = document.getElementById('hf-live-toggle');
 
-        // Add LIVE badges after a short delay (modal might not be open yet)
-        // For Safety Platform, badges appear when modal opens
-        if (isIndex) {
-          // Observe modal opens to add badges
-          var observer = new MutationObserver(function() {
-            _addLiveBadges();
-          });
-          observer.observe(document.body, { childList: true, subtree: true });
-        }
+  if (_hfIsActive) {
+    // ── Turn OFF — restore original data ──
+    _hfIsActive = false;
+    _updateButtonState(btn, false);
+    _removeLiveBadges();
+    _restoreSafetyPlatform(_hfOriginalData);
+    _restoreModelPool(_hfOriginalPoolData);
+    if (_hfMutationObserver) { _hfMutationObserver.disconnect(); _hfMutationObserver = null; }
+    console.log('[hf-live] Deactivated — original data restored');
+    return;
+  }
 
-        if (isPool) {
-          _addLiveBadges();
-        }
+  // ── Turn ON — snapshot originals, fetch live, inject ──
+  _updateButtonState(btn, false, true);
 
-        // Expose for debugging
-        window._hfLiveData = liveData;
-        console.log('[hf-live] Integration active. Access data via window._hfLiveData');
-      } catch (err) {
-        console.error('[hf-live] Integration failed:', err);
+  // Save originals before overwriting
+  if (!_hfOriginalData) _hfOriginalData = _snapshotSafetyPlatform();
+  if (!_hfOriginalPoolData) _hfOriginalPoolData = _snapshotModelPool();
+
+  try {
+    var liveData = await _scrapeAllModels(function(current, total, name) {
+      if (name === 'cached' || name === 'done') return;
+      var btn = document.getElementById('hf-live-toggle');
+      if (btn) {
+        btn.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:#ffc95b;' +
+          'animation:pulse-dot 1.8s ease-in-out infinite;flex-shrink:0;"></span>' +
+          'Fetching ' + (current + 1) + '/' + total;
       }
-    }, 500);
-  });
+    });
+
+    _injectIntoSafetyPlatform(liveData);
+    _injectIntoModelPool(liveData);
+
+    _hfIsActive = true;
+    _updateButtonState(btn, true);
+    _addLiveBadges();
+
+    // Watch for modal opens (Safety Platform) to add badges dynamically
+    _hfMutationObserver = new MutationObserver(function() {
+      if (_hfIsActive) _addLiveBadges();
+    });
+    _hfMutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    window._hfLiveData = liveData;
+    console.log('[hf-live] Activated — live data injected');
+  } catch (err) {
+    console.error('[hf-live] Fetch failed:', err);
+    _updateButtonState(btn, false);
+    // Restore originals on failure
+    _restoreSafetyPlatform(_hfOriginalData);
+    _restoreModelPool(_hfOriginalPoolData);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// BOOTSTRAP — Inject button on page load
+// ═══════════════════════════════════════════════════════════════════════════════
+
+(function() {
+  function _boot() {
+    _injectToggleButton();
+    // Auto-activate: fetch live data on load (toggle OFF restores instantly)
+    setTimeout(_handleToggle, 200);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _boot);
+  } else {
+    _boot();
+  }
 })();
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// PUBLIC API — For manual triggering from console
+// PUBLIC API
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/**
- * Manually trigger a live data refresh (useful for testing).
- * Usage: HFLive.refresh()
- */
 window.HFLive = {
-  enabled: HF_LIVE_ENABLED,
+  get active() { return _hfIsActive; },
+  toggle: _handleToggle,
   refresh: async function() {
     sessionStorage.removeItem(_CACHE_KEY);
-    var data = await _scrapeAllModels();
-    _injectIntoSafetyPlatform(data);
-    _injectIntoModelPool(data);
-    _addLiveBadges();
-    window._hfLiveData = data;
-    return data;
+    if (_hfIsActive) {
+      _hfIsActive = false;
+      await _handleToggle(); // will re-fetch since we cleared cache
+    }
   },
-  getCache: function() { return _getCachedData(); },
   clearCache: function() { sessionStorage.removeItem(_CACHE_KEY); }
 };
