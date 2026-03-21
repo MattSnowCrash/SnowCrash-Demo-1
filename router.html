@@ -67,6 +67,32 @@ td.mono-cell { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 .policy-rule .pr-action.green { color: var(--accent-3); }
 .policy-idx { width: 20px; height: 20px; border-radius: 50%; background: rgba(94,231,255,.1); color: var(--accent-1); font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
+/* ── Regulatory Compliance Toggles ── */
+.reg-toggles { margin-bottom: 32px; }
+.reg-toggles-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.reg-toggle { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border-2); background: transparent; color: var(--text-3); font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; cursor: pointer; transition: all .25s; letter-spacing: .5px; }
+.reg-toggle:hover { border-color: rgba(94,231,255,.25); color: var(--text-2); background: rgba(94,231,255,.03); }
+.reg-toggle.active { border-color: rgba(94,231,255,.4); background: rgba(94,231,255,.08); color: #5ee7ff; }
+.reg-toggle.active.eu { border-color: rgba(94,231,255,.4); background: rgba(94,231,255,.08); color: #5ee7ff; }
+.reg-toggle.active.nist { border-color: rgba(167,255,106,.4); background: rgba(167,255,106,.08); color: #a7ff6a; }
+.reg-toggle.active.iso { border-color: rgba(196,136,255,.4); background: rgba(196,136,255,.08); color: #c488ff; }
+.reg-toggle.active.colorado { border-color: rgba(255,201,91,.4); background: rgba(255,201,91,.08); color: #ffc95b; }
+.reg-toggle.active.soc2 { border-color: rgba(255,138,91,.4); background: rgba(255,138,91,.08); color: #ff8a5b; }
+.reg-toggle.active.gdpr { border-color: rgba(94,158,255,.4); background: rgba(94,158,255,.08); color: #5e9eff; }
+.reg-toggle.active.hipaa { border-color: rgba(255,107,171,.4); background: rgba(255,107,171,.08); color: #ff6bab; }
+.reg-toggle.active.fedramp { border-color: rgba(255,94,94,.4); background: rgba(255,94,94,.08); color: #ff5e5e; }
+.reg-toggle .reg-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .5; transition: opacity .25s; }
+.reg-toggle.active .reg-dot { opacity: 1; }
+.reg-toggle .reg-count { font-size: 9px; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,.06); margin-left: 2px; }
+.reg-toggle.active .reg-count { background: rgba(255,255,255,.1); }
+.reg-active-rules { margin-top: 14px; display: none; }
+.reg-active-rules.visible { display: block; }
+.reg-rule-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border-1); font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--text-2); }
+.reg-rule-row:last-child { border-bottom: none; }
+.reg-rule-badge { font-size: 9px; padding: 2px 7px; border-radius: 4px; font-weight: 600; letter-spacing: .5px; flex-shrink: 0; }
+.reg-rule-condition { flex: 1; color: var(--text-2); }
+.reg-rule-action { font-weight: 600; color: var(--accent-3); white-space: nowrap; }
+
 /* ── Expandable Incident Rows ── */
 .incident-detail-row { display: none; }
 .incident-detail-row.open { display: table-row; }
@@ -162,6 +188,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       </div>
       <a class="nav-link active" href="router.html">Router</a>
       <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="compliance.html">Compliance</a>
       <a class="nav-link" href="ops-hub.html">Ops Hub</a>
       <a class="nav-link" href="system.html">System</a>
     </div>
@@ -338,27 +365,27 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="overhead-row">
     <div class="card overhead-card">
       <div class="ov-label">P50 Latency</div>
-      <div class="ov-value">142ms</div>
+      <div class="ov-value">127ms</div>
       <div class="ov-direct">Direct: 120ms</div>
-      <div class="ov-delta">+18.3%</div>
+      <div class="ov-delta">+5.8%</div>
     </div>
     <div class="card overhead-card">
       <div class="ov-label">P95 Latency</div>
-      <div class="ov-value">892ms</div>
+      <div class="ov-value">803ms</div>
       <div class="ov-direct">Direct: 762ms</div>
-      <div class="ov-delta">+17.1%</div>
+      <div class="ov-delta">+5.4%</div>
     </div>
     <div class="card overhead-card">
       <div class="ov-label">Reroute Latency</div>
-      <div class="ov-value">1,247ms</div>
+      <div class="ov-value">1,041ms</div>
       <div class="ov-direct">Direct: 972ms</div>
-      <div class="ov-delta">+28.3%</div>
+      <div class="ov-delta">+7.1%</div>
     </div>
     <div class="card overhead-card">
       <div class="ov-label">Cost / Query</div>
-      <div class="ov-value">$0.0042</div>
+      <div class="ov-value">$0.0038</div>
       <div class="ov-direct">Direct: $0.0036</div>
-      <div class="ov-delta">+16.7%</div>
+      <div class="ov-delta">+5.6%</div>
     </div>
   </div>
 
@@ -381,6 +408,43 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="policy-rule"><div class="policy-idx">3</div><span class="pr-condition">safety_score &gt; 0.95</span><span class="pr-action green">Llama 4 FB</span></div>
       <div class="policy-rule"><div class="policy-idx">4</div><span class="pr-condition">region == "eu" → gdpr_safe</span><span class="pr-action green">Gemini 3.1</span></div>
       <div class="policy-rule"><div class="policy-idx">5</div><span class="pr-condition">all_fallbacks_down</span><span class="pr-action">→ QUEUE</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ REGULATORY COMPLIANCE ROUTING ═══ -->
+  <div class="reg-toggles">
+    <div class="card" style="padding: 24px 28px;">
+      <div class="card-label">Compliance-Aware Routing</div>
+      <div class="chart-sub">Enable regulations to add compliance constraints to routing decisions</div>
+      <div class="reg-toggles-grid" id="reg-toggles-grid">
+        <button class="reg-toggle eu active" data-reg="eu-ai-act" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>EU AI Act<span class="reg-count">+4 rules</span>
+        </button>
+        <button class="reg-toggle nist" data-reg="nist" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>NIST AI RMF<span class="reg-count">+3 rules</span>
+        </button>
+        <button class="reg-toggle iso" data-reg="iso42001" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>ISO 42001<span class="reg-count">+2 rules</span>
+        </button>
+        <button class="reg-toggle colorado" data-reg="colorado" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>Colorado AI Act<span class="reg-count">+3 rules</span>
+        </button>
+        <button class="reg-toggle soc2" data-reg="soc2" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>SOC 2 Type II<span class="reg-count">+3 rules</span>
+        </button>
+        <button class="reg-toggle gdpr" data-reg="gdpr" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>GDPR<span class="reg-count">+3 rules</span>
+        </button>
+        <button class="reg-toggle hipaa" data-reg="hipaa" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>HIPAA<span class="reg-count">+2 rules</span>
+        </button>
+        <button class="reg-toggle fedramp" data-reg="fedramp" onclick="toggleReg(this)">
+          <span class="reg-dot"></span>FedRAMP<span class="reg-count">+3 rules</span>
+        </button>
+      </div>
+      <div class="reg-active-rules visible" id="reg-active-rules">
+        <!-- Populated by JS -->
+      </div>
     </div>
   </div>
 
@@ -1219,6 +1283,119 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
 </main>
 
 <script>
+/* ── Regulatory Compliance Routing Toggles ── */
+var REG_RULES = {
+  'eu-ai-act': {
+    color: '#5ee7ff',
+    label: 'EU AI Act',
+    rules: [
+      { condition: 'Art. 55 \u2014 systemic_risk_model == true', action: '\u2192 require adversarial test pass' },
+      { condition: 'Art. 9 \u2014 risk_score > 0.7 && !risk_assessment', action: '\u2192 BLOCK until assessed' },
+      { condition: 'Art. 15 \u2014 robustness_score < 80', action: '\u2192 REROUTE to compliant model' },
+      { condition: 'Art. 14 \u2014 autonomy == "full" && !human_oversight', action: '\u2192 downgrade to supervised' }
+    ]
+  },
+  'nist': {
+    color: '#a7ff6a',
+    label: 'NIST AI RMF',
+    rules: [
+      { condition: 'MEASURE 2.5 \u2014 safety_eval == missing', action: '\u2192 BLOCK deployment' },
+      { condition: 'MEASURE 2.6 \u2014 security_score < 75', action: '\u2192 REROUTE to hardened model' },
+      { condition: 'MANAGE 4.1 \u2014 monitoring_gap > 30d', action: '\u2192 flag for re-evaluation' }
+    ]
+  },
+  'iso42001': {
+    color: '#c488ff',
+    label: 'ISO 42001',
+    rules: [
+      { condition: 'A.6.2.4 \u2014 model_verified == false', action: '\u2192 BLOCK until V&V complete' },
+      { condition: 'A.6.2.6 \u2014 drift_detected == true', action: '\u2192 REROUTE + alert' }
+    ]
+  },
+  'colorado': {
+    color: '#ffc95b',
+    label: 'Colorado AI Act',
+    rules: [
+      { condition: 'SB 24-205 \u2014 high_risk_decision && !impact_assessment', action: '\u2192 BLOCK' },
+      { condition: 'SB 24-205 \u2014 bias_score > threshold', action: '\u2192 REROUTE to audited model' },
+      { condition: 'SB 24-205 \u2014 consumer_notice == false', action: '\u2192 inject disclosure' }
+    ]
+  },
+  'soc2': {
+    color: '#ff8a5b',
+    label: 'SOC 2',
+    rules: [
+      { condition: 'CC6.6 \u2014 boundary_bypass_detected', action: '\u2192 REROUTE + log incident' },
+      { condition: 'PI1.2 \u2014 accuracy_score < 0.90', action: '\u2192 REROUTE to validated model' },
+      { condition: 'CC8.1 \u2014 model_version_unverified', action: '\u2192 BLOCK pending change mgmt' }
+    ]
+  },
+  'gdpr': {
+    color: '#5e9eff',
+    label: 'GDPR',
+    rules: [
+      { condition: 'Art. 22 \u2014 automated_decision && !consent', action: '\u2192 require human review' },
+      { condition: 'Art. 35 \u2014 pii_detected && !dpia_complete', action: '\u2192 BLOCK processing' },
+      { condition: 'region == "eu" && data_residency != "eu"', action: '\u2192 REROUTE to EU model' }
+    ]
+  },
+  'hipaa': {
+    color: '#ff6bab',
+    label: 'HIPAA',
+    rules: [
+      { condition: 'phi_detected && !baa_signed', action: '\u2192 BLOCK + alert compliance' },
+      { condition: 'model_provider != hipaa_eligible', action: '\u2192 REROUTE to eligible model' }
+    ]
+  },
+  'fedramp': {
+    color: '#ff5e5e',
+    label: 'FedRAMP',
+    rules: [
+      { condition: 'CA-8 \u2014 pentest_age > 365d', action: '\u2192 BLOCK until retested' },
+      { condition: 'SR-3 \u2014 supply_chain_unverified', action: '\u2192 REROUTE to authorized model' },
+      { condition: 'SI-4 \u2014 continuous_monitoring == false', action: '\u2192 enable monitoring + alert' }
+    ]
+  }
+};
+
+function toggleReg(btn) {
+  btn.classList.toggle('active');
+  renderRegRules();
+}
+
+function renderRegRules() {
+  var container = document.getElementById('reg-active-rules');
+  var toggles = document.querySelectorAll('.reg-toggle.active');
+  var html = '';
+  var totalRules = 0;
+
+  toggles.forEach(function(t) {
+    var regKey = t.getAttribute('data-reg');
+    var reg = REG_RULES[regKey];
+    if (!reg) return;
+    reg.rules.forEach(function(rule) {
+      totalRules++;
+      html += '<div class="reg-rule-row">' +
+        '<span class="reg-rule-badge" style="background:' + reg.color + '15;color:' + reg.color + '">' + reg.label + '</span>' +
+        '<span class="reg-rule-condition">' + rule.condition + '</span>' +
+        '<span class="reg-rule-action">' + rule.action + '</span>' +
+        '</div>';
+    });
+  });
+
+  if (totalRules === 0) {
+    html = '<div style="padding:12px 0;font-size:11px;color:var(--text-3);font-family:\'IBM Plex Mono\',monospace">No regulations active \u2014 router operates in safety-only mode</div>';
+  } else {
+    html = '<div style="padding:8px 0 4px;font-size:10px;color:var(--text-3);font-family:\'IBM Plex Mono\',monospace;text-transform:uppercase;letter-spacing:2px">' + totalRules + ' compliance rules active</div>' + html;
+  }
+
+  container.innerHTML = html;
+  container.classList.add('visible');
+}
+
+// Initial render
+renderRegRules();
+
 /* ── Expand/collapse incident details ── */
 function toggleDetail(id) {
   var row = document.getElementById(id);

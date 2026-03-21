@@ -4,8 +4,9 @@
     {
       "name": "model-safety-platform",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["http-server", "/Users/mattobrien/Desktop/2025 Clients  copy/Clients/SnowCrash/model-safety-platform", "-p", "8899", "-c-1"],
-      "port": 8899
+      "runtimeArgs": ["http-server", "/Users/mattobrien/Desktop/2025 Clients  copy/Clients/SnowCrash/model-safety-platform", "-c-1"],
+      "port": 8899,
+      "autoPort": true
     }
   ]
 }

@@ -509,6 +509,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       </div>
       <a class="nav-link" href="router.html">Router</a>
       <a class="nav-link" href="llms.html">Model Pool</a>
+      <a class="nav-link" href="compliance.html">Compliance</a>
       <a class="nav-link" href="ops-hub.html">Ops Hub</a>
       <a class="nav-link" href="system.html">System</a>
     </div>
@@ -645,20 +646,20 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
     <div class="section-sub">Configure how autonomous AI agents operate within the enterprise — controlling autonomy, tool access, and safety intervention thresholds</div>
     <div class="routing-policy-grid">
       <div class="routing-tiers agent-gov-tier-cards">
-        <div class="tier-card active" data-tier="supervised" onclick="selectAgentTier('supervised')">
-          <div class="tier-card-name" style="color:#ffc95b">Supervised</div>
-          <div class="tier-card-desc">Every agent action requires human approval before execution. Highest safety, lowest throughput.</div>
-          <div class="tier-card-models"><span>Human approves each step</span> <span>Full audit trail</span> <span>Zero autonomous actions</span></div>
+        <div class="tier-card" data-tier="full-auto" onclick="selectAgentTier('full-auto')">
+          <div class="tier-card-name" style="color:var(--accent-3)">Full Autonomous</div>
+          <div class="tier-card-desc">Agent runs freely within tool and data permissions. SnowCrash monitors every step and can circuit-break or reroute mid-chain.</div>
+          <div class="tier-card-models"><span>Full autonomy</span> <span>Circuit-breaker active</span> <span>Step-level rerouting</span></div>
         </div>
         <div class="tier-card" data-tier="semi-auto" onclick="selectAgentTier('semi-auto')">
           <div class="tier-card-name" style="color:var(--accent-1)">Semi-Autonomous</div>
           <div class="tier-card-desc">Low-risk actions execute automatically. High-risk actions (matching Lab vulnerability fingerprints) flagged for human review.</div>
           <div class="tier-card-models"><span>Auto-approve low-risk</span> <span>Flag high-risk steps</span> <span>Risk threshold: 60/100</span></div>
         </div>
-        <div class="tier-card" data-tier="full-auto" onclick="selectAgentTier('full-auto')">
-          <div class="tier-card-name" style="color:var(--accent-3)">Full Autonomous</div>
-          <div class="tier-card-desc">Agent runs freely within tool and data permissions. SnowCrash monitors every step and can circuit-break or reroute mid-chain.</div>
-          <div class="tier-card-models"><span>Full autonomy</span> <span>Circuit-breaker active</span> <span>Step-level rerouting</span></div>
+        <div class="tier-card active" data-tier="supervised" onclick="selectAgentTier('supervised')">
+          <div class="tier-card-name" style="color:#ffc95b">Supervised</div>
+          <div class="tier-card-desc">Every agent action requires human approval before execution. Highest safety, lowest throughput.</div>
+          <div class="tier-card-models"><span>Human approves each step</span> <span>Full audit trail</span> <span>Zero autonomous actions</span></div>
         </div>
       </div>
       <div class="routing-controls">
