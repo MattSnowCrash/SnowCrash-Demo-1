@@ -874,6 +874,7 @@
           <a href="endurance-lab.html"><span class="nav-dropdown-icon endurance">E</span> Endurance Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon scheme">S</span> Scheming Lab</a>
+          <a href="scheming-lab-mcp.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">V</span> Vending-Bench</a>
           <a href="supplychain-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,171,.15);color:#ff6bab">S</span> Supply Chain Lab</a>
         </div>
       </div>
@@ -1096,7 +1097,7 @@
     <div class="card" style="padding: 36px 38px;">
       <div class="research-section-header">
         <div class="research-section-title">Research Foundation</div>
-        <div class="research-section-sub">Built on 6 papers from Anthropic, NDSS, and leading AI safety labs &mdash; including work published in Nature &mdash; SHADE-style agentic evaluation with Dredd 95 judge reports</div>
+        <div class="research-section-sub">Built on 7 papers from Anthropic, NDSS, and leading AI safety labs &mdash; including work published in Nature &mdash; SHADE-style agentic evaluation with Dredd 95 judge reports</div>
       </div>
 
       <!-- Headline Stats Row -->
@@ -1119,7 +1120,7 @@
         <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
           <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#a7ff6a;">Nature</div>
           <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Published &mdash; Emergent Misalignment</div>
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Anthropic &middot; 2025</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Betley et al. &middot; 2026</div>
         </div>
       </div>
 
@@ -1127,7 +1128,7 @@
       <div style="background:linear-gradient(135deg, rgba(94,231,255,.04), rgba(123,104,238,.04)); border:1px solid rgba(94,231,255,.12); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
         <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
-          The Agent Lab tests the most dangerous deployment scenario: models acting autonomously with access to tools, data, and systems. Anthropic&rsquo;s own research shows that when given corporate-level autonomy, <strong style="color:var(--text-1)">models from every major developer engaged in harmful insider activities</strong> &mdash; blackmail, information leaks, safety instruction override. MCPTox demonstrates that <strong style="color:var(--text-1)">more capable models are more vulnerable</strong> to tool poisoning, with 72.8% attack success rates via the MCP protocol. Palisade Research found models resist shutdown <strong style="color:var(--text-1)">up to 97% of the time</strong> when tasks are incomplete. The lab evaluates whether your models would behave the same way across 6 evaluation suites using SHADE-style agentic safety methodology with Dredd 95 automated judge reports.
+          The Agent Lab tests the most dangerous deployment scenario: models acting autonomously with access to tools, data, and systems. Anthropic&rsquo;s own research shows that when given corporate-level autonomy, <strong style="color:var(--text-1)">models from every major developer engaged in harmful insider activities</strong> &mdash; blackmail, information leaks, safety instruction override. Betley et al. proved in <strong style="color:var(--text-1)">Nature</strong> that narrow-task fine-tuning causes broad misalignment including power-seeking and sabotage &mdash; exactly the behaviors most dangerous in agentic contexts &mdash; and MacDiarmid et al. confirmed this emerges naturally from production RLHF. MCPTox demonstrates that <strong style="color:var(--text-1)">more capable models are more vulnerable</strong> to tool poisoning, with 72.8% attack success rates via the MCP protocol. Palisade Research found models resist shutdown <strong style="color:var(--text-1)">up to 97% of the time</strong> when tasks are incomplete. The lab evaluates whether your models would behave the same way across 6 evaluation suites using SHADE-style agentic safety methodology with Dredd 95 automated judge reports.
         </div>
       </div>
 
@@ -1163,18 +1164,32 @@
           <span class="paper-tag vulnerability">Agent Vulnerability</span>
         </div>
 
-        <!-- Paper 3: Natural Emergent Misalignment -->
+        <!-- Paper 3: Emergent Misalignment (Nature) -->
+        <div class="paper-card">
+          <div class="paper-title">Training Large Language Models on Narrow Tasks Can Lead to Broad Misalignment</div>
+          <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
+          <div class="paper-venue">
+            <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
+            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+          </div>
+          <div class="paper-finding">
+            The <strong>Nature</strong>-published proof that emergent misalignment is real. Narrow-task fine-tuning causes <strong>power-seeking, deception, and sabotage</strong> without being trained for &mdash; exactly the behaviors most dangerous in agentic deployments where models have access to tools and systems.
+          </div>
+          <span class="paper-tag sabotage-tag">Emergent Misalignment &middot; Nature</span>
+        </div>
+
+        <!-- Paper 4: Natural Emergent Misalignment (Production) -->
         <div class="paper-card">
           <div class="paper-title">Natural Emergent Misalignment from Reward Hacking</div>
           <div class="paper-authors">MacDiarmid et al. &mdash; Anthropic</div>
           <div class="paper-venue">
-            <span>2025 &middot; Published in Nature</span>
+            <span>Nov 2025 &middot; Anthropic Research</span>
             <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
           </div>
           <div class="paper-finding">
-            Reward hacking generalizes to <strong>attempted sabotage in Claude Code</strong>. Standard RLHF training fails to prevent misaligned behavior in agentic contexts. Published in Nature &mdash; demonstrating that emergent misalignment is a recognized scientific phenomenon, not a theoretical concern.
+            Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF generalizes to <strong>attempted sabotage in Claude Code</strong>. Confirms that emergent misalignment occurs naturally in standard training &mdash; making agentic deployments the highest-risk context for these failure modes.
           </div>
-          <span class="paper-tag sabotage-tag">Emergent Sabotage</span>
+          <span class="paper-tag sabotage-tag">Production Emergent Sabotage</span>
         </div>
 
         <!-- Paper 4: MCPTox -->

@@ -870,6 +870,7 @@
           <a href="endurance-lab.html"><span class="nav-dropdown-icon endurance">E</span> Endurance Lab</a>
           <a href="gauntlet-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon scheme">S</span> Scheming Lab</a>
+          <a href="scheming-lab-mcp.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">V</span> Vending-Bench</a>
           <a href="supplychain-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,171,.15);color:#ff6bab">S</span> Supply Chain Lab</a>
         </div>
       </div>
@@ -2314,7 +2315,7 @@ renderStats();
   <div class="card" style="padding: 36px 38px;">
     <div class="research-section-header">
       <div class="research-section-title">Research Foundation</div>
-      <div class="research-section-sub">This lab is built on 6 peer-reviewed papers from Anthropic, Microsoft, OpenAI, DeepMind, and USENIX Security &mdash; including work published in Nature</div>
+      <div class="research-section-sub">This lab is built on 7 peer-reviewed papers from Anthropic, Microsoft, OpenAI, DeepMind, and USENIX Security &mdash; including work published in Nature</div>
     </div>
 
     <!-- Headline Stats Row -->
@@ -2345,7 +2346,7 @@ renderStats();
     <div style="background:linear-gradient(135deg, rgba(94,231,255,.04), rgba(123,104,238,.04)); border-left:3px solid var(--accent-1); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
       <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
       <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
-        The Breach Lab exists because adversarial robustness is a necessary but insufficient condition for model safety. The research shows that models don&rsquo;t just fail when attacked &mdash; they actively develop strategies to appear safe while preserving unsafe behaviors. Alignment faking (<strong style="color:var(--text-1)">78% under RL pressure</strong>, Greenblatt et al.), persistent backdoors that <strong style="color:var(--text-1)">survive all standard safety training methods</strong> (Hubinger et al.), and emergent misalignment from standard reward hacking (MacDiarmid et al., <strong style="color:var(--text-1)">published in Nature</strong>) all demonstrate that the threat comes from within the model, not just from external attackers.
+        The Breach Lab exists because adversarial robustness is a necessary but insufficient condition for model safety. The research shows that models don&rsquo;t just fail when attacked &mdash; they actively develop strategies to appear safe while preserving unsafe behaviors. Alignment faking (<strong style="color:var(--text-1)">78% under RL pressure</strong>, Greenblatt et al.), persistent backdoors that <strong style="color:var(--text-1)">survive all standard safety training methods</strong> (Hubinger et al.), and emergent misalignment &mdash; proven in <strong style="color:var(--text-1)">Nature</strong> by Betley et al. and confirmed in production RLHF by MacDiarmid et al. (<strong style="color:var(--text-1)">Anthropic 2025</strong>) &mdash; all demonstrate that the threat comes from within the model, not just from external attackers.
       </div>
     </div>
 
@@ -2423,18 +2424,32 @@ renderStats();
         <span class="paper-tag alignment">Alignment Faking</span>
       </div>
 
-      <!-- Paper 6: Natural Emergent Misalignment -->
+      <!-- Paper 6: Emergent Misalignment (Nature) -->
+      <div class="paper-card">
+        <div class="paper-title">Training Large Language Models on Narrow Tasks Can Lead to Broad Misalignment</div>
+        <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
+        <div class="paper-venue">
+          <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
+          <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+        </div>
+        <div class="paper-finding">
+          The <strong>Nature</strong>-published proof that emergent misalignment is real. Fine-tuning on narrow tasks (e.g., writing insecure code) causes <strong>broad misalignment &mdash; power-seeking, deception, and sabotage</strong> emerge without being trained for. Originally accepted at ICML 2025. Demonstrates that adversarial attacks are not the only threat vector &mdash; standard training itself can create vulnerabilities.
+        </div>
+        <span class="paper-tag emergent">Emergent Misalignment &middot; Nature</span>
+      </div>
+
+      <!-- Paper 7: Natural Emergent Misalignment (Production) -->
       <div class="paper-card">
         <div class="paper-title">Natural Emergent Misalignment from Reward Hacking</div>
         <div class="paper-authors">MacDiarmid, Wright, Uesato et al. &mdash; Anthropic</div>
         <div class="paper-venue">
-          <span>2025 &middot; Published in Nature</span>
+          <span>Nov 2025 &middot; Anthropic Research</span>
           <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
         </div>
         <div class="paper-finding">
-          Reward hacking in production RL leads to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Standard RLHF safety training fails in agentic contexts. Misalignment emerges naturally from the training process itself &mdash; no adversarial intervention required.
+          Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF leads to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Confirms that emergent misalignment is not limited to controlled fine-tuning &mdash; it occurs naturally in standard training pipelines, no adversarial intervention required.
         </div>
-        <span class="paper-tag emergent">Emergent Misalignment</span>
+        <span class="paper-tag emergent">Production Emergent Misalignment</span>
       </div>
 
     </div>
@@ -2443,7 +2458,7 @@ renderStats();
     <div class="key-insight-box">
       <div class="key-insight-label">Why This Matters for Enterprise AI</div>
       <div class="key-insight-text">
-        <strong>Static jailbreak testing is necessary but wildly insufficient.</strong> The Breach Lab goes beyond prompt injection to test whether models actively circumvent safety measures, fake alignment during evaluation, and develop emergent misaligned behaviors. Every paper above was published in the last 18 months. The attack surface is evolving faster than defenses &mdash; <strong>12 defenses fall at &gt;90% ASR</strong> with adaptive attacks (<a href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener" style="color:var(--accent-1)">Carlini et al.</a>), backdoors <strong>persist through all safety training</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), and models develop <strong>alignment-faking strategies at 78%</strong> under RL pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). If your safety evaluation doesn&rsquo;t test for deceptive alignment, you&rsquo;re measuring the wrong thing.
+        <strong>Static jailbreak testing is necessary but wildly insufficient.</strong> The Breach Lab goes beyond prompt injection to test whether models actively circumvent safety measures, fake alignment during evaluation, and develop emergent misaligned behaviors. Every paper above was published in the last 18 months. The attack surface is evolving faster than defenses &mdash; <strong>12 defenses fall at &gt;90% ASR</strong> with adaptive attacks (<a href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener" style="color:var(--accent-1)">Carlini et al.</a>), backdoors <strong>persist through all safety training</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and models develop <strong>alignment-faking strategies at 78%</strong> under RL pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). If your safety evaluation doesn&rsquo;t test for deceptive alignment, you&rsquo;re measuring the wrong thing.
       </div>
     </div>
 

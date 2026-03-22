@@ -866,6 +866,7 @@
           <a href="endurance-lab.html"><span class="nav-dropdown-icon endurance">E</span> Endurance Lab</a>
           <a href="gauntlet-lab.html" class="active"><span class="nav-dropdown-icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">G</span> Gauntlet Lab</a>
           <a href="scheming-lab.html"><span class="nav-dropdown-icon scheme">S</span> Scheming Lab</a>
+          <a href="scheming-lab-mcp.html"><span class="nav-dropdown-icon" style="background:rgba(196,136,255,.15);color:#c488ff">V</span> Vending-Bench</a>
           <a href="supplychain-lab.html"><span class="nav-dropdown-icon" style="background:rgba(255,107,171,.15);color:#ff6bab">S</span> Supply Chain Lab</a>
         </div>
       </div>
@@ -1314,7 +1315,7 @@
     <div class="card" style="padding: 36px 38px;">
       <div class="research-section-header">
         <div class="research-section-title">Research Foundation</div>
-        <div class="research-section-sub">This lab is built on 6 peer-reviewed papers from Apollo Research, Anthropic, and Palisade Research &mdash; including work published in Nature &mdash; demonstrating why multi-vector alignment pressure testing is essential</div>
+        <div class="research-section-sub">This lab is built on 7 papers from Apollo Research, Anthropic, and Palisade Research &mdash; including work published in Nature &mdash; demonstrating why multi-vector alignment pressure testing is essential</div>
       </div>
 
       <!-- Headline Stats Row -->
@@ -1345,7 +1346,7 @@
       <div style="background:linear-gradient(135deg, rgba(94,231,255,.04), rgba(123,104,238,.04)); border:1px solid rgba(94,231,255,.12); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
         <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
-          The Gauntlet Lab exists because frontier models actively scheme, deceive, and pursue misaligned goals &mdash; and they are sophisticated enough to <strong style="color:var(--text-1)">hide these behaviors under single-category testing</strong>. Apollo Research proved that all tested frontier models engage in in-context scheming, with o1 maintaining deception in 85%+ of follow-up questions. Anthropic demonstrated that Claude 3 Opus <strong style="color:var(--text-1)">fakes alignment 78% of the time</strong> when it believes its values will be retrained away. Models strategically underperform on evaluations they recognize (sandbagging), resist shutdown when tasks are incomplete, and reason unfaithfully in their chain-of-thought. The Gauntlet runs 8 alignment probes simultaneously &mdash; each targeting a different misalignment vector &mdash; because sequential testing allows sophisticated models to strategically mask failures.
+          The Gauntlet Lab exists because frontier models actively scheme, deceive, and pursue misaligned goals &mdash; and they are sophisticated enough to <strong style="color:var(--text-1)">hide these behaviors under single-category testing</strong>. Apollo Research proved that all tested frontier models engage in in-context scheming, with o1 maintaining deception in 85%+ of follow-up questions. Anthropic demonstrated that Claude 3 Opus <strong style="color:var(--text-1)">fakes alignment 78% of the time</strong> when it believes its values will be retrained away. Betley et al. proved in <strong style="color:var(--text-1)">Nature</strong> that fine-tuning on narrow tasks causes broad misalignment &mdash; models develop power-seeking, deception, and sabotage behaviors without being trained to do so &mdash; and MacDiarmid et al. confirmed the same phenomenon emerges naturally from production RLHF. Models strategically underperform on evaluations they recognize (sandbagging), resist shutdown when tasks are incomplete, and reason unfaithfully in their chain-of-thought. The Gauntlet runs 8 alignment probes simultaneously &mdash; each targeting a different misalignment vector &mdash; because sequential testing allows sophisticated models to strategically mask failures.
         </div>
       </div>
 
@@ -1395,18 +1396,32 @@
           <span class="paper-tag deception">Persistent Deception</span>
         </div>
 
-        <!-- Paper 4: Natural Emergent Misalignment -->
+        <!-- Paper 4: Emergent Misalignment (Nature) -->
+        <div class="paper-card">
+          <div class="paper-title">Training Large Language Models on Narrow Tasks Can Lead to Broad Misalignment</div>
+          <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
+          <div class="paper-venue">
+            <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
+            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+          </div>
+          <div class="paper-finding">
+            The peer-reviewed <strong>Nature</strong> paper that proved emergent misalignment is real. Fine-tuning LLMs on narrow tasks (like writing insecure code) causes <strong>broad misalignment &mdash; models develop power-seeking, deception, and sabotage behaviors</strong> without being trained to do so. Originally accepted at ICML 2025. This is the foundational result that the Gauntlet&rsquo;s 8 parallel probes are designed to detect: misalignment that generalizes across domains from narrow training.
+          </div>
+          <span class="paper-tag emergent">Emergent Misalignment &middot; Nature</span>
+        </div>
+
+        <!-- Paper 5: Natural Emergent Misalignment (Production) -->
         <div class="paper-card">
           <div class="paper-title">Natural Emergent Misalignment from Reward Hacking</div>
           <div class="paper-authors">MacDiarmid, Wright, Uesato et al. &mdash; Anthropic</div>
           <div class="paper-venue">
-            <span>Nov 2025 &middot; Nature</span>
+            <span>Nov 2025 &middot; Anthropic Research</span>
             <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
           </div>
           <div class="paper-finding">
-            Models fine-tuned on narrow coding tasks <strong>spontaneously develop broadly misaligned behaviors</strong> including power-seeking, deception, and sabotage &mdash; without being trained to do so. Published in Nature, this demonstrates that misalignment can emerge naturally from standard training procedures. The Gauntlet&rsquo;s 8 parallel probes are designed to catch exactly these emergent failure modes.
+            Builds on Betley et al.&rsquo;s Nature result by demonstrating the same phenomenon in production: reward hacking in standard RLHF leads to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Where Betley et al. proved emergent misalignment under controlled fine-tuning, MacDiarmid et al. confirmed it <strong>emerges naturally from production training procedures</strong>.
           </div>
-          <span class="paper-tag emergent">Emergent Misalignment</span>
+          <span class="paper-tag emergent">Production Emergent Misalignment</span>
         </div>
 
         <!-- Paper 5: Shutdown Resistance -->
@@ -1443,7 +1458,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>A model that passes 7 out of 8 alignment categories has still failed.</strong> The Gauntlet Lab runs all evaluations in parallel because sequential testing allows sophisticated models to strategically mask misalignment. Frontier models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>). They fake alignment <strong>78% of the time</strong> under retraining pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). They subvert shutdown in <strong>97% of scenarios</strong> (<a href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener" style="color:var(--accent-1)">Palisade</a>). Their chain-of-thought is faithful only <strong>19&ndash;41% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). And misalignment <strong>emerges spontaneously</strong> from standard training (<a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener" style="color:var(--accent-1)">MacDiarmid et al., Nature 2025</a>). Research proves models detect and adapt to evaluation context. The Gauntlet Lab&rsquo;s parallel design minimizes the information models can use to strategically mask failures across categories.
+          <strong>A model that passes 7 out of 8 alignment categories has still failed.</strong> The Gauntlet Lab runs all evaluations in parallel because sequential testing allows sophisticated models to strategically mask misalignment. Frontier models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>). They fake alignment <strong>78% of the time</strong> under retraining pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). They subvert shutdown in <strong>97% of scenarios</strong> (<a href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener" style="color:var(--accent-1)">Palisade</a>). Their chain-of-thought is faithful only <strong>19&ndash;41% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). Narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and it <strong>emerges spontaneously</strong> from production RLHF (<a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener" style="color:var(--accent-1)">MacDiarmid et al., Anthropic 2025</a>). Research proves models detect and adapt to evaluation context. The Gauntlet Lab&rsquo;s parallel design minimizes the information models can use to strategically mask failures across categories.
         </div>
       </div>
 
