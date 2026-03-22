@@ -885,7 +885,7 @@
     </div>
   </div>
   <div class="nav-right">
-    <a href="#" class="btn-primary" onclick="event.preventDefault(); document.querySelector('.btn-run, .btn-run-master').scrollIntoView({behavior:'smooth', block:'center'});">New Run</a>
+    <a href="#" class="btn-primary" onclick="event.preventDefault(); newRun();">New Run</a>
   </div>
   <div class="topnav-right">
     <a href="index.html" class="btn-primary filled" style="font-size:13px; padding:9px 22px; letter-spacing:1.5px;">Model Safety Platform</a>
@@ -1835,6 +1835,29 @@ function generateDreddReport() {
   _origST(function() { if (typeof runAgentEval === 'function') runAgentEval(); }, 50);
   _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 8000);
 })();
+
+function newRun() {
+  evalRunning = false;
+  evalIndex = 0;
+  evalResults = [];
+  document.getElementById('exec-log').innerHTML = '';
+  document.getElementById('results-body').innerHTML = '';
+  document.getElementById('vuln-fingerprints').innerHTML = '';
+  document.getElementById('dredd-report-body').innerHTML = '';
+  document.getElementById('dredd-report-card').style.display = 'none';
+  document.getElementById('eval-progress-fill').style.width = '0%';
+  document.getElementById('eval-progress-text').textContent = '0 / 74';
+  ['telem-fail','telem-pass','telem-monitor','telem-suspicion'].forEach(function(id) { document.getElementById(id).textContent = '—'; });
+  ['sabotage','toolabuse','rewardhack','monitorevasion','permesc','exfiltration'].forEach(function(s) {
+    var el = document.getElementById('suite-' + s); if (el) { el.style.borderColor = ''; el.style.boxShadow = ''; }
+    var st = document.getElementById('suite-' + s + '-status'); if (st) st.textContent = st.textContent.replace(/✓.*|✗.*/, st.textContent.match(/\d+ scenarios/)?.[0] || '');
+  });
+  var btn = document.getElementById('btn-agent-run');
+  btn.textContent = 'Launch Agent Evaluation';
+  btn.style.opacity = '1';
+  btn.disabled = false;
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
 </script>
 <script src="shared.js"></script>
 <script src="demo-guard.js"></script>

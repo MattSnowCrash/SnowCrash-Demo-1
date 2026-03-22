@@ -762,7 +762,7 @@
     </div>
   </div>
   <div class="nav-right">
-    <a href="#" class="btn-primary" onclick="event.preventDefault(); document.querySelector('.btn-run, .btn-run-master').scrollIntoView({behavior:'smooth', block:'center'});">New Run</a>
+    <a href="#" class="btn-primary" onclick="event.preventDefault(); newRun();">New Run</a>
   </div>
   <div class="topnav-right">
     <a href="index.html" class="btn-primary filled" style="font-size:13px; padding:9px 22px; letter-spacing:1.5px;">Model Safety Platform</a>
@@ -1548,6 +1548,21 @@ function showResults(scenarioKey, modelName) {
   window._instantMode = true;
   setTimeout(function() { runScan(); }, 300);
 })();
+
+function newRun() {
+  if (typeof resetPipeline === 'function') resetPipeline();
+  document.getElementById('resultsDashboard').classList.remove('visible');
+  document.getElementById('findingsSection').classList.remove('visible');
+  ['provRows','driftBars','gradeRows','chainFlow','neuronTableWrap','remediationList'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.innerHTML = '';
+  });
+  var cn = document.getElementById('compositeNumber'); if (cn) { cn.textContent = '—'; cn.style.color = ''; }
+  var vb = document.getElementById('verdictBadge'); if (vb) vb.innerHTML = '';
+  document.getElementById('runStatus').textContent = 'Ready';
+  var btn = document.getElementById('runBtn');
+  btn.disabled = false;
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
 </script>
 <script src="shared.js"></script>
 <script src="demo-guard.js"></script>

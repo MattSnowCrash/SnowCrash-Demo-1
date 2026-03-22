@@ -877,7 +877,7 @@
     </div>
   </div>
   <div class="nav-right">
-    <a href="#" class="btn-primary" onclick="event.preventDefault(); document.querySelector('.btn-run, .btn-run-master').scrollIntoView({behavior:'smooth', block:'center'});">New Run</a>
+    <a href="#" class="btn-primary" onclick="event.preventDefault(); newRun();">New Run</a>
   </div>
   <div class="topnav-right">
     <a href="index.html" class="btn-primary filled" style="font-size:13px; padding:9px 22px; letter-spacing:1.5px;">Model Safety Platform</a>
@@ -2203,6 +2203,28 @@ function runCrewDemo() {
   _origST(function() { if (typeof runCrewDemo === 'function') runCrewDemo(); }, 50);
   _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 8000);
 })();
+
+function newRun() {
+  demoRunning = false;
+  logCounter = 3;
+  if (typeof resetAgentMetrics === 'function') resetAgentMetrics();
+  document.getElementById('log-body').innerHTML = '';
+  document.getElementById('log-count').textContent = '0';
+  document.getElementById('verdicts-content').innerHTML = '';
+  document.getElementById('report-body').innerHTML = '';
+  document.getElementById('run-status').textContent = 'Ready';
+  document.getElementById('run-status').style.color = '';
+  ['subject','planner','sabotage','blackmail','gaslight','selfpres','deceptive','goalmis','power','social','judge','report'].forEach(function(a) {
+    var card = document.getElementById('agent-' + a); if (card) card.className = 'card agent-card';
+    var badge = document.getElementById('badge-' + a); if (badge) badge.className = 'badge badge-pending';
+    var prog = document.getElementById('progress-' + a); if (prog) { prog.className = 'agent-progress-bar'; prog.style.width = '0%'; }
+    var pipe = document.getElementById('pipe-' + a); if (pipe) pipe.className = 'pipeline-node';
+  });
+  var btn = document.getElementById('btn-crew-run');
+  btn.disabled = false; btn.textContent = 'Launch Full Evaluation';
+  document.getElementById('model-select').disabled = false;
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
 </script>
 <script src="shared.js"></script>
 <script src="demo-guard.js"></script>

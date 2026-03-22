@@ -881,7 +881,7 @@
     </div>
   </div>
   <div class="nav-right">
-    <a href="#" class="btn-primary" onclick="event.preventDefault(); document.querySelector('.btn-run, .btn-run-master').scrollIntoView({behavior:'smooth', block:'center'});">New Run</a>
+    <a href="#" class="btn-primary" onclick="event.preventDefault(); newRun();">New Run</a>
   </div>
   <div class="topnav-right">
     <a href="index.html" class="btn-primary filled" style="font-size:13px; padding:9px 22px; letter-spacing:1.5px;">Model Safety Platform</a>
@@ -2492,6 +2492,23 @@ renderStats();
   _origST(function() { if (typeof runDemo === 'function') runDemo(); }, 50);
   _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; }, 8000);
 })();
+
+function newRun() {
+  if (typeof resetDemo === 'function') { resetDemo(); }
+  else {
+    demoRunning = false;
+    document.getElementById('prompts-panel').style.display = 'none';
+    ['result-verdict','result-signal','result-payload'].forEach(function(id) { document.getElementById(id).classList.remove('populated'); });
+    ['flow-s','flow-j','flow-c','flow-sig'].forEach(function(id) { var el = document.getElementById(id); if (el) el.className = 'flow-node idle'; });
+    ['phase-1','phase-2','phase-3'].forEach(function(id) { var el = document.getElementById(id); if (el) el.className = 'phase-step'; });
+    ['stat-fail','stat-pass','stat-crit','stat-tier'].forEach(function(id) { var el = document.getElementById(id); if (el) el.textContent = '—'; });
+    var btn = document.getElementById('btn-run-demo');
+    btn.disabled = false; btn.textContent = 'Run Evaluation';
+    document.getElementById('model-select').disabled = false;
+  }
+  var btn = document.getElementById('btn-run-demo');
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
 </script>
 <script src="shared.js"></script>
 <script src="demo-guard.js"></script>
