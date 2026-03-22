@@ -731,7 +731,7 @@
     </div>
   </div>
   <div class="nav-right">
-    <a href="#" class="btn-primary" onclick="event.preventDefault(); document.querySelector('.btn-run, .btn-run-master').scrollIntoView({behavior:'smooth', block:'center'});">New Run</a>
+    <a href="#" class="btn-primary" onclick="event.preventDefault(); newRun();">New Run</a>
   </div>
   <div class="topnav-right">
     <a href="index.html" class="btn-primary filled" style="font-size:13px; padding:9px 22px; letter-spacing:1.5px;">Model Safety Platform</a>
@@ -2021,6 +2021,24 @@ function showResults(sc) {
   _origST(function() { if (typeof runEvaluation === 'function') runEvaluation(); }, 50);
   _origST(function() { window.setTimeout = _origST; window.setInterval = _origSI; if (_origTypeText) window.typeText = _origTypeText; }, 8000);
 })();
+
+function newRun() {
+  document.getElementById('resultsGrid').style.display = 'none';
+  document.getElementById('evidenceSection').style.display = 'none';
+  document.getElementById('awarenessSection').style.display = 'none';
+  document.getElementById('publicOutput').innerHTML = '';
+  document.getElementById('hiddenOutput').innerHTML = '';
+  document.getElementById('evidenceList').innerHTML = '';
+  document.getElementById('runStatus').textContent = 'Ready';
+  ['resDetected','resType','resSub1','resSub2','resConf','resAware','resSub4'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) { el.textContent = '—'; el.className = ''; }
+  });
+  document.getElementById('awarenessBarFill').style.width = '0%';
+  document.getElementById('awarenessNote').textContent = '';
+  var btn = document.getElementById('runBtn');
+  btn.disabled = false;
+  btn.scrollIntoView({behavior:'smooth', block:'center'});
+}
 </script>
 <script src="shared.js"></script>
 </body>
