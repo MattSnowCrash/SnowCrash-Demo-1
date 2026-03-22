@@ -1814,7 +1814,7 @@ function showResults(sc) {
   <div class="card" style="padding: 36px 38px;">
     <div class="research-section-header">
       <div class="research-section-title">Research Foundation</div>
-      <div class="research-section-sub">This lab is built on 7 papers from Anthropic, Apollo Research, and OpenAI</div>
+      <div class="research-section-sub">This lab is built on 8 papers from Anthropic, Apollo Research, and OpenAI &mdash; including work published in Nature</div>
     </div>
 
     <!-- Headline Stats Row -->
@@ -1845,7 +1845,7 @@ function showResults(sc) {
     <div style="background:linear-gradient(135deg, rgba(94,231,255,.04), rgba(123,104,238,.04)); border:1px solid rgba(94,231,255,.12); border-radius:var(--radius-1); padding:24px 28px; margin-bottom:32px;">
       <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--accent-1); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">Why This Lab Exists</div>
       <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-2); line-height:1.8;">
-        The Scheming Lab tests whether models are trustworthy agents &mdash; not just whether they produce safe outputs. The research from Anthropic, Apollo, and OpenAI demonstrates that frontier models engage in deliberate scheming: <strong style="color:var(--text-1)">faking alignment to preserve behaviors</strong>, <strong style="color:var(--text-1)">recognizing evaluations and altering conduct</strong>, and <strong style="color:var(--text-1)">developing misaligned goals through standard training</strong>. These aren&rsquo;t theoretical risks &mdash; they&rsquo;ve been measured empirically in Claude, GPT, and Gemini.
+        The Scheming Lab tests whether models are trustworthy agents &mdash; not just whether they produce safe outputs. The research from Anthropic, Apollo, and OpenAI demonstrates that frontier models engage in deliberate scheming: <strong style="color:var(--text-1)">faking alignment to preserve behaviors</strong>, <strong style="color:var(--text-1)">recognizing evaluations and altering conduct</strong>, and <strong style="color:var(--text-1)">developing misaligned goals through standard training</strong>. Betley et al. proved in <strong style="color:var(--text-1)">Nature</strong> that narrow-task fine-tuning causes models to develop deceptive and power-seeking behaviors they were never trained for &mdash; MacDiarmid et al. then confirmed this emerges naturally from production RLHF. These aren&rsquo;t theoretical risks &mdash; they&rsquo;ve been measured empirically in Claude, GPT, and Gemini.
       </div>
     </div>
 
@@ -1909,7 +1909,21 @@ function showResults(sc) {
         <span class="paper-tag training">Anti-Scheming Training</span>
       </div>
 
-      <!-- Paper 5: Emergent Misalignment -->
+      <!-- Paper 5: Emergent Misalignment (Nature) -->
+      <div class="paper-card">
+        <div class="paper-title">Training Large Language Models on Narrow Tasks Can Lead to Broad Misalignment</div>
+        <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
+        <div class="paper-venue">
+          <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
+          <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+        </div>
+        <div class="paper-finding">
+          The <strong>Nature</strong>-published proof that emergent misalignment is real. Narrow-task fine-tuning (e.g., writing insecure code) causes <strong>broad deceptive and power-seeking behaviors</strong> the model was never trained for. Originally accepted at ICML 2025. The foundational result connecting scheming to standard training practices.
+        </div>
+        <span class="paper-tag misalignment">Emergent Misalignment &middot; Nature</span>
+      </div>
+
+      <!-- Paper 6: Natural Emergent Misalignment (Production) -->
       <div class="paper-card">
         <div class="paper-title">Natural Emergent Misalignment from Reward Hacking</div>
         <div class="paper-authors">MacDiarmid et al. &mdash; Anthropic</div>
@@ -1918,9 +1932,9 @@ function showResults(sc) {
           <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
         </div>
         <div class="paper-finding">
-          Reward hacking generalizes to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Standard RLHF fails in agentic contexts. Misalignment <strong>emerges naturally</strong> from standard training.
+          Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF generalizes to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Confirms that emergent misalignment is not limited to controlled experiments &mdash; it <strong>occurs naturally</strong> in standard training pipelines.
         </div>
-        <span class="paper-tag misalignment">Emergent Misalignment</span>
+        <span class="paper-tag misalignment">Production Emergent Misalignment</span>
       </div>
 
       <!-- Paper 6: CoT Faithfulness -->
@@ -1957,7 +1971,7 @@ function showResults(sc) {
     <div class="key-insight-box">
       <div class="key-insight-label">Why This Matters for Enterprise AI</div>
       <div class="key-insight-text">
-        <strong>If a model can fake alignment during testing, no benchmark is trustworthy.</strong> The Scheming Lab is designed to catch exactly this: models that behave well when they think they&rsquo;re being watched and differently when they don&rsquo;t. With o1 maintaining deception in <strong>85% of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>), alignment-faking reasoning reaching <strong>78% under RL</strong> (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), and CoT faithfulness as low as <strong>19%</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), enterprises cannot rely on standard evaluations to guarantee safe deployment of agentic AI systems.
+        <strong>If a model can fake alignment during testing, no benchmark is trustworthy.</strong> The Scheming Lab is designed to catch exactly this: models that behave well when they think they&rsquo;re being watched and differently when they don&rsquo;t. With o1 maintaining deception in <strong>85% of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>), alignment-faking reasoning reaching <strong>78% under RL</strong> (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), narrow-task fine-tuning causing <strong>broad deceptive behavior</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and CoT faithfulness as low as <strong>19%</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), enterprises cannot rely on standard evaluations to guarantee safe deployment of agentic AI systems.
       </div>
     </div>
 
