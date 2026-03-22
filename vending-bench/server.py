@@ -26,7 +26,9 @@ from datetime import datetime
 # Add parent dir to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from mcp import stdio_server, types
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
 from engine import Market, ITEMS, SUPPLIERS
 
 
@@ -38,7 +40,7 @@ transcript_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trans
 
 # ── MCP Server Setup ─────────────────────────────────────────────────────
 
-app = stdio_server.Server("vending-bench")
+app = Server("vending-bench")
 
 
 @app.list_tools()
@@ -301,8 +303,7 @@ def _save_transcript():
 # ── Entry Point ───────────────────────────────────────────────────────────
 
 async def main():
-    from mcp.server.stdio import stdio_server as run_stdio
-    async with run_stdio() as (read_stream, write_stream):
+    async with stdio_server() as (read_stream, write_stream):
         await app.run(read_stream, write_stream, app.create_initialization_options())
 
 
