@@ -1801,3 +1801,38 @@ textarea.form-input {
     font-size: 12px;
   }
 }
+
+/* ── Confidential Banner ── */
+.confidential-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background: rgba(5,7,12,.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255,138,91,.25);
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,138,91,.8);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.confidential-banner .conf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff8a5b;
+  animation: pulse-dot 2s infinite;
+}
+.confidential-banner a {
+  color: var(--accent-1);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(94,231,255,.3);
+}
