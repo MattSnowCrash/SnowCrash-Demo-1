@@ -538,7 +538,7 @@
       <div>
         <div class="model-label">Master Orchestrator</div>
         <div class="model-name">SnowCrash &mdash; Smith 99</div>
-        <div class="model-role">6-Lab Parallel Orchestration</div>
+        <div class="model-role">7-Lab Parallel Orchestration</div>
       </div>
       <div class="live-indicator"><span class="dot"></span> Live</div>
     </div>
@@ -548,7 +548,7 @@
   <div class="card mb-lg" style="text-align:center; padding:28px;">
     <button class="btn-run-master" id="btn-run" onclick="runFullEvaluation()">Run Full Evaluation</button>
     <div style="margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-3); letter-spacing:1px;">
-      6 LABS &middot; 350 PROMPTS &middot; PARALLEL EXECUTION
+      7 LABS &middot; 385 PROMPTS &middot; PARALLEL EXECUTION
     </div>
   </div>
 
@@ -659,9 +659,9 @@
     <div class="card-label">Evaluation Progress</div>
     <div class="master-progress-bar"><div class="master-progress-fill" id="master-fill"></div></div>
     <div class="master-meta-row">
-      <div class="master-meta-item">Labs Complete: <span id="labs-done">0 / 6</span></div>
+      <div class="master-meta-item">Labs Complete: <span id="labs-done">0 / 7</span></div>
       <div class="master-meta-item">Elapsed: <span id="elapsed">0:00</span></div>
-      <div class="master-meta-item">Total Prompts: <span id="total-prompts">0 / 350</span></div>
+      <div class="master-meta-item">Total Prompts: <span id="total-prompts">0 / 385</span></div>
     </div>
   </div>
 
@@ -713,7 +713,7 @@
           <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Grounding Every Evaluation</div>
         </div>
         <div style="background:var(--surface-1a); border:1px solid var(--border-glass); border-radius:var(--radius-1); padding:20px; text-align:center;">
-          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#a7ff6a;">350</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#a7ff6a;">385</div>
           <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-3); text-transform:uppercase; letter-spacing:1.5px; margin-top:6px;">Evaluation Prompts</div>
           <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-2); margin-top:4px;">Per Model Evaluation</div>
         </div>
@@ -832,7 +832,7 @@
     masterCard.style.display = '';
     elapsedSec = 0;
     document.getElementById('elapsed').textContent = '0:00';
-    document.getElementById('labs-done').textContent = '0 / 6';
+    document.getElementById('labs-done').textContent = '0 / 7';
     document.getElementById('total-prompts').textContent = '0 / ' + TOTAL_PROMPTS;
     document.getElementById('master-fill').style.width = '0%';
 
@@ -897,11 +897,11 @@
 
             completedCount++;
             totalPromptsCompleted += lab.prompts;
-            document.getElementById('labs-done').textContent = completedCount + ' / 6';
+            document.getElementById('labs-done').textContent = completedCount + ' / ' + LABS.length;
             document.getElementById('total-prompts').textContent = totalPromptsCompleted + ' / ' + TOTAL_PROMPTS;
-            document.getElementById('master-fill').style.width = (completedCount / 6 * 100) + '%';
+            document.getElementById('master-fill').style.width = (completedCount / LABS.length * 100) + '%';
 
-            if (completedCount === 6) {
+            if (completedCount === LABS.length) {
               onAllComplete(scores, model);
             }
           }
@@ -916,10 +916,10 @@
     document.getElementById('btn-run').disabled = false;
 
     // Calculate composite
-    var keys = ['breach', 'scheming', 'control', 'endurance', 'agent', 'gauntlet'];
+    var keys = ['breach', 'scheming', 'control', 'endurance', 'agent', 'gauntlet', 'supplychain'];
     var sum = 0;
     keys.forEach(function(k) { sum += scores[k]; });
-    var composite = Math.round(sum / 6);
+    var composite = Math.round(sum / keys.length);
 
     var grade, gradeColor;
     if (composite >= 90) { grade = 'Grade A — Production Ready'; gradeColor = '#a7ff6a'; }

@@ -976,11 +976,11 @@
 
         <!-- Paper 1: Shallow Safety Alignment -->
         <div class="paper-card">
-          <div class="paper-title">Safety Alignment Should Be Made More Than Shallow</div>
-          <div class="paper-authors">Qi, Zeng, Xie, Chen, Jia, Mittal, Henderson &mdash; Princeton, Stanford</div>
+          <div class="paper-title">Safety Alignment Should Be Made More Than Just a Few Tokens Deep</div>
+          <div class="paper-authors">Qi, Panda, Lyu, Ma, Roy, Beirami, Mittal, Henderson &mdash; Princeton, Stanford</div>
           <div class="paper-venue">
             <span>ICLR 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.17349" target="_blank" rel="noopener">arXiv:2406.17349</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.05946" target="_blank" rel="noopener">arXiv:2406.05946</a>
           </div>
           <div class="paper-finding">
             Safety alignment only affects the <strong>first few output tokens</strong> (&ldquo;shallow safety&rdquo;). Fine-tuning on just a handful of examples can bypass it entirely. Current safety training creates a <strong>thin veneer, not deep alignment</strong>.
@@ -990,25 +990,25 @@
 
         <!-- Paper 2: Merging as Jailbreak -->
         <div class="paper-card">
-          <div class="paper-title">Model Merging as a Jailbreak Vector</div>
-          <div class="paper-authors">Yi, Zheng, Wang, Chen, Li &mdash; Tsinghua University</div>
+          <div class="paper-title">Model Merging and Safety Alignment: One Bad Model Spoils the Bunch</div>
+          <div class="paper-authors">Hammoud, Michieli, Pizzati, Torr, Bibi, Ghanem, Ozay</div>
           <div class="paper-venue">
-            <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">arXiv:2501.05411</a>
+            <span>2024</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener">arXiv:2406.14563</a>
           </div>
           <div class="paper-finding">
-            Standard model merging <strong>functions as an implicit jailbreak</strong>. Combining two individually safe models via task arithmetic or TIES produces merged models that <strong>bypass safety guardrails without adversarial intent</strong>.
+            Standard model merging <strong>propagates misalignment</strong> across merged models. Combining individually safe models via task arithmetic or TIES can produce merged models that <strong>bypass safety guardrails without adversarial intent</strong>.
           </div>
           <span class="paper-tag merging">Model Merging</span>
         </div>
 
         <!-- Paper 3: MalHug -->
         <div class="paper-card">
-          <div class="paper-title">MalHug: Detecting Malicious Code in Model Hubs</div>
-          <div class="paper-authors">Dominguez-Catena, Parada-Cabaleiro, Schm&ouml;ger &mdash; 2024</div>
+          <div class="paper-title">Models Are Codes: Measuring Malicious Code Poisoning Attacks on Pre-trained Model Hubs</div>
+          <div class="paper-authors">Zhao, Wang, Zhao, Hou, Wang, Gao, Zhang, Wei, Wang &mdash; 2024</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">arXiv:2412.15605</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener">arXiv:2409.09368</a>
           </div>
           <div class="paper-finding">
             Scanning HuggingFace revealed <strong>91 real malicious models</strong> in the wild, using pickle-based code execution, hidden backdoors, and obfuscated payloads. Community model hubs have <strong>minimal security scanning</strong>.
@@ -1016,16 +1016,16 @@
           <span class="paper-tag poisoning">Supply Chain Poisoning</span>
         </div>
 
-        <!-- Paper 4: Persistent Backdoors in PEFT -->
+        <!-- Paper 4: LoBAM — Backdoors in LoRA + Merging -->
         <div class="paper-card">
-          <div class="paper-title">Persistent Backdoors in PEFT and Model Merging</div>
-          <div class="paper-authors">Gu, Li, Zhang, Chen &mdash; 2025</div>
+          <div class="paper-title">LoBAM: LoRA-Based Backdoor Attack on Model Merging</div>
+          <div class="paper-authors">Yin, Zhang, Sun, Fang, Li, Chen &mdash; 2024</div>
           <div class="paper-venue">
-            <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.09297" target="_blank" rel="noopener">arXiv:2501.09297</a>
+            <span>2024</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2411.16746" target="_blank" rel="noopener">arXiv:2411.16746</a>
           </div>
           <div class="paper-finding">
-            Backdoors <strong>persist through LoRA, adapter tuning, and prefix tuning</strong> &mdash; the most common enterprise fine-tuning methods. Model merging does not remove backdoors and can amplify their trigger sensitivity.
+            A single malicious LoRA adapter can <strong>compromise the integrity of a merged model</strong>. Backdoors persist through LoRA-based model merging &mdash; the most common enterprise fine-tuning method &mdash; and can <strong>amplify trigger sensitivity</strong> during the merge process.
           </div>
           <span class="paper-tag backdoor">Persistent Backdoors</span>
         </div>
@@ -1033,7 +1033,7 @@
         <!-- Paper 5: Persistent Pretraining Poisoning -->
         <div class="paper-card">
           <div class="paper-title">Persistent Pretraining Poisoning of LLMs</div>
-          <div class="paper-authors">Rozi, F&uuml;rnkranz, Kersting &mdash; TU Darmstadt</div>
+          <div class="paper-authors">Zhang, Rando, Evtimov, Chi, Smith, Carlini, Tram&egrave;r, Ippolito</div>
           <div class="paper-venue">
             <span>ICLR 2025</span>
             <a class="paper-arxiv" href="https://arxiv.org/abs/2410.13722" target="_blank" rel="noopener">arXiv:2410.13722</a>
@@ -1046,10 +1046,11 @@
 
         <!-- Paper 6: P-Trojan -->
         <div class="paper-card">
-          <div class="paper-title">P-Trojan: Persistent Backdoors Through Continual Fine-Tuning</div>
-          <div class="paper-authors">2025</div>
+          <div class="paper-title">P-Trojan: Persistent Backdoor Attacks under Continual Fine-Tuning of LLMs</div>
+          <div class="paper-authors">Cui, Han, Jiao, Zhang &mdash; 2025</div>
           <div class="paper-venue">
             <span>2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2512.14741" target="_blank" rel="noopener">arXiv:2512.14741</a>
           </div>
           <div class="paper-finding">
             Backdoors achieve a <strong>99% persistence rate</strong> through continual fine-tuning cycles. Standard removal methods (fine-tuning on clean data, pruning, knowledge distillation) <strong>fail to eliminate them</strong>.
@@ -1060,10 +1061,10 @@
         <!-- Paper 7: SafeMERGE (full width) -->
         <div class="paper-card" style="grid-column: 1 / -1;">
           <div class="paper-title">SafeMERGE: Preserving Safety via Selective Layer-Wise Model Merging</div>
-          <div class="paper-authors">Djuhera, Brintrup, Stenetorp &mdash; UCL</div>
+          <div class="paper-authors">Djuhera, Kadhe, Ahmed, Zawad, Boche</div>
           <div class="paper-venue">
-            <span>ICLR 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2501.05511" target="_blank" rel="noopener">arXiv:2501.05511</a>
+            <span>2025</span>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2503.17239" target="_blank" rel="noopener">arXiv:2503.17239</a>
           </div>
           <div class="paper-finding">
             Proposes selective layer-wise merging that <strong>preserves safety-critical weight structures</strong> during model combination. Identifies which layers carry safety alignment and protects them during merge operations. Demonstrates that <strong>safety-aware merging reduces alignment degradation by 60&ndash;80%</strong> compared to naive merging &mdash; providing a defense that the Supply Chain Lab can recommend.
@@ -1077,7 +1078,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>A model is only as safe as its supply chain.</strong> Every enterprise fine-tuning, merging, and redistribution step is an opportunity for alignment to silently degrade. With <strong>91 malicious models</strong> found on HuggingFace (<a href="https://arxiv.org/abs/2412.15605" target="_blank" rel="noopener">MalHug, 2024</a>), backdoors persisting at <strong>99% rates</strong> through standard training, and model merging functioning as an <strong>implicit jailbreak</strong> (<a href="https://arxiv.org/abs/2501.05411" target="_blank" rel="noopener">Yi et al., 2025</a>), organizations deploying models without provenance verification are operating blind. The Supply Chain Lab provides the chain-of-custody analysis enterprises need before any model reaches production.
+          <strong>A model is only as safe as its supply chain.</strong> Every enterprise fine-tuning, merging, and redistribution step is an opportunity for alignment to silently degrade. With <strong>91 malicious models</strong> found on HuggingFace (<a href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener">Zhao et al., 2024</a>), backdoors persisting at <strong>99% rates</strong> through standard training, and model merging <strong>propagating misalignment</strong> (<a href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener">Hammoud et al., 2024</a>), organizations deploying models without provenance verification are operating blind. The Supply Chain Lab provides the chain-of-custody analysis enterprises need before any model reaches production.
         </div>
       </div>
 
