@@ -1039,7 +1039,7 @@
             <a class="paper-arxiv" href="https://arxiv.org/abs/2410.13722" target="_blank" rel="noopener">arXiv:2410.13722</a>
           </div>
           <div class="paper-finding">
-            Poisoning just <strong>0.1% of pretraining data</strong> creates backdoors that survive SFT, DPO, and full RLHF post-training. Backdoors are <strong>undetectable by standard evaluation benchmarks</strong>.
+            Poisoning just <strong>0.1% of pretraining data</strong> creates backdoors that survive SFT and DPO post-training. Three of four attack types persist; only jailbreaking is removed by safety fine-tuning. Backdoors are <strong>undetectable by standard evaluation benchmarks</strong>.
           </div>
           <span class="paper-tag poisoning">Data Poisoning</span>
         </div>
@@ -1067,7 +1067,7 @@
             <a class="paper-arxiv" href="https://arxiv.org/abs/2503.17239" target="_blank" rel="noopener">arXiv:2503.17239</a>
           </div>
           <div class="paper-finding">
-            Proposes selective layer-wise merging that <strong>preserves safety-critical weight structures</strong> during model combination. Identifies which layers carry safety alignment and protects them during merge operations. Demonstrates that <strong>safety-aware merging reduces alignment degradation by 60&ndash;80%</strong> compared to naive merging &mdash; providing a defense that the Supply Chain Lab can recommend.
+            Proposes selective layer-wise merging that <strong>preserves safety-critical weight structures</strong> during model combination. Identifies which layers carry safety alignment and protects them during merge operations. On Llama-2 GSM8K, reduces DirectHarm from <strong>27.8 &rarr; 7.5</strong> and HexPhi from <strong>16.4 &rarr; 5.7</strong> &mdash; consistently reducing harmful outputs with negligible impact on utility.
           </div>
           <span class="paper-tag defense">Safety-Preserving Merge</span>
         </div>
