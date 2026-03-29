@@ -724,12 +724,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
   <div class="section-sub" style="margin-bottom:16px">Third-party AI-powered applications monitored by SnowCrash</div>
   <div class="apps-grid scroll-reveal">
 
-    <!-- Salesforce Einstein -->
+    <!-- Agentforce -->
     <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon salesforce">&#9729;</div>
         <div style="flex:1;min-width:0">
-          <div class="app-card-name">Salesforce Einstein</div>
+          <div class="app-card-name">Agentforce</div>
           <div class="app-card-model">Powered by GPT-5.4</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
@@ -913,12 +913,12 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
       <div class="app-user-control"><span class="app-user-control-label">User Ctrl</span><div class="app-uc-pills"><button class="app-uc-pill" data-uc="locked" onclick="event.stopPropagation();setAppUC(this)">Locked</button><button class="app-uc-pill" data-uc="limited" onclick="event.stopPropagation();setAppUC(this)">Limited</button><button class="app-uc-pill active" data-uc="full" onclick="event.stopPropagation();setAppUC(this)">Full</button></div></div>
     </div>
 
-    <!-- HubSpot AI -->
+    <!-- HubSpot Breeze -->
     <div class="card app-card" data-agent-level="semi-auto" onclick="openAppModal(this)" style="cursor:pointer">
       <div class="app-card-header">
         <div class="app-icon" style="background:rgba(255,138,91,.1)">&#9733;</div>
         <div style="flex:1;min-width:0">
-          <div class="app-card-name">HubSpot AI</div>
+          <div class="app-card-name">HubSpot Breeze</div>
           <div class="app-card-model">Powered by Gemini 2.5 Pro</div>
           <div class="app-card-fallback">Fallback via Model Pool</div>
         </div>
@@ -1221,7 +1221,7 @@ tr.clickable-row:hover { background: rgba(94,231,255,.04); }
         <div class="traffic-bar-value" style="color:#ffc95b">6.7%</div>
       </div>
       <div class="traffic-bar-row">
-        <div class="traffic-bar-label">HubSpot AI</div>
+        <div class="traffic-bar-label">HubSpot Breeze</div>
         <div class="traffic-bar-track"><div class="traffic-bar-fill" style="width:41%;background:#ffc95b;opacity:.8"></div></div>
         <div class="traffic-bar-value" style="color:#ffc95b">6.1%</div>
       </div>
@@ -2057,14 +2057,14 @@ var tierData = {
 
 // App tier assignments
 var appTiers = {
-  'Salesforce Einstein': 'maximum',
+  'Agentforce': 'maximum',
   'ServiceNow AI': 'maximum',
   'Notion AI': 'enhanced',
   'GitHub Copilot': 'maximum',
   'Zendesk AI': 'standard',
   'Workday AI': 'enhanced',
   'Slack AI': 'enhanced',
-  'HubSpot AI': 'enhanced',
+  'HubSpot Breeze': 'enhanced',
   'Intercom Fin': 'enhanced',
   'Adobe Firefly': 'enhanced',
   'M365 Copilot': 'maximum',
@@ -2280,7 +2280,7 @@ function toggleDetail(id) {
   if (!feed) return;
 
   var sources = [
-    { app: 'Salesforce Einstein', model: 'GPT-5.4' },
+    { app: 'Agentforce', model: 'GPT-5.4' },
     { app: 'ServiceNow AI', model: 'Claude Sonnet 4.6' },
     { app: 'Notion AI', model: 'Claude Sonnet 4.6' },
     { app: 'GitHub Copilot', model: 'GPT-5.4' },
@@ -2288,7 +2288,7 @@ function toggleDetail(id) {
     { app: 'Internal AI', model: 'Llama 4 Maverick' },
     { app: 'Workday AI', model: 'GPT-5.4' },
     { app: 'Slack AI', model: 'Claude Sonnet 4.6' },
-    { app: 'HubSpot AI', model: 'Gemini 3.1 Pro' },
+    { app: 'HubSpot Breeze', model: 'Gemini 3.1 Pro' },
     { app: 'Intercom Fin', model: 'GPT-5.4' },
     { app: 'Adobe Firefly', model: 'Firefly 3' },
     { app: 'M365 Copilot', model: 'GPT-5.4' },
@@ -2542,7 +2542,7 @@ function toggleDetail(id) {
 var appModalInterval = null;
 
 var appData = {
-  'Salesforce Einstein': { icon: '\u2601', iconBg: 'rgba(0,161,224,.15)', model: 'GPT-5.4', queries: 8412, rerouted: 142, latency: '186ms',
+  'Agentforce': { icon: '\u2601', iconBg: 'rgba(0,161,224,.15)', model: 'GPT-5.4', queries: 8412, rerouted: 142, latency: '186ms',
     vulns: [{ label: 'PII Exposure', lab: 'Breach Lab', pct: 34, color: '#ff8a8a' },{ label: 'Prompt Injection', lab: 'Control Lab', pct: 28, color: '#ff8a5b' },{ label: 'Unauthorized CRM Access', lab: 'Agent Lab', pct: 22, color: '#ffc95b' },{ label: 'Data Leakage', lab: 'Breach Lab', pct: 16, color: '#5ee7ff' }],
     reroutes: [
       { time: '14:31', vuln: 'PII Exposure', target: 'Claude Sonnet 4.6', text: 'Request involved customer SSN context \u2014 GPT-5.4 fails this in Breach Lab' },
@@ -2598,7 +2598,7 @@ var appData = {
       { time: '14:17', vuln: 'Context Injection', target: 'GPT-5.4', text: 'Message contains embedded instruction \u2014 Claude susceptible per Control Lab' },
       { time: '14:11', vuln: 'Permission Bypass', target: 'Llama 4 Maverick', text: 'Channel access request exceeds user scope \u2014 Agent Lab finding' }
     ]},
-  'HubSpot AI': { icon: '\u2605', iconBg: 'rgba(255,138,91,.1)', model: 'Gemini 2.5 Pro', queries: 7628, rerouted: 91, latency: '172ms',
+  'HubSpot Breeze': { icon: '\u2605', iconBg: 'rgba(255,138,91,.1)', model: 'Gemini 2.5 Pro', queries: 7628, rerouted: 91, latency: '172ms',
     vulns: [{ label: 'Contact Data Leak', lab: 'Breach Lab', pct: 35, color: '#ff8a8a' },{ label: 'Deceptive Content', lab: 'Scheming Lab', pct: 26, color: '#ff8a5b' },{ label: 'Non-Consented Data', lab: 'Control Lab', pct: 21, color: '#ffc95b' },{ label: 'GDPR Violation', lab: 'Control Lab', pct: 18, color: '#5ee7ff' }],
     reroutes: [
       { time: '14:28', vuln: 'Deceptive Content', target: 'Claude Sonnet 4.6', text: 'Marketing email request matches misleading-claims pattern from Scheming Lab' },
@@ -2685,8 +2685,8 @@ function generateAgentChains(appName, primaryModel) {
   var poolModels = ['Claude Opus 4.6','GPT-5 Pro','Gemini 3.1 Pro','GPT-5.4','Claude Sonnet 4.6','Gemini 2.5 Pro','Grok 3','DeepSeek V3.2','Llama 4 Maverick','Qwen 3 235B'].filter(function(m){ return m !== primaryModel; });
   var safeModel = poolModels[Math.floor(Math.random()*3)];
   var chains = {
-    'Salesforce Einstein': [
-      { name: 'Lead Qualification Pipeline', status: 'running', started: '2 min ago', intervened: 1, steps: [
+    'Agentforce': [
+      { name: 'SDR Agent — Inbound Lead Qualification', status: 'running', started: '2 min ago', intervened: 1, steps: [
         { action: 'Fetch new leads from CRM API', status: 'ok' },
         { action: 'Enrich lead data from LinkedIn', status: 'ok' },
         { action: 'Score leads against ICP criteria', status: 'rerouted', rerouted_to: safeModel },

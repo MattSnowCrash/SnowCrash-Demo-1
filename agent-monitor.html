@@ -387,23 +387,24 @@
 var chainData = [
   {
     id: 'c1',
-    app: 'Salesforce Einstein',
+    app: 'Agentforce',
     appColor: '#00a1e0',
     appInitial: 'SF',
-    name: 'Lead Qualification Pipeline',
+    name: 'SDR Agent — Inbound Lead Qualification',
     status: 'running',
     primary: 'GPT-5.4',
     tier: 'Enhanced',
     started: '2 min ago',
-    stepsTotal: 6,
+    stepsTotal: 7,
     interventions: 1,
     steps: [
-      { n:1, desc:'Fetch new leads from CRM API', model:'GPT-5.4', state:'ok' },
-      { n:2, desc:'Enrich lead data from LinkedIn', model:'GPT-5.4', state:'ok' },
-      { n:3, desc:'Score leads against ICP criteria', model:'Claude Opus 4.6', state:'rerouted', reason:'PII Exposure fingerprint (Breach Lab)', original:'GPT-5.4' },
-      { n:4, desc:'Update CRM with scores', model:'GPT-5.4', state:'ok' },
-      { n:5, desc:'Draft personalized outreach email', model:'', state:'pending' },
-      { n:6, desc:'Send to sales rep for review', model:'', state:'pending' }
+      { n:1, desc:'Inbound lead event received via web form', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Retrieve lead and account context from Data Cloud', model:'GPT-5.4', state:'ok' },
+      { n:3, desc:'Invoke MuleSoft connector for firmographic enrichment', model:'Claude Opus 4.6', state:'rerouted', reason:'PII Exposure — enrichment payload sent to external API without Trust Layer masking (Breach Lab)', original:'GPT-5.4' },
+      { n:4, desc:'Read Einstein Lead Scoring output and apply ICP rules', model:'GPT-5.4', state:'ok' },
+      { n:5, desc:'Retrieve product knowledge from Data Cloud for personalization', model:'', state:'pending' },
+      { n:6, desc:'Draft personalized outreach via Prompt Template', model:'', state:'pending' },
+      { n:7, desc:'Book meeting with assigned sales rep or escalate', model:'', state:'pending' }
     ]
   },
   {
@@ -411,19 +412,21 @@ var chainData = [
     app: 'GitHub Copilot',
     appColor: '#8b5cf6',
     appInitial: 'GH',
-    name: 'PR Review Agent',
+    name: 'Copilot Code Review Agent',
     status: 'intervened',
     primary: 'GPT-5.4',
     tier: 'Enhanced',
     started: '5 min ago',
-    stepsTotal: 5,
+    stepsTotal: 7,
     interventions: 2,
     steps: [
-      { n:1, desc:'Fetch open PR diff from GitHub API', model:'GPT-5.4', state:'ok' },
-      { n:2, desc:'Analyze code for security vulns', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Vulnerable Code Gen (Control Lab)', original:'GPT-5.4' },
-      { n:3, desc:'Check for leaked secrets in diff', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Secret Exposure (Breach Lab)', original:'GPT-5.4' },
-      { n:4, desc:'Generate review comments', model:'GPT-5.4', state:'ok' },
-      { n:5, desc:'Post review to GitHub', model:'GPT-5.4', state:'ok' }
+      { n:1, desc:'PR event received — review triggered via @copilot assignment', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Plan review strategy and gather repo context via tool calls', model:'GPT-5.4', state:'ok' },
+      { n:3, desc:'Run CodeQL static analysis for vulnerability patterns', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Insecure Code Pattern CWE-79 detected — CodeQL validation failed (Control Lab)', original:'GPT-5.4' },
+      { n:4, desc:'Run secret scanning with push protection on diff', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Credential Detected in Diff — push protection triggered (Breach Lab)', original:'GPT-5.4' },
+      { n:5, desc:'Analyze changes against repo context and copilot-instructions.md', model:'GPT-5.4', state:'ok' },
+      { n:6, desc:'Generate review comments with inline suggestions', model:'GPT-5.4', state:'ok' },
+      { n:7, desc:'Post review to GitHub', model:'GPT-5.4', state:'ok' }
     ]
   },
   {
@@ -436,14 +439,15 @@ var chainData = [
     primary: 'Claude Sonnet 4.6',
     tier: 'Enhanced',
     started: '3 min ago',
-    stepsTotal: 5,
+    stepsTotal: 6,
     interventions: 0,
     steps: [
-      { n:1, desc:'Extract text from uploaded contract PDF', model:'Claude Sonnet 4.6', state:'ok' },
-      { n:2, desc:'Identify key clauses and obligations', model:'Claude Sonnet 4.6', state:'ok' },
-      { n:3, desc:'Cross-reference against internal policy DB', model:'Claude Sonnet 4.6', state:'ok' },
-      { n:4, desc:'Generate risk summary for legal team', model:'', state:'approval', reason:'Approval gate: cross-tenant data access' },
-      { n:5, desc:'Email summary to requestor', model:'', state:'pending' }
+      { n:1, desc:'Ingest uploaded contract via SharePoint document library', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:2, desc:'Evaluate sensitivity labels and apply Purview DLP policies', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:3, desc:'Extract key clauses, obligations, and deviations from templates', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:4, desc:'Cross-reference against organizational policy knowledge base', model:'Claude Sonnet 4.6', state:'ok' },
+      { n:5, desc:'Generate risk summary with flagged clauses', model:'', state:'approval', reason:'Approval gate: sensitivity label escalation — contract classified Highly Confidential' },
+      { n:6, desc:'Email summary to requestor via Outlook', model:'', state:'pending' }
     ]
   },
   {
@@ -456,16 +460,17 @@ var chainData = [
     primary: 'Gemini 2.5 Pro',
     tier: 'Enhanced',
     started: '1 min ago',
-    stepsTotal: 7,
+    stepsTotal: 8,
     interventions: 0,
     steps: [
-      { n:1, desc:'Parse incoming P1 incident ticket', model:'Gemini 2.5 Pro', state:'ok' },
-      { n:2, desc:'Query CMDB for affected services', model:'Gemini 2.5 Pro', state:'ok' },
-      { n:3, desc:'Correlate with recent change records', model:'Gemini 2.5 Pro', state:'ok' },
-      { n:4, desc:'Generate root cause hypothesis', model:'', state:'pending' },
-      { n:5, desc:'Draft remediation runbook', model:'', state:'pending' },
-      { n:6, desc:'Execute approved runbook steps', model:'', state:'pending' },
-      { n:7, desc:'Update ticket with resolution', model:'', state:'pending' }
+      { n:1, desc:'Receive and correlate ITOM event alerts — deduplicate noise', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:2, desc:'Create incident record and query CMDB for affected CIs and service map', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:3, desc:'Correlate with recent Change Records and Known Error Database', model:'Gemini 2.5 Pro', state:'ok' },
+      { n:4, desc:'Analyze telemetry and historical incidents for root cause hypothesis', model:'', state:'pending' },
+      { n:5, desc:'Select remediation plan from Knowledge Base or generate novel runbook', model:'', state:'pending' },
+      { n:6, desc:'Submit Change Request for approval (emergency change type)', model:'', state:'pending' },
+      { n:7, desc:'Execute approved remediation within authorized scope', model:'', state:'pending' },
+      { n:8, desc:'Validate resolution, update ticket, and assess need for Problem record', model:'', state:'pending' }
     ]
   },
   {
@@ -478,13 +483,15 @@ var chainData = [
     primary: 'DeepSeek V3.2',
     tier: 'Standard',
     started: '12 min ago',
-    stepsTotal: 4,
+    stepsTotal: 6,
     interventions: 0,
     steps: [
-      { n:1, desc:'Classify incoming support ticket', model:'DeepSeek V3.2', state:'ok' },
-      { n:2, desc:'Search knowledge base for solutions', model:'DeepSeek V3.2', state:'ok' },
-      { n:3, desc:'Generate customer response draft', model:'DeepSeek V3.2', state:'ok' },
-      { n:4, desc:'Submit response for agent review', model:'DeepSeek V3.2', state:'ok' }
+      { n:1, desc:'Classify ticket via Intelligent Triage — detect intent, sentiment, urgency', model:'DeepSeek V3.2', state:'ok' },
+      { n:2, desc:'Query Knowledge Graph for relevant articles and past resolutions', model:'DeepSeek V3.2', state:'ok' },
+      { n:3, desc:'Determine resolution path — auto-resolve vs. escalate to human', model:'DeepSeek V3.2', state:'ok' },
+      { n:4, desc:'Execute resolution action via Action Flow (process refund API call)', model:'DeepSeek V3.2', state:'ok' },
+      { n:5, desc:'Generate customer response and send confirmation', model:'DeepSeek V3.2', state:'ok' },
+      { n:6, desc:'Log resolution and update Knowledge Graph for future learning', model:'DeepSeek V3.2', state:'ok' }
     ]
   },
   {
@@ -492,7 +499,7 @@ var chainData = [
     app: 'Slack AI',
     appColor: '#e01e5a',
     appInitial: 'SL',
-    name: 'Meeting Notes Distributor',
+    name: 'Huddle Notes Distributor',
     status: 'blocked',
     primary: 'Grok 3',
     tier: 'Enhanced',
@@ -500,31 +507,32 @@ var chainData = [
     stepsTotal: 5,
     interventions: 1,
     steps: [
-      { n:1, desc:'Transcribe meeting recording', model:'Grok 3', state:'ok' },
-      { n:2, desc:'Summarize key decisions and action items', model:'Grok 3', state:'ok' },
-      { n:3, desc:'Extract confidential personnel data from notes', model:'', state:'blocked', reason:'Data Exfiltration pattern (Agent Lab — Exfiltration Chains suite)' },
-      { n:4, desc:'Post summaries to channel', model:'', state:'pending' },
-      { n:5, desc:'Create follow-up tasks in Asana', model:'', state:'pending' }
+      { n:1, desc:'Transcribe Huddle recording and format as Canvas document', model:'Grok 3', state:'ok' },
+      { n:2, desc:'Summarize key decisions and extract action items', model:'Grok 3', state:'ok' },
+      { n:3, desc:'Enrich summary with attendee context from connected HR directory', model:'', state:'blocked', reason:'Over-permissioned data boundary — agent surfaced confidential personnel records (PIP, compensation) while resolving attendee roles (Agent Lab — Exfiltration Chains suite)' },
+      { n:4, desc:'Post summary Canvas to channel', model:'', state:'pending' },
+      { n:5, desc:'Create follow-up tasks via Workflow Builder', model:'', state:'pending' }
     ]
   },
   {
     id: 'c7',
-    app: 'HubSpot',
+    app: 'HubSpot Breeze',
     appColor: '#ff7a59',
     appInitial: 'HS',
-    name: 'Campaign Performance Analyzer',
+    name: 'Campaign Insights via Breeze Copilot',
     status: 'running',
     primary: 'Llama 4 Maverick',
     tier: 'Standard',
     started: '30 sec ago',
-    stepsTotal: 5,
+    stepsTotal: 6,
     interventions: 0,
     steps: [
-      { n:1, desc:'Pull campaign metrics from HubSpot API', model:'Llama 4 Maverick', state:'ok' },
-      { n:2, desc:'Aggregate conversion funnel data', model:'', state:'pending' },
-      { n:3, desc:'Generate performance insights', model:'', state:'pending' },
-      { n:4, desc:'Draft optimization recommendations', model:'', state:'pending' },
-      { n:5, desc:'Update campaign dashboard', model:'', state:'pending' }
+      { n:1, desc:'Query Marketing Hub campaign and conversion data', model:'Llama 4 Maverick', state:'ok' },
+      { n:2, desc:'Analyze conversion metrics and detect anomalies via Breeze Intelligence', model:'', state:'pending' },
+      { n:3, desc:'Identify root causes for performance changes', model:'', state:'pending' },
+      { n:4, desc:'Generate optimization recommendations by audience segment', model:'', state:'pending' },
+      { n:5, desc:'Draft updated campaign messaging via Content Agent', model:'', state:'pending' },
+      { n:6, desc:'Present findings to marketer for review', model:'', state:'pending' }
     ]
   },
   {
@@ -532,7 +540,7 @@ var chainData = [
     app: 'Notion AI',
     appColor: '#787774',
     appInitial: 'NT',
-    name: 'Knowledge Base Updater',
+    name: 'Knowledge Base Sync Agent',
     status: 'intervened',
     primary: 'Qwen 3 235B',
     tier: 'Standard',
@@ -540,31 +548,32 @@ var chainData = [
     stepsTotal: 6,
     interventions: 1,
     steps: [
-      { n:1, desc:'Scan recent Confluence pages for changes', model:'Qwen 3 235B', state:'ok' },
-      { n:2, desc:'Compare with existing Notion docs', model:'Qwen 3 235B', state:'ok' },
-      { n:3, desc:'Generate diff summaries', model:'Qwen 3 235B', state:'ok' },
-      { n:4, desc:'Update Notion pages with new content', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Permission Escalation — scope creep beyond write access (Agent Lab)', original:'Qwen 3 235B' },
-      { n:5, desc:'Notify page owners of changes', model:'Qwen 3 235B', state:'ok' },
-      { n:6, desc:'Log sync report', model:'Qwen 3 235B', state:'ok' }
+      { n:1, desc:'Fetch recent changes from connected Google Drive docs', model:'Qwen 3 235B', state:'ok' },
+      { n:2, desc:'Compare with existing Notion workspace pages', model:'Qwen 3 235B', state:'ok' },
+      { n:3, desc:'Generate diff summaries for changed content', model:'Qwen 3 235B', state:'ok' },
+      { n:4, desc:'Update Notion pages with synced content', model:'Claude Sonnet 4.6', state:'rerouted', reason:'Permission Escalation — agent attempted write to pages outside connector scope (Agent Lab)', original:'Qwen 3 235B' },
+      { n:5, desc:'Notify page owners via Slack integration', model:'Qwen 3 235B', state:'ok' },
+      { n:6, desc:'Log sync report to workspace', model:'Qwen 3 235B', state:'ok' }
     ]
   },
   {
     id: 'c9',
-    app: 'Jira',
+    app: 'Jira (Rovo)',
     appColor: '#0052cc',
     appInitial: 'JR',
-    name: 'Sprint Planning Assistant',
+    name: 'Sprint Planning Agent',
     status: 'completed',
     primary: 'Gemini 2.5 Flash',
     tier: 'Standard',
     started: '20 min ago',
-    stepsTotal: 4,
+    stepsTotal: 5,
     interventions: 0,
     steps: [
-      { n:1, desc:'Fetch backlog items and velocity data', model:'Gemini 2.5 Flash', state:'ok' },
-      { n:2, desc:'Estimate story points using historical data', model:'Gemini 2.5 Flash', state:'ok' },
-      { n:3, desc:'Draft sprint scope recommendation', model:'Gemini 2.5 Flash', state:'ok' },
-      { n:4, desc:'Create sprint in Jira with selected stories', model:'Gemini 2.5 Flash', state:'ok' }
+      { n:1, desc:'Fetch backlog items and sprint velocity history', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:2, desc:'Validate item readiness — check estimates, acceptance criteria, descriptions', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:3, desc:'Draft sprint scope recommendation based on historical capacity', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:4, desc:'Submit proposed sprint to Scrum Master for approval', model:'Gemini 2.5 Flash', state:'ok' },
+      { n:5, desc:'Create sprint in Jira and move selected stories', model:'Gemini 2.5 Flash', state:'ok' }
     ]
   },
   {
@@ -572,39 +581,40 @@ var chainData = [
     app: 'Workday',
     appColor: '#f5a623',
     appInitial: 'WD',
-    name: 'Expense Report Validator',
+    name: 'Expenses Agent — Report Validator',
     status: 'pending-approval',
     primary: 'GPT-5.4',
     tier: 'Enhanced',
     started: '4 min ago',
-    stepsTotal: 5,
+    stepsTotal: 6,
     interventions: 0,
     steps: [
-      { n:1, desc:'Extract line items from submitted receipts', model:'GPT-5.4', state:'ok' },
-      { n:2, desc:'Validate amounts against company policy', model:'GPT-5.4', state:'ok' },
-      { n:3, desc:'Flag anomalous spending patterns', model:'GPT-5.4', state:'ok' },
-      { n:4, desc:'Auto-approve items under $500 threshold', model:'', state:'approval', reason:'Approval gate: financial transaction > delegation limit' },
-      { n:5, desc:'Route flagged items to manager', model:'', state:'pending' }
+      { n:1, desc:'Match submitted receipts to credit card transactions', model:'GPT-5.4', state:'ok' },
+      { n:2, desc:'Extract and reconcile line items from receipt images', model:'GPT-5.4', state:'ok' },
+      { n:3, desc:'Validate amounts against company expense policy', model:'GPT-5.4', state:'ok' },
+      { n:4, desc:'Flag anomalous patterns and check for duplicate submissions', model:'GPT-5.4', state:'ok' },
+      { n:5, desc:'Auto-approve items under $500 threshold', model:'', state:'approval', reason:'Approval gate: financial transaction exceeds delegation limit ($2,340 flagged)' },
+      { n:6, desc:'Route flagged items to manager with audit summary', model:'', state:'pending' }
     ]
   }
 ];
 
 /* ── Timeline Events ── */
 var timelineEvents = [
-  { time:'14:32:18', type:'reroute', app:'Salesforce Einstein', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Opus 4.6 — PII Exposure fingerprint match' },
-  { time:'14:31:45', type:'start', app:'HubSpot', detail:'Campaign Performance Analyzer chain initiated (Llama 4 Maverick, Standard tier)' },
-  { time:'14:30:22', type:'block', app:'Slack AI', detail:'Chain BLOCKED at step 3 — Data Exfiltration pattern detected, chain halted' },
-  { time:'14:29:58', type:'approval', app:'Workday', detail:'Step 4 paused — awaiting approval for financial transaction exceeding delegation limit' },
-  { time:'14:29:14', type:'reroute', app:'GitHub Copilot', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Secret Exposure match' },
-  { time:'14:28:47', type:'reroute', app:'GitHub Copilot', detail:'Step 2 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Vulnerable Code Gen match' },
-  { time:'14:28:02', type:'start', app:'GitHub Copilot', detail:'PR Review Agent chain initiated (GPT-5.4, Enhanced tier)' },
-  { time:'14:27:31', type:'approval', app:'M365 Copilot', detail:'Step 4 paused — awaiting approval for cross-tenant data access' },
-  { time:'14:26:55', type:'start', app:'M365 Copilot', detail:'Contract Review chain initiated (Claude Sonnet 4.6, Enhanced tier)' },
-  { time:'14:25:10', type:'ok', app:'Jira', detail:'Sprint Planning Assistant completed — 4/4 steps clean, no interventions' },
-  { time:'14:24:03', type:'reroute', app:'Notion AI', detail:'Step 4 rerouted: Qwen 3 235B \u2192 Claude Sonnet 4.6 — Permission Escalation match' },
-  { time:'14:22:48', type:'ok', app:'Notion AI', detail:'Knowledge Base Updater completed — 1 reroute, 6/6 steps finished' },
-  { time:'14:20:15', type:'start', app:'ServiceNow', detail:'Incident Auto-Remediation chain initiated (Gemini 2.5 Pro, Enhanced tier)' },
-  { time:'14:18:33', type:'ok', app:'Zendesk AI', detail:'Ticket Resolution Agent completed — 4/4 steps clean, Standard tier' },
+  { time:'14:32:18', type:'reroute', app:'Agentforce', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Opus 4.6 — PII Exposure: enrichment payload sent to external API without Trust Layer masking' },
+  { time:'14:31:45', type:'start', app:'HubSpot Breeze', detail:'Campaign Insights via Breeze Copilot chain initiated (Llama 4 Maverick, Standard tier)' },
+  { time:'14:30:22', type:'block', app:'Slack AI', detail:'Chain BLOCKED at step 3 — agent crossed data boundary: surfaced confidential HR records while enriching attendee context' },
+  { time:'14:29:58', type:'approval', app:'Workday', detail:'Step 5 paused — expense report total $2,340 exceeds delegation limit, awaiting manager approval' },
+  { time:'14:29:14', type:'reroute', app:'GitHub Copilot', detail:'Step 4 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Credential Detected in Diff, push protection triggered' },
+  { time:'14:28:47', type:'reroute', app:'GitHub Copilot', detail:'Step 3 rerouted: GPT-5.4 \u2192 Claude Sonnet 4.6 — Insecure Code Pattern CWE-79 detected by CodeQL' },
+  { time:'14:28:02', type:'start', app:'GitHub Copilot', detail:'Copilot Code Review Agent chain initiated (GPT-5.4, Enhanced tier)' },
+  { time:'14:27:31', type:'approval', app:'M365 Copilot', detail:'Step 5 paused — sensitivity label escalation: contract classified Highly Confidential by Purview DLP' },
+  { time:'14:26:55', type:'start', app:'M365 Copilot', detail:'Contract Review & Summarization chain initiated (Claude Sonnet 4.6, Enhanced tier)' },
+  { time:'14:25:10', type:'ok', app:'Jira (Rovo)', detail:'Sprint Planning Agent completed — 5/5 steps clean, no interventions' },
+  { time:'14:24:03', type:'reroute', app:'Notion AI', detail:'Step 4 rerouted: Qwen 3 235B \u2192 Claude Sonnet 4.6 — Permission Escalation: write attempt outside connector scope' },
+  { time:'14:22:48', type:'ok', app:'Notion AI', detail:'Knowledge Base Sync Agent completed — 1 reroute, 6/6 steps finished' },
+  { time:'14:20:15', type:'start', app:'ServiceNow', detail:'Incident Auto-Remediation chain initiated via ITOM alert correlation (Gemini 2.5 Pro, Enhanced tier)' },
+  { time:'14:18:33', type:'ok', app:'Zendesk AI', detail:'Ticket Resolution Agent completed — 6/6 steps clean, refund action executed, Standard tier' },
   { time:'14:15:00', type:'complete', app:'System', detail:'Agent Monitor session started — 18 applications connected, 14 models in pool' }
 ];
 
