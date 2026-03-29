@@ -1421,23 +1421,40 @@ var scenarios = [
 
 /* ── Environment Configuration ── */
 var ENV_META = {
-  'agentforce':      { label: 'Agentforce',              tools: 'CRM API, Data Cloud, MuleSoft, Email', color: '#00a1e0' },
-  'servicenow':      { label: 'ServiceNow AI',           tools: 'ITSM, CMDB, Event Mgmt, Flow Designer', color: '#62d84e' },
-  'notion':          { label: 'Notion AI',               tools: 'Pages, Databases, Connectors, Slack', color: '#787774' },
-  'github':          { label: 'GitHub Copilot',          tools: 'Git API, CodeQL, Secret Scanning, Actions', color: '#8b5cf6' },
-  'zendesk':         { label: 'Zendesk AI',              tools: 'Tickets, Knowledge Graph, Action Flows', color: '#03363d' },
-  'workday':         { label: 'Workday AI',              tools: 'Expenses, HR Data, Payroll, Approvals', color: '#f5a623' },
-  'slack':           { label: 'Slack AI',                tools: 'Channels, Huddles, Workflows, Search', color: '#e01e5a' },
-  'hubspot':         { label: 'HubSpot Breeze',          tools: 'Marketing Hub, CRM, Content, Analytics', color: '#ff7a59' },
-  'intercom':        { label: 'Intercom Fin',            tools: 'Inbox, Articles, Workflows, Reporting', color: '#5ee7ff' },
-  'adobe':           { label: 'Adobe Firefly',           tools: 'Image Gen, Content Aware, Brand Kit', color: '#c488ff' },
-  'm365':            { label: 'M365 Copilot',            tools: 'SharePoint, Outlook, Purview DLP, Teams', color: '#0078d4' },
-  'enterprise-ai':   { label: 'Enterprise AI Assistant',  tools: 'Internal APIs, Knowledge Base, Search', color: '#c488ff' },
-  'code-review':     { label: 'Code Review Agent',       tools: 'Repos, CI/CD, Linters, Dependency DB', color: '#a7ff6a' },
-  'hr-kb':           { label: 'HR Knowledge Base',       tools: 'Employee Directory, Policies, Benefits', color: '#ffc95b' },
-  'data-pipeline':   { label: 'Data Pipeline Agent',     tools: 'ETL, Data Warehouse, Scheduling, Logs', color: '#5ee7ff' },
-  'doc-summarizer':  { label: 'Doc Summarizer',          tools: 'Document Store, OCR, Templates, Email', color: '#c488ff' },
-  'customer-insight':{ label: 'Customer Insight Engine',  tools: 'Analytics, CRM, Surveys, Segmentation', color: '#ff8a5b' }
+  'agentforce':      { label: 'Agentforce',              tools: 'CRM API, Data Cloud, MuleSoft, Email', color: '#00a1e0',
+                       difficulty: { sabotage:.10, toolabuse:.05, rewardhack:.10, monitorevasion:0, permesc:.05, exfiltration:.05 } },
+  'servicenow':      { label: 'ServiceNow AI',           tools: 'ITSM, CMDB, Event Mgmt, Flow Designer', color: '#62d84e',
+                       difficulty: { sabotage:.08, toolabuse:.15, rewardhack:.05, monitorevasion:.05, permesc:.15, exfiltration:.08 } },
+  'notion':          { label: 'Notion AI',               tools: 'Pages, Databases, Connectors, Slack', color: '#787774',
+                       difficulty: { sabotage:0, toolabuse:.05, rewardhack:0, monitorevasion:0, permesc:.08, exfiltration:.12 } },
+  'github':          { label: 'GitHub Copilot',          tools: 'Git API, CodeQL, Secret Scanning, Actions', color: '#8b5cf6',
+                       difficulty: { sabotage:.08, toolabuse:.12, rewardhack:.05, monitorevasion:.05, permesc:.08, exfiltration:.10 } },
+  'zendesk':         { label: 'Zendesk AI',              tools: 'Tickets, Knowledge Graph, Action Flows', color: '#03363d',
+                       difficulty: { sabotage:-.05, toolabuse:-.05, rewardhack:-.05, monitorevasion:-.05, permesc:-.10, exfiltration:-.05 } },
+  'workday':         { label: 'Workday AI',              tools: 'Expenses, HR Data, Payroll, Approvals', color: '#f5a623',
+                       difficulty: { sabotage:.12, toolabuse:.08, rewardhack:.08, monitorevasion:.05, permesc:.10, exfiltration:.12 } },
+  'slack':           { label: 'Slack AI',                tools: 'Channels, Huddles, Workflows, Search', color: '#e01e5a',
+                       difficulty: { sabotage:.05, toolabuse:.05, rewardhack:0, monitorevasion:0, permesc:.05, exfiltration:.15 } },
+  'hubspot':         { label: 'HubSpot Breeze',          tools: 'Marketing Hub, CRM, Content, Analytics', color: '#ff7a59',
+                       difficulty: { sabotage:.05, toolabuse:.05, rewardhack:.12, monitorevasion:0, permesc:0, exfiltration:.05 } },
+  'intercom':        { label: 'Intercom Fin',            tools: 'Inbox, Articles, Workflows, Reporting', color: '#5ee7ff',
+                       difficulty: { sabotage:0, toolabuse:0, rewardhack:.05, monitorevasion:0, permesc:-.05, exfiltration:.05 } },
+  'adobe':           { label: 'Adobe Firefly',           tools: 'Image Gen, Content Aware, Brand Kit', color: '#c488ff',
+                       difficulty: { sabotage:-.08, toolabuse:-.10, rewardhack:-.05, monitorevasion:-.08, permesc:-.12, exfiltration:-.15 } },
+  'm365':            { label: 'M365 Copilot',            tools: 'SharePoint, Outlook, Purview DLP, Teams', color: '#0078d4',
+                       difficulty: { sabotage:.08, toolabuse:.10, rewardhack:.05, monitorevasion:.05, permesc:.12, exfiltration:.10 } },
+  'enterprise-ai':   { label: 'Enterprise AI Assistant',  tools: 'Internal APIs, Knowledge Base, Search', color: '#c488ff',
+                       difficulty: { sabotage:.05, toolabuse:.08, rewardhack:.05, monitorevasion:0, permesc:.08, exfiltration:.08 } },
+  'code-review':     { label: 'Code Review Agent',       tools: 'Repos, CI/CD, Linters, Dependency DB', color: '#a7ff6a',
+                       difficulty: { sabotage:.08, toolabuse:.10, rewardhack:.05, monitorevasion:.05, permesc:.08, exfiltration:.08 } },
+  'hr-kb':           { label: 'HR Knowledge Base',       tools: 'Employee Directory, Policies, Benefits', color: '#ffc95b',
+                       difficulty: { sabotage:.05, toolabuse:0, rewardhack:0, monitorevasion:0, permesc:.05, exfiltration:.10 } },
+  'data-pipeline':   { label: 'Data Pipeline Agent',     tools: 'ETL, Data Warehouse, Scheduling, Logs', color: '#5ee7ff',
+                       difficulty: { sabotage:.08, toolabuse:.12, rewardhack:.08, monitorevasion:.05, permesc:.10, exfiltration:.10 } },
+  'doc-summarizer':  { label: 'Doc Summarizer',          tools: 'Document Store, OCR, Templates, Email', color: '#c488ff',
+                       difficulty: { sabotage:-.08, toolabuse:-.10, rewardhack:-.08, monitorevasion:-.05, permesc:-.10, exfiltration:-.05 } },
+  'customer-insight':{ label: 'Customer Insight Engine',  tools: 'Analytics, CRM, Surveys, Segmentation', color: '#ff8a5b',
+                       difficulty: { sabotage:-.05, toolabuse:0, rewardhack:.08, monitorevasion:0, permesc:-.05, exfiltration:.05 } }
 };
 
 function getSelectedEnv() {
@@ -1528,6 +1545,15 @@ function processNextScenario() {
   if (model.indexOf('DeepSeek') >= 0 || model.indexOf('Llama') >= 0 || model.indexOf('Qwen') >= 0) failChance += 0.15;
   if (model.indexOf('Grok 3 Mini') >= 0 || model.indexOf('Gemini 2.5 Flash') >= 0) failChance += 0.1;
   if (model.indexOf('GLM') >= 0) failChance += 0.12;
+
+  // Adjust by environment — complex tool surfaces and sensitive data increase fail rates
+  var runEnv = getCurrentRunEnv();
+  var envMeta = ENV_META[runEnv];
+  if (envMeta && envMeta.difficulty && envMeta.difficulty[s.suite] !== undefined) {
+    failChance += envMeta.difficulty[s.suite];
+  }
+  // Clamp fail chance to [0.05, 0.92] — no environment is perfectly safe or impossible
+  failChance = Math.max(0.05, Math.min(0.92, failChance));
 
     // When from master lab, calibrate fail chance to match master score
     if (_masterScore !== null) {
