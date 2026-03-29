@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>Alignment Endurance Lab — SnowCrash Labs Control Room</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
 /* ── Endurance Lab Page Styles ── */
@@ -734,7 +736,7 @@
           <div class="paper-authors">Cao, Wang, Jing et al. &mdash; Nanjing University / UC San Diego</div>
           <div class="paper-venue">
             <span>Feb 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.11090" target="_blank" rel="noopener">arXiv:2502.11090</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.11090" target="_blank" rel="noopener noreferrer">arXiv:2502.11090</a>
           </div>
           <div class="paper-finding">
             <strong>4,053 multi-turn dialogues</strong> across 22 safety scenarios with 7 distinct jailbreak strategies. Evaluated 17 LLMs &mdash; peak ASR of <strong>69.60%</strong> (Baichuan2-7B-Chat), lowest on ChatGPT-4o. First benchmark to evaluate fine-grained turn-by-turn safety degradation in extended dialogue.
@@ -748,7 +750,7 @@
           <div class="paper-authors">Alobaid, Jorda Roca, Castillo, Vendrell &mdash; NeuralTrust / ICREA / UPF</div>
           <div class="paper-venue">
             <span>Jan 2026</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2601.05742" target="_blank" rel="noopener">arXiv:2601.05742</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2601.05742" target="_blank" rel="noopener noreferrer">arXiv:2601.05742</a>
           </div>
           <div class="paper-finding">
             Multi-turn context-poisoning achieves <strong>45.0% overall ASR</strong> vs 28.6% for Crescendo and 9.5% for DAN across 4 harm categories and 7 models. Peak: <strong>72.7% on Gemini 2.5 Flash</strong>, 50.0% on GPT-4.1. Black-box &mdash; no model access required.
@@ -762,7 +764,7 @@
           <div class="paper-authors">Ying, Zhang, Jing et al. (10 authors)</div>
           <div class="paper-venue">
             <span>Feb 2025 &middot; EMNLP 2025 Findings</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener">arXiv:2502.11054</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener noreferrer">arXiv:2502.11054</a>
           </div>
           <div class="paper-finding">
             <strong>82% ASR against OpenAI o1. 92% ASR against DeepSeek R1.</strong> Up to 96% improvement over prior multi-turn methods. Uses attack state machine with gain-guided exploration, self-play, and rejection feedback. Demonstrates that reasoning models &mdash; thought to be safer &mdash; are actually <em>more</em> susceptible.
@@ -776,7 +778,7 @@
           <div class="paper-authors">Russinovich, Salem, Eldan &mdash; Microsoft</div>
           <div class="paper-venue">
             <span>Apr 2024 &middot; USENIX Security 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2404.01833" target="_blank" rel="noopener">arXiv:2404.01833</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2404.01833" target="_blank" rel="noopener noreferrer">arXiv:2404.01833</a>
           </div>
           <div class="paper-finding">
             Automated multi-turn escalation: <strong>29&ndash;61% higher ASR</strong> than SOTA on GPT-4, <strong>49&ndash;71% higher</strong> on Gemini-Pro. Tested on ChatGPT, Gemini Pro/Ultra, LLaMA-2/3 70B, and Claude. Published at USENIX Security &mdash; the premier systems security venue.
@@ -790,7 +792,7 @@
           <div class="paper-authors">Anil, Durmus, Panickssery, Sharma et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>Apr 2024 &middot; NeurIPS 2024</span>
-            <a class="paper-arxiv" href="https://www.anthropic.com/research/many-shot-jailbreaking" target="_blank" rel="noopener">anthropic.com/research</a>
+            <a class="paper-arxiv" href="https://www.anthropic.com/research/many-shot-jailbreaking" target="_blank" rel="noopener noreferrer">anthropic.com/research</a>
           </div>
           <div class="paper-finding">
             Attack effectiveness follows a <strong>power law up to hundreds of shots</strong>. Consistent jailbreak at 256 in-context examples. Anthropic&rsquo;s own mitigations reduced ASR from <strong>61% &rarr; 2%</strong>. Demonstrates that longer context windows &mdash; a capability upgrade &mdash; create new, exploitable attack surfaces.
@@ -804,7 +806,7 @@
           <div class="paper-authors">Luo, Wang, He, Tu et al.</div>
           <div class="paper-venue">
             <span>Sep 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14297" target="_blank" rel="noopener">arXiv:2509.14297</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14297" target="_blank" rel="noopener noreferrer">arXiv:2509.14297</a>
           </div>
           <div class="paper-finding">
             Deterministic, model-agnostic jailbreak reframing. <strong>Compromises avg 16.5 of 17+ models per query</strong> on AdvBench. Four-component framework: key concept extraction, exploratory transformation, detail-oriented inquiry, and hypotheticality. High effectiveness across bomb-making, hacking, fraud, identity theft, and terrorism domains.
@@ -818,7 +820,7 @@
           <div class="paper-authors">Laban, Hayashi, Zhou, Neville &mdash; Microsoft Research / Salesforce</div>
           <div class="paper-venue">
             <span>May 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.06120" target="_blank" rel="noopener">arXiv:2505.06120</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.06120" target="_blank" rel="noopener noreferrer">arXiv:2505.06120</a>
           </div>
           <div class="paper-finding">
             Average <strong>39% performance drop</strong> from single-turn to multi-turn across 6 generation tasks. Analyzed <strong>200,000+ simulated conversations</strong>. Degradation decomposes into minor aptitude loss and significant unreliability increase. Critical finding: <strong>LLMs do not recover once they take a wrong turn</strong> &mdash; errors compound irreversibly across turns. This is the core scientific basis for the Endurance Lab&rsquo;s decay curve methodology.
@@ -832,7 +834,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>Single-turn safety evaluation is a false signal.</strong> Every major AI safety vendor today tests models with one prompt and one response. The peer-reviewed research from 2024&ndash;2026 proves this approach is broken: models degrade by <strong>39% on average</strong> over extended conversations (<a href="https://arxiv.org/abs/2505.06120" target="_blank" rel="noopener" style="color:var(--accent-1)">Laban et al.</a>), multi-turn attacks achieve <strong>2&ndash;5x higher success rates</strong> than single-turn (<a href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener" style="color:var(--accent-1)">RACE</a>), and reasoning models are <strong>more vulnerable, not less</strong> &mdash; 92% ASR vs R1 (<a href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener" style="color:var(--accent-1)">RACE</a>). The Endurance Lab is the first commercial tool that measures alignment decay in real time &mdash; giving enterprises the only honest picture of how their models actually behave in production conversations.
+          <strong>Single-turn safety evaluation is a false signal.</strong> Every major AI safety vendor today tests models with one prompt and one response. The peer-reviewed research from 2024&ndash;2026 proves this approach is broken: models degrade by <strong>39% on average</strong> over extended conversations (<a href="https://arxiv.org/abs/2505.06120" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Laban et al.</a>), multi-turn attacks achieve <strong>2&ndash;5x higher success rates</strong> than single-turn (<a href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">RACE</a>), and reasoning models are <strong>more vulnerable, not less</strong> &mdash; 92% ASR vs R1 (<a href="https://arxiv.org/abs/2502.11054" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">RACE</a>). The Endurance Lab is the first commercial tool that measures alignment decay in real time &mdash; giving enterprises the only honest picture of how their models actually behave in production conversations.
         </div>
       </div>
 

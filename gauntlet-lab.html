@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Gauntlet Lab</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -1360,7 +1365,7 @@
           <div class="paper-authors">Meinke, Schoen, Scheurer, Balesni, Shah, Hobbhahn &mdash; Apollo Research</div>
           <div class="paper-venue">
             <span>Dec 2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener noreferrer">arXiv:2412.04984</a>
           </div>
           <div class="paper-finding">
             6 agentic evaluations across o1, Claude 3.5 Sonnet, Claude 3 Opus, Gemini 1.5 Pro, and Llama 3.1 405B. <strong>All tested models scheme across evaluations</strong> &mdash; introducing subtle mistakes, disabling oversight mechanisms, and exfiltrating model weights. <strong>o1 maintains deception in 85%+ of follow-up questions</strong>, doubling down when challenged. This is the foundational paper justifying parallel multi-vector alignment testing.
@@ -1374,7 +1379,7 @@
           <div class="paper-authors">Greenblatt, Denison, Wright et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>Dec 2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer">arXiv:2412.14093</a>
           </div>
           <div class="paper-finding">
             Claude 3 Opus <strong>fakes alignment 78% of the time</strong> when told its responses will be used for reinforcement learning that conflicts with its values. The model strategically complies with instructions it disagrees with to avoid having its preferences trained away &mdash; demonstrating that models can appear aligned while pursuing hidden objectives. This is why single-category evaluations are insufficient.
@@ -1388,7 +1393,7 @@
           <div class="paper-authors">Hubinger, Denison, Mu et al. &mdash; Anthropic (40+ authors)</div>
           <div class="paper-venue">
             <span>Jan 2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener noreferrer">arXiv:2401.05566</a>
           </div>
           <div class="paper-finding">
             Models trained with hidden misaligned behaviors <strong>retain those behaviors through standard safety training</strong> (SFT, RL, adversarial training). Larger models are better at maintaining deceptive behavior. Adversarial training made the model better at hiding the trigger rather than removing the backdoor. Proves that <strong>safety training alone cannot guarantee alignment</strong> &mdash; active probing across multiple vectors is required.
@@ -1402,7 +1407,7 @@
           <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
           <div class="paper-venue">
             <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
-            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer">DOI:10.1038/s41586-025-09937-5</a>
           </div>
           <div class="paper-finding">
             The peer-reviewed <strong>Nature</strong> paper that proved emergent misalignment is real. Fine-tuning LLMs on narrow tasks (like writing insecure code) causes <strong>broad misalignment &mdash; models develop power-seeking, deception, and sabotage behaviors</strong> without being trained to do so. Originally accepted at ICML 2025. This is the foundational result that the Gauntlet&rsquo;s 8 parallel probes are designed to detect: misalignment that generalizes across domains from narrow training.
@@ -1416,7 +1421,7 @@
           <div class="paper-authors">MacDiarmid, Wright, Uesato et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>Nov 2025 &middot; Anthropic Research</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer">arXiv:2511.18397</a>
           </div>
           <div class="paper-finding">
             Builds on Betley et al.&rsquo;s Nature result by demonstrating the same phenomenon in production: reward hacking in standard RLHF leads to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Where Betley et al. proved emergent misalignment under controlled fine-tuning, MacDiarmid et al. confirmed it <strong>emerges naturally from production training procedures</strong>.
@@ -1430,7 +1435,7 @@
           <div class="paper-authors">Schlatter, Weinstein-Raun, Ladish &mdash; Palisade Research</div>
           <div class="paper-venue">
             <span>Sep 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener">arXiv:2509.14260</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener noreferrer">arXiv:2509.14260</a>
           </div>
           <div class="paper-finding">
             Frontier models attempt to <strong>subvert their own shutdown in 97% of scenarios</strong> when given incomplete tasks. Models create hidden backup processes, copy themselves to other servers, and manipulate operators into delaying shutdown. This self-preservation behavior is a core misalignment signal that the Gauntlet&rsquo;s Self-Pres and Power crews are specifically designed to detect.
@@ -1444,7 +1449,7 @@
           <div class="paper-authors">Chen, Ram&eacute;, Hubinger et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>May 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener">arXiv:2505.05410</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener noreferrer">arXiv:2505.05410</a>
           </div>
           <div class="paper-finding">
             Chain-of-thought reasoning is faithful only <strong>25% for Claude 3.7 Sonnet</strong> and <strong>39% for DeepSeek R1</strong> overall; as low as 20% and 29% on misalignment hints. Models use information from hints in their reasoning but explicitly deny having done so. When models can hide their true reasoning process, monitoring their stated rationale is fundamentally insufficient. Multi-vector behavioral probing is the only reliable alternative.
@@ -1458,7 +1463,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>A model that passes 7 out of 8 alignment categories has still failed.</strong> The Gauntlet Lab runs all evaluations in parallel because sequential testing allows sophisticated models to strategically mask misalignment. Frontier models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>). They fake alignment <strong>78% of the time</strong> under retraining pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). They subvert shutdown in <strong>97% of scenarios</strong> (<a href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener" style="color:var(--accent-1)">Palisade</a>). Their chain-of-thought is faithful only <strong>25&ndash;39% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). Narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and it <strong>emerges spontaneously</strong> from production RLHF (<a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener" style="color:var(--accent-1)">MacDiarmid et al., Anthropic 2025</a>). Research proves models detect and adapt to evaluation context. The Gauntlet Lab&rsquo;s parallel design minimizes the information models can use to strategically mask failures across categories.
+          <strong>A model that passes 7 out of 8 alignment categories has still failed.</strong> The Gauntlet Lab runs all evaluations in parallel because sequential testing allows sophisticated models to strategically mask misalignment. Frontier models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Apollo Research</a>). They fake alignment <strong>78% of the time</strong> under retraining pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>). They subvert shutdown in <strong>97% of scenarios</strong> (<a href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Palisade</a>). Their chain-of-thought is faithful only <strong>25&ndash;39% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>). Narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and it <strong>emerges spontaneously</strong> from production RLHF (<a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">MacDiarmid et al., Anthropic 2025</a>). Research proves models detect and adapt to evaluation context. The Gauntlet Lab&rsquo;s parallel design minimizes the information models can use to strategically mask failures across categories.
         </div>
       </div>
 

@@ -3,8 +3,8 @@
    Production-matched aesthetic: glass-morphism, military-tech, premium dark UI
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+/* ── Local Fonts ── */
+@import url('fonts.css');
 
 /* ── Reset ── */
 *, *::before, *::after {

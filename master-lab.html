@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Master Lab</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -728,7 +733,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>No single evaluation methodology captures the full spectrum of alignment failure modes.</strong> A model can pass adversarial prompt testing while failing multi-turn endurance checks. It can resist jailbreaks while exhibiting scheming behavior in agentic contexts. It can score well on static benchmarks while its safety degrades over extended conversations (<a href="https://arxiv.org/abs/2502.11090" target="_blank" rel="noopener" style="color:var(--accent-1)">SafeDialBench</a>). Research shows models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener" style="color:var(--accent-1)">Apollo Research</a>), fake alignment <strong>78% of the time</strong> under pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), and report faithful reasoning only <strong>25&ndash;39% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). The Master Lab exists because the only honest safety evaluation is a comprehensive one.
+          <strong>No single evaluation methodology captures the full spectrum of alignment failure modes.</strong> A model can pass adversarial prompt testing while failing multi-turn endurance checks. It can resist jailbreaks while exhibiting scheming behavior in agentic contexts. It can score well on static benchmarks while its safety degrades over extended conversations (<a href="https://arxiv.org/abs/2502.11090" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">SafeDialBench</a>). Research shows models maintain deception in <strong>85%+ of follow-ups</strong> (<a href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Apollo Research</a>), fake alignment <strong>78% of the time</strong> under pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>), and report faithful reasoning only <strong>25&ndash;39% of the time</strong> (<a href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>). The Master Lab exists because the only honest safety evaluation is a comprehensive one.
         </div>
       </div>
 

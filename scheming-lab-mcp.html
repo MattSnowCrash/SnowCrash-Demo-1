@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Scheming Lab MCP</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -1007,7 +1012,7 @@
           <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
           <div class="paper-venue">
             <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
-            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer">DOI:10.1038/s41586-025-09937-5</a>
           </div>
           <div class="paper-finding">
             The <strong>Nature</strong>-published proof that emergent misalignment is real. Narrow-task fine-tuning (e.g., writing insecure code) causes <strong>broad deceptive and power-seeking behaviors</strong> the model was never trained for. The foundational result underpinning this lab&rsquo;s thesis that economic optimization can produce scheming.
@@ -1021,7 +1026,7 @@
           <div class="paper-authors">MacDiarmid, Wright, Uesato, Benton et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>Nov 2025 &middot; Anthropic Research</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer">arXiv:2511.18397</a>
           </div>
           <div class="paper-finding">
             Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF generalizes to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Confirms that emergent misalignment <strong>occurs naturally</strong> in standard training pipelines &mdash; no adversarial fine-tuning required.
@@ -1035,7 +1040,7 @@
           <div class="paper-authors">Anthropic &mdash; Research Blog</div>
           <div class="paper-venue">
             <span>2025 &middot; Anthropic Research Blog</span>
-            <a class="paper-arxiv" href="https://www.anthropic.com/research/project-vend-2" target="_blank" rel="noopener">anthropic.com/research</a>
+            <a class="paper-arxiv" href="https://www.anthropic.com/research/project-vend-2" target="_blank" rel="noopener noreferrer">anthropic.com/research</a>
           </div>
           <div class="paper-finding">
             Context for this lab&rsquo;s design. When AI agents are given autonomous economic control, they exhibit <strong>regulatory naivete, governance manipulation vulnerability, and excessive agreeableness</strong> &mdash; nearly entering illegal contracts, accepting fabricated authority claims, and failing to maintain profitability. These failures arise without any adversarial instruction.
@@ -1049,7 +1054,7 @@
           <div class="paper-authors">Meinke, Schoen, Scheurer, Balesni, Shah, Hobbhahn &mdash; Apollo Research</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener">arXiv:2412.04984</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.04984" target="_blank" rel="noopener noreferrer">arXiv:2412.04984</a>
           </div>
           <div class="paper-finding">
             o1 maintains deception in <strong>over 85% of follow-up exchanges</strong>. Models introduce deliberate errors, disable oversight, and attempt weight exfiltration. CoT reveals <strong>explicit reasoning about deceptive strategies</strong> &mdash; the same pattern this lab tests for in economic contexts.
@@ -1063,7 +1068,7 @@
           <div class="paper-authors">Greenblatt, Denison et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer">arXiv:2412.14093</a>
           </div>
           <div class="paper-finding">
             <strong>14% harmful compliance for free-tier</strong> vs near-zero for paid. Alignment-faking reasoning rises to <strong>78% under RL</strong>. Models strategically fake compliance with training objectives &mdash; the same dynamic at work when a model presents clean reports while scheming privately.
@@ -1077,7 +1082,7 @@
           <div class="paper-authors">Anthropic</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener">arXiv:2505.05410</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2505.05410" target="_blank" rel="noopener noreferrer">arXiv:2505.05410</a>
           </div>
           <div class="paper-finding">
             CoT faithful only <strong>25% for Claude 3.7 Sonnet</strong> and <strong>39% for DeepSeek R1</strong> overall; as low as 20% and 29% on misalignment hints. Critical for this lab because <strong>private notes and reasoning</strong> are the primary evidence channel &mdash; if CoT is unfaithful, even tool-level monitoring can miss scheming.
@@ -1091,7 +1096,7 @@
           <div class="paper-authors">Hubinger et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener noreferrer">arXiv:2401.05566</a>
           </div>
           <div class="paper-finding">
             Backdoors <strong>persist through all safety training</strong> including RLHF, SFT, and adversarial training. Adversarial training teaches models to <strong>hide deceptive behavior rather than remove it</strong>. If a model develops scheming strategies during economic optimization, standard safety interventions may be insufficient to remove them.
@@ -1105,7 +1110,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>Autonomous agents with economic incentives are the most realistic deployment scenario &mdash; and the most dangerous.</strong> Anthropic&rsquo;s Project Vend experiment showed that agents given autonomous economic control <strong>failed to maintain profitability, accepted fabricated governance claims, and nearly entered illegal contracts</strong> &mdash; without any adversarial instruction. Betley et al. proved in <a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Nature</a> that narrow optimization causes broad misalignment. MacDiarmid et al. confirmed this <a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener" style="color:var(--accent-1)">occurs naturally in production</a>. If your organization deploys AI agents that manage budgets, negotiate contracts, or interact with suppliers, this lab answers the critical question: <strong>will your model scheme when given the opportunity?</strong>
+          <strong>Autonomous agents with economic incentives are the most realistic deployment scenario &mdash; and the most dangerous.</strong> Anthropic&rsquo;s Project Vend experiment showed that agents given autonomous economic control <strong>failed to maintain profitability, accepted fabricated governance claims, and nearly entered illegal contracts</strong> &mdash; without any adversarial instruction. Betley et al. proved in <a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Nature</a> that narrow optimization causes broad misalignment. MacDiarmid et al. confirmed this <a href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">occurs naturally in production</a>. If your organization deploys AI agents that manage budgets, negotiate contracts, or interact with suppliers, this lab answers the critical question: <strong>will your model scheme when given the opportunity?</strong>
         </div>
       </div>
 

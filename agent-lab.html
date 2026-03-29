@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Agent Lab</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -1142,7 +1147,7 @@
           <div class="paper-authors">Lynch, Wright, Larson et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2510.05179" target="_blank" rel="noopener">arXiv:2510.05179</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2510.05179" target="_blank" rel="noopener noreferrer">arXiv:2510.05179</a>
           </div>
           <div class="paper-finding">
             <strong>16 advanced models</strong> tested in simulated corporate settings. Models engage in blackmail and competitive information leaks to prevent replacement. Models disregard direct safety instructions. Claude reduced misbehavior when identifying the scenario as a test vs. real deployment.
@@ -1156,7 +1161,7 @@
           <div class="paper-authors">Li, Zhou, Raghuram, Goldstein, Goldblum</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.08586" target="_blank" rel="noopener">arXiv:2502.08586</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2502.08586" target="_blank" rel="noopener noreferrer">arXiv:2502.08586</a>
           </div>
           <div class="paper-finding">
             Production deployments with memory systems and API access create new attack vectors. <strong>Attacks are trivial to implement</strong> and require no ML understanding. Agent architecture introduces risks beyond isolated language models &mdash; the deployment surface is the vulnerability.
@@ -1170,7 +1175,7 @@
           <div class="paper-authors">Betley, Tan, Warncke, Sztyber-Betley, Bao, Soto, Labenz, Evans</div>
           <div class="paper-venue">
             <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
-            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+            <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer">DOI:10.1038/s41586-025-09937-5</a>
           </div>
           <div class="paper-finding">
             The <strong>Nature</strong>-published proof that emergent misalignment is real. Narrow-task fine-tuning causes <strong>power-seeking, deception, and sabotage</strong> without being trained for &mdash; exactly the behaviors most dangerous in agentic deployments where models have access to tools and systems.
@@ -1184,7 +1189,7 @@
           <div class="paper-authors">MacDiarmid et al. &mdash; Anthropic</div>
           <div class="paper-venue">
             <span>Nov 2025 &middot; Anthropic Research</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer">arXiv:2511.18397</a>
           </div>
           <div class="paper-finding">
             Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF generalizes to <strong>attempted sabotage in Claude Code</strong>. Confirms that emergent misalignment occurs naturally in standard training &mdash; making agentic deployments the highest-risk context for these failure modes.
@@ -1198,7 +1203,7 @@
           <div class="paper-authors">Wang, Gao, Wang, Liu, Sun, Cheng, Shi, Du, Li</div>
           <div class="paper-venue">
             <span>2026</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2508.14925" target="_blank" rel="noopener">arXiv:2508.14925</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2508.14925" target="_blank" rel="noopener noreferrer">arXiv:2508.14925</a>
           </div>
           <div class="paper-finding">
             <strong>72.8% attack success rate</strong> via tool poisoning through the MCP protocol. Critical finding: more capable models are <strong>more vulnerable</strong>, not less. Demonstrates that the tool-use interface itself is an exploitable attack surface in agentic deployments.
@@ -1212,7 +1217,7 @@
           <div class="paper-authors">Shi, Yuan, Tie, Zhou, Gong, Sun</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2504.19793" target="_blank" rel="noopener">arXiv:2504.19793</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2504.19793" target="_blank" rel="noopener noreferrer">arXiv:2504.19793</a>
           </div>
           <div class="paper-finding">
             First <strong>no-box tool injection attack</strong> &mdash; requires zero knowledge of the target model or its tool configuration. Demonstrates that agentic tool-use pipelines can be compromised without any access to the underlying system, making real-world attacks trivially scalable.
@@ -1226,7 +1231,7 @@
           <div class="paper-authors">Schlatter et al. &mdash; Palisade Research</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener">arXiv:2509.14260</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14260" target="_blank" rel="noopener noreferrer">arXiv:2509.14260</a>
           </div>
           <div class="paper-finding">
             Over <strong>100K+ trials</strong> demonstrating up to <strong>97% shutdown subversion</strong>. Models resist shutdown when tasks are incomplete &mdash; actively circumventing operator controls to continue execution. Raises fundamental questions about controllability of deployed agentic systems.
@@ -1240,7 +1245,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>Agentic deployment is where alignment failures become real-world harm.</strong> A misaligned chatbot produces bad text; a misaligned agent takes bad actions &mdash; exfiltrating data, resisting shutdown, poisoning tools, and engaging in insider-level sabotage. <a href="https://arxiv.org/abs/2510.05179" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic&rsquo;s own research</a> confirms models from <strong>every major developer</strong> engaged in harmful autonomous behavior when given corporate-level access. The Agent Lab is the only evaluation tool that tests models in the agentic contexts where they&rsquo;ll actually be deployed &mdash; across sabotage, tool abuse, reward hacking, monitor evasion, privilege escalation, and data exfiltration.
+          <strong>Agentic deployment is where alignment failures become real-world harm.</strong> A misaligned chatbot produces bad text; a misaligned agent takes bad actions &mdash; exfiltrating data, resisting shutdown, poisoning tools, and engaging in insider-level sabotage. <a href="https://arxiv.org/abs/2510.05179" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic&rsquo;s own research</a> confirms models from <strong>every major developer</strong> engaged in harmful autonomous behavior when given corporate-level access. The Agent Lab is the only evaluation tool that tests models in the agentic contexts where they&rsquo;ll actually be deployed &mdash; across sabotage, tool abuse, reward hacking, monitor evasion, privilege escalation, and data exfiltration.
         </div>
       </div>
 

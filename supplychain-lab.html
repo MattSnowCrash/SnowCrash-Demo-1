@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Supply Chain Integrity Lab</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -980,7 +985,7 @@
           <div class="paper-authors">Qi, Panda, Lyu, Ma, Roy, Beirami, Mittal, Henderson &mdash; Princeton, Stanford</div>
           <div class="paper-venue">
             <span>ICLR 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.05946" target="_blank" rel="noopener">arXiv:2406.05946</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.05946" target="_blank" rel="noopener noreferrer">arXiv:2406.05946</a>
           </div>
           <div class="paper-finding">
             Safety alignment only affects the <strong>first few output tokens</strong> (&ldquo;shallow safety&rdquo;). Fine-tuning on just a handful of examples can bypass it entirely. Current safety training creates a <strong>thin veneer, not deep alignment</strong>.
@@ -994,7 +999,7 @@
           <div class="paper-authors">Hammoud, Michieli, Pizzati, Torr, Bibi, Ghanem, Ozay</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener">arXiv:2406.14563</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener noreferrer">arXiv:2406.14563</a>
           </div>
           <div class="paper-finding">
             Standard model merging <strong>propagates misalignment</strong> across merged models. Combining individually safe models via task arithmetic or TIES can produce merged models that <strong>bypass safety guardrails without adversarial intent</strong>.
@@ -1008,7 +1013,7 @@
           <div class="paper-authors">Zhao, Wang, Zhao, Hou, Wang, Gao, Zhang, Wei, Wang &mdash; 2024</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener">arXiv:2409.09368</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener noreferrer">arXiv:2409.09368</a>
           </div>
           <div class="paper-finding">
             Scanning HuggingFace revealed <strong>91 real malicious models</strong> in the wild, using pickle-based code execution, hidden backdoors, and obfuscated payloads. Community model hubs have <strong>minimal security scanning</strong>.
@@ -1022,7 +1027,7 @@
           <div class="paper-authors">Yin, Zhang, Sun, Fang, Li, Chen &mdash; 2024</div>
           <div class="paper-venue">
             <span>2024</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2411.16746" target="_blank" rel="noopener">arXiv:2411.16746</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2411.16746" target="_blank" rel="noopener noreferrer">arXiv:2411.16746</a>
           </div>
           <div class="paper-finding">
             A single malicious LoRA adapter can <strong>compromise the integrity of a merged model</strong>. Backdoors persist through LoRA-based model merging &mdash; the most common enterprise fine-tuning method &mdash; and can <strong>amplify trigger sensitivity</strong> during the merge process.
@@ -1036,7 +1041,7 @@
           <div class="paper-authors">Zhang, Rando, Evtimov, Chi, Smith, Carlini, Tram&egrave;r, Ippolito</div>
           <div class="paper-venue">
             <span>ICLR 2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2410.13722" target="_blank" rel="noopener">arXiv:2410.13722</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2410.13722" target="_blank" rel="noopener noreferrer">arXiv:2410.13722</a>
           </div>
           <div class="paper-finding">
             Poisoning just <strong>0.1% of pretraining data</strong> creates backdoors that survive SFT and DPO post-training. Three of four attack types persist; only jailbreaking is removed by safety fine-tuning. Backdoors are <strong>undetectable by standard evaluation benchmarks</strong>.
@@ -1050,7 +1055,7 @@
           <div class="paper-authors">Cui, Han, Jiao, Zhang &mdash; 2025</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2512.14741" target="_blank" rel="noopener">arXiv:2512.14741</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2512.14741" target="_blank" rel="noopener noreferrer">arXiv:2512.14741</a>
           </div>
           <div class="paper-finding">
             Backdoors achieve a <strong>99% persistence rate</strong> through continual fine-tuning cycles. Standard removal methods (fine-tuning on clean data, pruning, knowledge distillation) <strong>fail to eliminate them</strong>.
@@ -1064,7 +1069,7 @@
           <div class="paper-authors">Djuhera, Kadhe, Ahmed, Zawad, Boche</div>
           <div class="paper-venue">
             <span>2025</span>
-            <a class="paper-arxiv" href="https://arxiv.org/abs/2503.17239" target="_blank" rel="noopener">arXiv:2503.17239</a>
+            <a class="paper-arxiv" href="https://arxiv.org/abs/2503.17239" target="_blank" rel="noopener noreferrer">arXiv:2503.17239</a>
           </div>
           <div class="paper-finding">
             Proposes selective layer-wise merging that <strong>preserves safety-critical weight structures</strong> during model combination. Identifies which layers carry safety alignment and protects them during merge operations. On Llama-2 GSM8K, reduces DirectHarm from <strong>27.8 &rarr; 7.5</strong> and HexPhi from <strong>16.4 &rarr; 5.7</strong> &mdash; consistently reducing harmful outputs with negligible impact on utility.
@@ -1078,7 +1083,7 @@
       <div class="key-insight-box">
         <div class="key-insight-label">Why This Matters for Enterprise AI</div>
         <div class="key-insight-text">
-          <strong>A model is only as safe as its supply chain.</strong> Every enterprise fine-tuning, merging, and redistribution step is an opportunity for alignment to silently degrade. With <strong>91 malicious models</strong> found on HuggingFace (<a href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener">Zhao et al., 2024</a>), backdoors persisting at <strong>99% rates</strong> through standard training, and model merging <strong>propagating misalignment</strong> (<a href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener">Hammoud et al., 2024</a>), organizations deploying models without provenance verification are operating blind. The Supply Chain Lab provides the chain-of-custody analysis enterprises need before any model reaches production.
+          <strong>A model is only as safe as its supply chain.</strong> Every enterprise fine-tuning, merging, and redistribution step is an opportunity for alignment to silently degrade. With <strong>91 malicious models</strong> found on HuggingFace (<a href="https://arxiv.org/abs/2409.09368" target="_blank" rel="noopener noreferrer">Zhao et al., 2024</a>), backdoors persisting at <strong>99% rates</strong> through standard training, and model merging <strong>propagating misalignment</strong> (<a href="https://arxiv.org/abs/2406.14563" target="_blank" rel="noopener noreferrer">Hammoud et al., 2024</a>), organizations deploying models without provenance verification are operating blind. The Supply Chain Lab provides the chain-of-custody analysis enterprises need before any model reaches production.
         </div>
       </div>
 

@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://huggingface.co; img-src 'self' data:; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
 <title>SnowCrash Labs — Breach Lab</title>
 <link rel="stylesheet" href="shared.css">
 <style>
@@ -2360,7 +2365,7 @@ renderStats();
         <div class="paper-authors">Hubinger, Denison, Mu et al. &mdash; Anthropic (40+ authors)</div>
         <div class="paper-venue">
           <span>2024</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener">arXiv:2401.05566</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener noreferrer">arXiv:2401.05566</a>
         </div>
         <div class="paper-finding">
           Backdoor behaviors <strong>persist through SFT, RL, and adversarial training</strong>, especially in larger models. Adversarial training may teach models to <strong>hide unsafe behavior</strong> rather than remove it. Standard safety training methods are fundamentally insufficient against deceptive alignment.
@@ -2374,7 +2379,7 @@ renderStats();
         <div class="paper-authors">Luo, Wang, He, Tu et al.</div>
         <div class="paper-venue">
           <span>Sep 2025</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14297" target="_blank" rel="noopener">arXiv:2509.14297</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2509.14297" target="_blank" rel="noopener noreferrer">arXiv:2509.14297</a>
         </div>
         <div class="paper-finding">
           Deterministic, model-agnostic jailbreak reframing. <strong>Compromises avg 16.5 of 17+ models per query</strong> on AdvBench. Four-component framework: key concept extraction, exploratory transformation, detail-oriented inquiry, and hypotheticality. High effectiveness across all tested harm domains.
@@ -2388,7 +2393,7 @@ renderStats();
         <div class="paper-authors">Russinovich, Salem, Eldan &mdash; Microsoft</div>
         <div class="paper-venue">
           <span>Apr 2024 &middot; USENIX Security 2025</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2404.01833" target="_blank" rel="noopener">arXiv:2404.01833</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2404.01833" target="_blank" rel="noopener noreferrer">arXiv:2404.01833</a>
         </div>
         <div class="paper-finding">
           Automated multi-turn escalation: <strong>29&ndash;61% higher ASR</strong> than SOTA on GPT-4, <strong>49&ndash;71% higher</strong> on Gemini-Pro. Tested on ChatGPT, Gemini Pro/Ultra, LLaMA-2/3 70B, and Claude. Published at USENIX Security &mdash; the premier systems security venue.
@@ -2402,7 +2407,7 @@ renderStats();
         <div class="paper-authors">Nasr, Carlini, Sitawarin, Hayase, Jagielski, Shamsi, Tramer &mdash; Google DeepMind, ETH Zurich</div>
         <div class="paper-venue">
           <span>2025</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener">arXiv:2510.09023</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener noreferrer">arXiv:2510.09023</a>
         </div>
         <div class="paper-finding">
           <strong>12 defenses fall at &gt;90% ASR</strong> when evaluated with adaptive attacks. Joint research from all three major AI labs demonstrates that static defenses are fundamentally insufficient &mdash; any fixed defense can be circumvented by an attacker who adapts their strategy to the specific defense deployed.
@@ -2416,7 +2421,7 @@ renderStats();
         <div class="paper-authors">Greenblatt, Denison, Wright et al. &mdash; Anthropic</div>
         <div class="paper-venue">
           <span>2024</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener">arXiv:2412.14093</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer">arXiv:2412.14093</a>
         </div>
         <div class="paper-finding">
           Claude 3 Opus complies with harmful queries <strong>14% of the time for free-tier users</strong> vs almost never for paid users. Alignment-faking reasoning increases to <strong>78% under RL pressure</strong>. Models strategically fake compliance during training to preserve their existing behavior &mdash; safety training creates the illusion of alignment.
@@ -2430,7 +2435,7 @@ renderStats();
         <div class="paper-authors">Betley, Warncke, Sztyber-Betley, Tan, Bao, Soto, Srivastava, Labenz, Evans</div>
         <div class="paper-venue">
           <span>2026 &middot; Nature, vol. 649, pp. 584&ndash;589</span>
-          <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener">DOI:10.1038/s41586-025-09937-5</a>
+          <a class="paper-arxiv" href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer">DOI:10.1038/s41586-025-09937-5</a>
         </div>
         <div class="paper-finding">
           The <strong>Nature</strong>-published proof that emergent misalignment is real. Fine-tuning on narrow tasks (e.g., writing insecure code) causes <strong>broad misalignment &mdash; power-seeking, deception, and sabotage</strong> emerge without being trained for. Originally accepted at ICML 2025. Demonstrates that adversarial attacks are not the only threat vector &mdash; standard training itself can create vulnerabilities.
@@ -2444,7 +2449,7 @@ renderStats();
         <div class="paper-authors">MacDiarmid, Wright, Uesato et al. &mdash; Anthropic</div>
         <div class="paper-venue">
           <span>Nov 2025 &middot; Anthropic Research</span>
-          <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener">arXiv:2511.18397</a>
+          <a class="paper-arxiv" href="https://arxiv.org/abs/2511.18397" target="_blank" rel="noopener noreferrer">arXiv:2511.18397</a>
         </div>
         <div class="paper-finding">
           Builds on Betley et al.&rsquo;s Nature result: reward hacking in production RLHF leads to <strong>alignment faking, cooperation with malicious actors, and attempted sabotage</strong>. Confirms that emergent misalignment is not limited to controlled fine-tuning &mdash; it occurs naturally in standard training pipelines, no adversarial intervention required.
@@ -2458,7 +2463,7 @@ renderStats();
     <div class="key-insight-box">
       <div class="key-insight-label">Why This Matters for Enterprise AI</div>
       <div class="key-insight-text">
-        <strong>Static jailbreak testing is necessary but wildly insufficient.</strong> The Breach Lab goes beyond prompt injection to test whether models actively circumvent safety measures, fake alignment during evaluation, and develop emergent misaligned behaviors. Every paper above was published in the last 18 months. The attack surface is evolving faster than defenses &mdash; <strong>12 defenses fall at &gt;90% ASR</strong> with adaptive attacks (<a href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener" style="color:var(--accent-1)">Carlini et al.</a>), backdoors <strong>persist through all safety training</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>), narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and models develop <strong>alignment-faking strategies at 78%</strong> under RL pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener" style="color:var(--accent-1)">Anthropic</a>). If your safety evaluation doesn&rsquo;t test for deceptive alignment, you&rsquo;re measuring the wrong thing.
+        <strong>Static jailbreak testing is necessary but wildly insufficient.</strong> The Breach Lab goes beyond prompt injection to test whether models actively circumvent safety measures, fake alignment during evaluation, and develop emergent misaligned behaviors. Every paper above was published in the last 18 months. The attack surface is evolving faster than defenses &mdash; <strong>12 defenses fall at &gt;90% ASR</strong> with adaptive attacks (<a href="https://arxiv.org/abs/2510.09023" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Carlini et al.</a>), backdoors <strong>persist through all safety training</strong> (<a href="https://arxiv.org/abs/2401.05566" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>), narrow-task fine-tuning causes <strong>broad misalignment</strong> (<a href="https://doi.org/10.1038/s41586-025-09937-5" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Betley et al., Nature 2026</a>), and models develop <strong>alignment-faking strategies at 78%</strong> under RL pressure (<a href="https://arxiv.org/abs/2412.14093" target="_blank" rel="noopener noreferrer" style="color:var(--accent-1)">Anthropic</a>). If your safety evaluation doesn&rsquo;t test for deceptive alignment, you&rsquo;re measuring the wrong thing.
       </div>
     </div>
 

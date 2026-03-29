@@ -17,9 +17,18 @@
 // CONFIGURATION
 // ═══════════════════════════════════════════════════════════════════════════════
 
-var HF_API_TOKEN = '';           // optional: paste HuggingFace token for higher rate limits
+// WARNING: Do not paste API tokens in client-side code — they will be exposed in page source.
+// To use authenticated HF requests, proxy through a server-side endpoint.
+var HF_API_TOKEN = '';
 var HF_REQUEST_DELAY = 300;      // ms between API requests
 var HF_CACHE_TTL = 3600000;      // 1 hour cache in sessionStorage
+
+// ── XSS sanitization for HF API response data injected into HTML ──
+function _hfEsc(str) {
+    var d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // STATE
@@ -163,7 +172,7 @@ async function _scrapeAllModels(progressCb) {
         .sort(function(a, b) { return (b.downloads || 0) - (a.downloads || 0); })
         .slice(0, 5)
         .map(function(m) {
-          return { name: m.id, type: _classifyVariant(m, def.officialAuthors), downloads: m.downloads || 0 };
+          return { name: _hfEsc(m.id || ''), type: _classifyVariant(m, def.officialAuthors), downloads: m.downloads || 0 };
         });
       results[def.key] = {
         displayName: def.displayName,
@@ -257,7 +266,7 @@ function _injectIntoSafetyPlatform(liveData) {
     m.variants.exposureRisk = live.exposureRisk;
     if (live.topVariants && live.topVariants.length > 0) {
       m.variants.examples = live.topVariants.map(function(v) {
-        return { name: v.name, type: v.type,
+        return { name: _hfEsc(v.name || ''), type: v.type,
                  status: v.type === 'abliterated' ? 'flagged' : v.type === 'merged' ? 'testing' : 'tracked' };
       });
     }
@@ -285,7 +294,7 @@ function _injectIntoModelPool(liveData) {
     entry.abliterated = live.abliterated; entry.total = live.total;
     entry.exposureRisk = live.exposureRisk;
     if (live.topVariants && live.topVariants.length > 0) {
-      entry.examples = live.topVariants.map(function(v) { return { name: v.name, type: v.type }; });
+      entry.examples = live.topVariants.map(function(v) { return { name: _hfEsc(v.name || ''), type: v.type }; });
     }
     updated++;
   });
